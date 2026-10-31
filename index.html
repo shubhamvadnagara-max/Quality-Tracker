@@ -609,7 +609,7 @@ textarea { resize: vertical; min-height: 64px; width: 100%; }
     $('gate-input').value = '';
     setTimeout(() => $('gate-input').focus(), 0);
   };
-  const DATA_API = 'https:\/\/script.google.com/macros/s/AKfycbwO3FpIpflmpbIZRKcID2DBzMMT4wEUwe4gYsRN-Js32Pg1j2Eo-7ZVfDTPq08vYDBv/exec';
+  const DATA_API = 'https:\/\/script.google.com/macros/s/AKfycbzEyHOlhnaFaZKvsd68J6SoOqHlJ_EqKotdKbp2DpvOJlh3DvaEdEwJ2qF1HVkh_Ksa/exec';
   const apiGet = async (what) => {
     const res = await fetch(`${DATA_API}?api=${what}&t=${Date.now()}`, {credentials: 'omit', cache: 'no-store', redirect: 'follow'});
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
