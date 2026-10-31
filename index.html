@@ -1,0 +1,2284 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="referrer" content="no-referrer">
+<title>Saivana Quality Tracker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Barlow+Condensed:wght@500;600;700&display=swap">
+<style>[hidden]{display:none!important} body{margin:0}</style>
+<style>
+/* Layout: one centred workbench. Header and filters on top, then three views (Overview, Reports, Add a report).
+   Indigo accent from the dye house; red, amber and green are used only for state. */
+:root {
+  --bg: #F3F5F9;
+  --panel: #FFFFFF;
+  --ink: #1A1F2E;
+  --muted: #5B6276;
+  --line: #DADFEA;
+  --soft: #EDF0F6;
+  --accent: #3243A6;
+  --accent-ink: #FFFFFF;
+  --accent-soft: #E3E7F8;
+  --bar: #B5BCCF;
+  --bad: #BB3226;
+  --warn: #965700;
+  --ok: #26744A;
+  --bad-soft: #FBE8E5;
+  --warn-soft: #FDF1DC;
+  --ok-soft: #E4F3EA;
+  --font-display: "Barlow Condensed", "Arial Narrow", "Roboto Condensed", sans-serif;
+  --font-body: "Atkinson Hyperlegible", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --radius: 10px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #10121A; --panel: #181B25; --ink: #E7EAF3; --muted: #A3A9BB; --line: #2B3041; --soft: #1F2330;
+    --accent: #97A5FF; --accent-ink: #10121A; --accent-soft: #262B48; --bar: #4B526A;
+    --bad: #FF7C70; --warn: #EFB14E; --ok: #63CA8F; --bad-soft: #3A1F1C; --warn-soft: #382B15; --ok-soft: #173426;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #10121A; --panel: #181B25; --ink: #E7EAF3; --muted: #A3A9BB; --line: #2B3041; --soft: #1F2330;
+  --accent: #97A5FF; --accent-ink: #10121A; --accent-soft: #262B48; --bar: #4B526A;
+  --bad: #FF7C70; --warn: #EFB14E; --ok: #63CA8F; --bad-soft: #3A1F1C; --warn-soft: #382B15; --ok-soft: #173426;
+  color-scheme: dark;
+}
+body { background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 15px; line-height: 1.45; }
+* { box-sizing: border-box; }
+button, input, select, textarea { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.qt { max-width: 1180px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 22px 48px; display: grid; gap: 18px; }
+.qt-head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 10px 24px; }
+.qt-title { margin: 0; font-family: var(--font-display); font-weight: 700; font-size: 2.1rem; line-height: 1; letter-spacing: .01em; text-wrap: balance; }
+.qt-sub { margin: 4px 0 0; color: var(--muted); font-size: .9rem; }
+.qt-tabs { display: flex; gap: 4px; padding: 4px; background: var(--soft); border-radius: 999px; flex-wrap: wrap; }
+.qt-tab { border: 0; background: transparent; padding: 7px 14px; border-radius: 999px; cursor: pointer; color: var(--muted); font-weight: 700; font-size: .9rem; }
+.qt-tab[aria-selected="true"] { background: var(--panel); color: var(--ink); box-shadow: 0 1px 2px rgba(0,0,0,.08); }
+
+.qt-filters { display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: flex-end; background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 12px 14px; }
+.qt-field { display: grid; gap: 3px; min-width: 0; }
+.qt-field > span, .qt-label { font-size: .75rem; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); font-weight: 700; }
+.qt-filters select { min-width: 9.5rem; max-width: 100%; }
+select, input[type="text"], input[type="number"], input[type="date"], input[type="search"], input[type="password"], textarea {
+  background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 7px 9px; min-width: 0; max-width: 100%;
+}
+textarea { resize: vertical; min-height: 64px; width: 100%; }
+.qt-btn { border: 1px solid var(--line); background: var(--panel); border-radius: 8px; padding: 7px 13px; cursor: pointer; font-weight: 700; font-size: .9rem; }
+.qt-btn:hover { border-color: var(--accent); }
+.qt-btn.is-primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.qt-btn.is-danger { color: var(--bad); }
+.qt-btn.is-quiet { border-color: transparent; background: transparent; color: var(--accent); padding-inline: 6px; }
+.qt-btn[disabled] { opacity: .55; cursor: default; }
+.qt-filter-note { font-size: .85rem; color: var(--muted); margin-left: auto; align-self: center; }
+
+.qt-view[hidden] { display: none !important; }
+.qt-view { display: grid; gap: 18px; }
+
+.qt-banner { border-radius: var(--radius); padding: 12px 14px; background: var(--soft); color: var(--muted); font-size: .92rem; }
+.qt-banner.is-bad { background: var(--bad-soft); color: var(--ink); }
+
+.qt-findings { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 18px; display: grid; gap: 12px; }
+.qt-findings h2 { margin: 0; font-family: var(--font-display); font-weight: 700; font-size: 1.5rem; line-height: 1.1; }
+.qt-find-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.qt-find { display: grid; grid-template-columns: 6px minmax(0, 1fr); gap: 12px; padding: 10px 12px 10px 0; border-radius: 8px; background: var(--soft); }
+.qt-find::before { content: ""; border-radius: 6px 0 0 6px; background: var(--muted); }
+.qt-find.is-bad::before { background: var(--bad); }
+.qt-find.is-warn::before { background: var(--warn); }
+.qt-find.is-info::before { background: var(--accent); }
+.qt-find-what { margin: 0; font-weight: 700; }
+.qt-find-do { margin: 3px 0 0; color: var(--muted); font-size: .92rem; }
+.qt-find-do b { color: var(--ink); font-weight: 700; }
+
+.qt-tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 10.5rem), 1fr)); gap: 12px; }
+.qt-tile { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 12px 14px; display: grid; gap: 4px; align-content: start; }
+.qt-tile-label { font-size: .78rem; color: var(--muted); font-weight: 700; letter-spacing: .02em; }
+.qt-tile-num { font-family: var(--font-display); font-weight: 600; font-size: 2.2rem; line-height: 1; font-variant-numeric: tabular-nums; }
+.qt-tile-num small { font-family: var(--font-body); font-size: .9rem; color: var(--muted); font-weight: 400; }
+.qt-tile-note { font-size: .8rem; color: var(--muted); }
+.qt-tile.is-bad .qt-tile-num { color: var(--bad); }
+
+.qt-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 25rem), 1fr)); gap: 14px; }
+.qt-card { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 18px; display: grid; gap: 10px; align-content: start; min-width: 0; }
+.qt-card h3 { margin: 0; font-family: var(--font-display); font-weight: 700; font-size: 1.3rem; line-height: 1.1; }
+.qt-note { margin: 0; color: var(--muted); font-size: .85rem; max-width: 70ch; }
+.qt-empty { color: var(--muted); font-size: .9rem; padding: 18px 0; }
+
+.qt-bars { display: grid; gap: 7px; position: relative; container-type: inline-size; }
+.qt-bar-row { display: grid; grid-template-columns: minmax(7.5rem, 13rem) minmax(3rem, 1fr) 6.5rem; gap: 10px; align-items: center; font-size: .86rem; }
+.qt-bar-row.has-cum { grid-template-columns: minmax(7.5rem, 13rem) minmax(3rem, 1fr) 3.5rem 3.6rem; }
+.qt-bar-name { min-width: 0; overflow-wrap: anywhere; }
+.qt-bar-track { height: 14px; background: var(--soft); border-radius: 4px; overflow: hidden; }
+.qt-bar-fill { display: block; height: 100%; border-radius: 4px; background: var(--bar); }
+.qt-bar-fill.is-key { background: var(--accent); }
+.qt-bar-val, .qt-bar-cum { font-variant-numeric: tabular-nums; white-space: nowrap; text-align: right; color: var(--muted); }
+.qt-bar-val b { color: var(--ink); }
+.qt-bar-head { font-size: .72rem; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); font-weight: 700; }
+@container (max-width: 27rem) {
+  .qt-bar-row, .qt-bar-row.has-cum { grid-template-columns: minmax(3rem, 1fr) auto auto; row-gap: 2px; }
+  .qt-bar-name { grid-column: 1 / -1; }
+}
+
+.qt-trend { width: 100%; height: auto; display: block; }
+.qt-trend text { fill: var(--muted); font-size: 12px; font-family: var(--font-body); }
+.qt-trend .qt-trend-val { fill: var(--ink); font-weight: 700; }
+
+.qt-margin { display: grid; container-type: inline-size; }
+.qt-m-row { display: grid; grid-template-columns: minmax(8rem, 14rem) minmax(0, 1fr) minmax(0, 1fr) 8.5rem; gap: 10px; align-items: center; padding-block: 8px; border-top: 1px solid var(--line); font-size: .86rem; }
+.qt-m-row:first-child { border-top: 0; }
+.qt-m-name { display: grid; min-width: 0; }
+.qt-m-name span { color: var(--muted); font-size: .8rem; }
+.qt-dots { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; min-width: 0; }
+.qt-dots-k { width: 2.8rem; color: var(--muted); font-size: .8rem; }
+.qt-dot { width: 12px; height: 12px; border-radius: 50%; border: 1.5px solid var(--bar); flex: none; }
+.qt-dot.is-on { background: var(--accent); border-color: var(--accent); }
+.qt-dot.is-over { background: var(--bad); border-color: var(--bad); }
+.qt-x { color: var(--bad); font-size: 13px; line-height: 1; margin-inline-start: 1px; }
+.qt-dots-txt { color: var(--muted); margin-inline-start: 4px; font-size: .8rem; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.qt-pill { justify-self: start; display: inline-block; border-radius: 999px; padding: 2px 9px; font-size: .78rem; font-weight: 700; white-space: nowrap; background: var(--soft); color: var(--muted); }
+.qt-pill.is-bad { background: var(--bad-soft); color: var(--bad); }
+.qt-pill.is-warn { background: var(--warn-soft); color: var(--warn); }
+.qt-pill.is-ok { background: var(--ok-soft); color: var(--ok); }
+.qt-legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: .8rem; color: var(--muted); }
+.qt-legend span { display: inline-flex; align-items: center; gap: 5px; }
+@container (max-width: 36rem) {
+  .qt-m-row { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .qt-m-name { grid-column: 1 / -1; }
+}
+
+.qt-table-wrap { overflow-x: auto; }
+.qt-table { width: 100%; border-collapse: collapse; font-size: .86rem; font-variant-numeric: tabular-nums; }
+.qt-table th { text-align: left; font-size: .72rem; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); font-weight: 700; padding: 6px 8px; border-bottom: 1px solid var(--line); white-space: nowrap; vertical-align: bottom; }
+.qt-table td { padding: 7px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.qt-table .num { text-align: right; }
+.qt-table td.is-missing { color: var(--warn); }
+.qt-table tbody tr:last-child td { border-bottom: 0; }
+.qt-table .nowrap { white-space: nowrap; }
+.qt-table-wide { min-width: 60rem; }
+.qt-table.is-compact th { white-space: normal; }
+.qt-row-main { cursor: pointer; }
+.qt-row-main:hover td { background: var(--soft); }
+.qt-row-detail td { background: var(--soft); }
+.qt-detail { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr)); gap: 12px 20px; padding: 6px 2px; }
+.qt-detail h4 { margin: 0 0 4px; font-size: .74rem; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); }
+.qt-detail ul { margin: 0; padding-left: 18px; }
+.qt-detail p { margin: 0; }
+.qt-detail-actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; grid-column: 1 / -1; }
+.qt-search { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; }
+.qt-search input { width: min(100%, 22rem); }
+
+.qt-form { display: grid; gap: 16px; }
+.qt-fieldset { border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); padding: 14px 16px 16px; margin: 0; display: grid; gap: 12px; min-width: 0; }
+.qt-fieldset legend { font-family: var(--font-display); font-weight: 700; font-size: 1.2rem; padding: 0 6px; }
+.qt-form-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 11rem), 1fr)); gap: 12px; }
+.qt-form-grid .qt-field input, .qt-form-grid .qt-field select { width: 100%; }
+.qt-req { color: var(--bad); }
+.qt-choice { display: flex; flex-wrap: wrap; gap: 8px 16px; }
+.qt-choice label { display: inline-flex; gap: 6px; align-items: center; cursor: pointer; }
+.qt-lines { display: grid; gap: 8px; }
+.qt-line { display: grid; grid-template-columns: minmax(10rem, 1.4fr) minmax(8rem, 1.2fr) minmax(6.5rem, .8fr) 5rem minmax(9rem, 1fr) auto; gap: 8px; align-items: end; padding: 10px; border-radius: 8px; background: var(--soft); }
+.qt-line.is-measure { grid-template-columns: minmax(10rem, 1.6fr) minmax(6rem, .8fr) minmax(8rem, 1fr) 5rem auto; }
+.qt-line .qt-field input, .qt-line .qt-field select { width: 100%; }
+.qt-line .qt-btn { align-self: end; }
+@media (max-width: 760px) {
+  .qt-line, .qt-line.is-measure { grid-template-columns: 1fr 1fr; }
+  .qt-line .qt-field.is-wide { grid-column: 1 / -1; }
+}
+.qt-checks { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 14rem), 1fr)); gap: 8px 16px; }
+.qt-checks label { display: flex; gap: 8px; align-items: flex-start; cursor: pointer; font-size: .92rem; }
+.qt-form-foot { display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: center; }
+.qt-msg { font-size: .92rem; }
+.qt-msg.is-bad { color: var(--bad); }
+.qt-msg.is-ok { color: var(--ok); }
+.qt-sum { font-size: .9rem; color: var(--muted); }
+.qt-sum b { color: var(--ink); }
+.qt-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+.qt-auto { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 18px; display: grid; gap: 12px; }
+.qt-auto h2 { margin: 0; font-family: var(--font-display); font-weight: 700; font-size: 1.5rem; line-height: 1.1; }
+.qt-steps { margin: 0; padding-left: 20px; display: grid; gap: 2px; font-size: .95rem; }
+.qt-auto-row { display: flex; flex-wrap: wrap; gap: 12px 14px; align-items: flex-end; }
+.qt-auto-row select { min-width: 12rem; }
+.qt-file input[type="file"] { max-width: 100%; padding: 6px; border: 1px dashed var(--accent); border-radius: 8px; background: var(--accent-soft); }
+.qt-auto-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.qt-auto-item { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 6px 12px; align-items: center; padding: 10px 12px; border-radius: 8px; background: var(--soft); }
+.qt-auto-file { font-weight: 700; overflow-wrap: anywhere; }
+.qt-auto-status { font-size: .9rem; color: var(--muted); }
+.qt-auto-status.is-ok { color: var(--ok); }
+.qt-auto-status.is-bad { color: var(--bad); }
+.qt-auto-status.is-warn { color: var(--warn); }
+.qt-auto-acts { display: flex; flex-wrap: wrap; gap: 6px; justify-content: flex-end; }
+.qt-auto-more { display: grid; gap: 2px; margin-top: 6px; font-size: .88rem; color: var(--ink); }
+.qt-auto-more:empty { display: none; }
+.qt-auto-more .is-warn { color: var(--warn); font-weight: 700; }
+.qt-manual { border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); padding: 12px 16px; }
+.qt-manual > summary { cursor: pointer; font-weight: 700; padding: 4px 0; }
+.qt-manual[open] > summary { margin-bottom: 12px; }
+.qt-check-pill { margin-left: 6px; }
+.qt-lock { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px 20px; display: grid; gap: 12px; width: min(100%, 30rem); margin: 12px auto; }
+.qt-lock h2 { margin: 0; font-family: var(--font-display); font-weight: 700; font-size: 1.6rem; line-height: 1.1; }
+.qt-lock p { margin: 0; }
+.qt-lock form { display: grid; gap: 12px; }
+.qt-lock input[type="password"] { width: 100%; }
+.qt-remember { display: inline-flex; gap: 8px; align-items: center; font-size: .92rem; cursor: pointer; }
+.qt-lock-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.qt-share { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 18px; display: grid; gap: 12px; }
+.qt-share h2, .qt-share h3 { margin: 0; font-family: var(--font-display); font-weight: 700; line-height: 1.1; }
+.qt-share h2 { font-size: 1.5rem; }
+.qt-share h3 { font-size: 1.25rem; }
+.qt-share p { margin: 0; }
+.qt-pw-form { display: flex; flex-wrap: wrap; gap: 12px 14px; align-items: flex-end; }
+.qt-pw-form input { width: 14rem; }
+.qt-pw-state { font-weight: 700; }
+.qt-pw-state.is-on { color: var(--ok); }
+.qt-pw-state.is-off { color: var(--warn); }
+.qt-share #web-url { width: min(100%, 30rem); }
+.qt-share a.qt-btn { text-decoration: none; color: inherit; display: inline-block; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .qt-bar-fill { transition: width .35s ease-out; }
+}
+
+</style>
+<style>
+/* Website: only the read-only views exist. */
+#tab-add, #view-add, #tab-share, #view-share, #lock-view { display: none !important; }
+.qt-site-foot { color: var(--muted); font-size: .8rem; text-align: center; margin: 0; }
+</style>
+</head>
+<body>
+<script>window.__siteErrors=[];window.addEventListener('error',function(e){window.__siteErrors.push(String(e.message||'error')+(e.lineno?' (line '+e.lineno+')':''));});window.addEventListener('unhandledrejection',function(e){var r=e.reason;window.__siteErrors.push('promise: '+String(r&&(r.message||r.code)||r));});</script>
+<div class="qt" id="site-gate">
+  <header class="qt-head">
+    <div>
+      <h1 class="qt-title">Saivana Quality Tracker</h1>
+      <p class="qt-sub">Dynamic Agencies inspection reports</p>
+    </div>
+  </header>
+  <section class="qt-lock" aria-labelledby="gate-title">
+    <h2 id="gate-title">This tracker is locked</h2>
+    <p>Type the password to open it. If you do not have it, ask the person who sent you the link.</p>
+    <form id="gate-form" novalidate>
+      <label class="qt-field"><span>Password</span><input type="password" id="gate-input" autocomplete="current-password"></label>
+      <label class="qt-remember"><input type="checkbox" id="gate-remember" checked> Remember on this device</label>
+      <div class="qt-lock-row">
+        <button class="qt-btn is-primary" type="submit" id="gate-go">Open the tracker</button>
+      </div>
+      <p class="qt-msg" id="gate-msg" role="status"></p>
+    </form>
+  </section>
+</div>
+<div class="qt" id="site-diag" hidden><div class="qt-banner is-bad" id="site-error" role="alert"></div></div>
+<div id="site-app" hidden>
+<div class="qt">
+  <header class="qt-head">
+    <div>
+      <h1 class="qt-title">Saivana Quality Tracker</h1>
+      <p class="qt-sub">Dynamic Agencies inspection reports. <span id="site-updated"></span></p>
+    </div>
+    <nav class="qt-tabs" id="tabs" role="tablist" aria-label="Views">
+      <button class="qt-tab" role="tab" id="tab-overview" data-view="overview" aria-selected="true">Overview</button>
+      <button class="qt-tab" role="tab" id="tab-reports" data-view="reports" aria-selected="false">All reports</button>
+      <button class="qt-tab" role="tab" id="tab-add" data-view="add" aria-selected="false">Add a report</button>
+      <button class="qt-tab" role="tab" id="tab-share" data-view="share" aria-selected="false" hidden>Share</button>
+    </nav>
+  </header>
+
+  <div class="qt-banner" id="status-banner">Loading reports…</div>
+  <div class="qt-banner is-bad" id="web-alert" role="alert" hidden></div>
+
+  <section class="qt-lock" id="lock-view" aria-labelledby="lock-title" hidden>
+    <h2 id="lock-title">This tracker is locked</h2>
+    <p>Type the password to open it. If you do not have it, ask the person who sent you the link.</p>
+    <form id="lock-form" novalidate>
+      <label class="qt-field"><span>Password</span><input type="password" id="lock-input" autocomplete="current-password"></label>
+      <label class="qt-remember"><input type="checkbox" id="lock-remember" checked> Remember on this device</label>
+      <div class="qt-lock-row">
+        <button class="qt-btn is-primary" type="submit" id="lock-go">Open the tracker</button>
+        <button class="qt-btn" type="button" id="lock-cancel" hidden>Back</button>
+      </div>
+      <p class="qt-msg" id="lock-msg" role="status"></p>
+    </form>
+  </section>
+
+  <section class="qt-filters" id="filters" aria-label="Filters">
+    <label class="qt-field"><span>Factory</span><select id="f-factory"><option value="">All factories</option></select></label>
+    <label class="qt-field"><span>Buyer</span><select id="f-buyer"><option value="">All buyers</option></select></label>
+    <label class="qt-field"><span>Inspection</span><select id="f-type"><option value="">All inspections</option></select></label>
+    <label class="qt-field"><span>Month</span><select id="f-month"><option value="">All months</option></select></label>
+    <button class="qt-btn" type="button" id="f-clear">Clear filters</button>
+    <span class="qt-filter-note" id="f-note"></span>
+  </section>
+
+  <!-- OVERVIEW -->
+  <main class="qt-view" id="view-overview" aria-labelledby="tab-overview">
+    <section class="qt-findings" aria-labelledby="find-title">
+      <h2 id="find-title">What is going wrong</h2>
+      <p class="qt-note">Worked out from the reports below, worst first. Each line says what to do about it.</p>
+      <ul class="qt-find-list" id="findings"></ul>
+    </section>
+
+    <section class="qt-tiles" id="tiles" aria-label="Headline figures"></section>
+
+    <div class="qt-grid">
+      <article class="qt-card">
+        <h3>Defects by type, biggest first</h3>
+        <p class="qt-note">Pieces with each defect. Dark bars are the few types that make up 80% of all defects: fix these first.</p>
+        <div class="qt-bars" id="chart-types"></div>
+      </article>
+      <article class="qt-card">
+        <h3>Who causes the defects</h3>
+        <p class="qt-note">Pieces by the department responsible. Until Dynamic writes the department, it is taken from the defect type.</p>
+        <div class="qt-bars" id="chart-depts"></div>
+      </article>
+    </div>
+
+    <article class="qt-card">
+      <h3>How close each lot came to failing</h3>
+      <p class="qt-note">Each circle is one defect the AQL allows for that sample. Filled circles are defects found. The cross is the next defect, which fails the lot. Lots where every piece was checked have no AQL limit and are not shown.</p>
+      <div class="qt-legend" aria-hidden="true">
+        <span><span class="qt-dot is-on"></span>Defect found</span>
+        <span><span class="qt-dot"></span>Still allowed</span>
+        <span><span class="qt-x">✕</span>Fails the lot</span>
+      </div>
+      <div class="qt-margin" id="chart-margin"></div>
+    </article>
+
+    <article class="qt-card">
+      <h3>Week by week</h3>
+      <p class="qt-note">Defects per 100 pieces checked in each week, with the number of lots. Lower is better.</p>
+      <div id="chart-trend"></div>
+    </article>
+
+    <div class="qt-grid">
+      <article class="qt-card">
+        <h3>Factories</h3>
+        <p class="qt-note">Worst defect rate first.</p>
+        <div class="qt-table-wrap" id="table-factories"></div>
+      </article>
+      <article class="qt-card">
+        <h3>Buyers</h3>
+        <p class="qt-note">Worst defect rate first.</p>
+        <div class="qt-table-wrap" id="table-buyers"></div>
+      </article>
+    </div>
+
+    <div class="qt-grid">
+      <article class="qt-card">
+        <h3>Measurements out of tolerance</h3>
+        <p class="qt-note" id="meas-note"></p>
+        <div class="qt-table-wrap" id="table-meas"></div>
+      </article>
+      <article class="qt-card">
+        <h3>What Dynamic leaves blank</h3>
+        <p class="qt-note">Missing details make reports hard to track. Ask Dynamic to fill these on every report.</p>
+        <div class="qt-bars" id="chart-gaps"></div>
+      </article>
+    </div>
+  </main>
+
+  <!-- ALL REPORTS -->
+  <section class="qt-view" id="view-reports" aria-labelledby="tab-reports" hidden>
+    <article class="qt-card">
+      <div class="qt-search">
+        <label class="qt-field"><span>Search</span><input type="search" id="r-search" placeholder="Style, buyer, PO or defect"></label>
+        <button class="qt-btn" type="button" id="r-export" hidden>Download for Excel (CSV)</button>
+      </div>
+      <p class="qt-note">Newest first. Click a line to see its defects and measurements.</p>
+      <div class="qt-table-wrap" id="table-reports"></div>
+      <p class="qt-msg" id="r-msg" role="status"></p>
+    </article>
+  </section>
+
+  <!-- ADD A REPORT -->
+  <section class="qt-view" id="view-add" aria-labelledby="tab-add" hidden>
+    <div class="qt-banner" id="add-readonly" hidden>You can see the reports but cannot add or change them. Ask the owner to share this tracker with you as a Contributor.</div>
+
+    <section class="qt-auto" id="auto-section" aria-labelledby="auto-title">
+      <h2 id="auto-title">Add reports automatically</h2>
+      <ol class="qt-steps">
+        <li>Pick the factory. If the factory on the report is right, leave it as it is.</li>
+        <li>Choose the report files Dynamic sent you, as PDFs or photos. You can choose up to 10 at once.</li>
+        <li>Click <b>Read and save</b>. Claude reads each report and saves it with all its details.</li>
+      </ol>
+      <div class="qt-auto-row">
+        <label class="qt-field"><span>Factory</span>
+          <select id="auto-factory"><option value="">As written on the report</option></select></label>
+        <label class="qt-field qt-file"><span>Report files</span><input type="file" id="auto-files" multiple accept="application/pdf,.pdf,image/jpeg,image/png,image/webp"></label>
+        <button class="qt-btn is-primary" type="button" id="auto-go" disabled>Read and save</button>
+        <button class="qt-btn" type="button" id="auto-stop" hidden>Stop</button>
+      </div>
+      <p class="qt-note">The first time, Claude asks your permission to read the reports. Choose Allow. If a saved report says "Check", open it and fix what was read wrong.</p>
+      <ul class="qt-auto-list" id="auto-list"></ul>
+    </section>
+    <div class="qt-banner" id="auto-off" hidden>Automatic reading is not available here. You can still type a report by hand below.</div>
+
+    <details class="qt-manual" id="manual-box">
+      <summary>Type a report by hand, or change a saved one</summary>
+    <form class="qt-form" id="report-form" novalidate>
+      <div class="qt-banner" id="edit-banner" hidden>You are changing a saved report. <button class="qt-btn is-quiet" type="button" id="cancel-edit">Stop changing and clear the form</button></div>
+
+      <fieldset class="qt-fieldset">
+        <legend>Report</legend>
+        <div class="qt-form-grid">
+          <label class="qt-field"><span>Date <b class="qt-req">*</b></span><input type="date" id="in-date" required></label>
+          <label class="qt-field"><span>Inspection <b class="qt-req">*</b></span>
+            <select id="in-type"><option>Final</option><option>Endline</option><option>Midline</option><option>Inline</option></select></label>
+          <label class="qt-field"><span>Factory <b class="qt-req">*</b></span><input type="text" id="in-factory" list="dl-factory" placeholder="73"></label>
+          <label class="qt-field"><span>Buyer <b class="qt-req">*</b></span><input type="text" id="in-buyer" list="dl-buyer"></label>
+          <label class="qt-field"><span>Style name <b class="qt-req">*</b></span><input type="text" id="in-style" list="dl-style"></label>
+          <label class="qt-field"><span>Style number</span><input type="text" id="in-styleno"></label>
+          <label class="qt-field"><span>PO number</span><input type="text" id="in-po"></label>
+          <label class="qt-field"><span>Colour</span><input type="text" id="in-colour"></label>
+        </div>
+      </fieldset>
+
+      <fieldset class="qt-fieldset">
+        <legend>Quantities</legend>
+        <div class="qt-form-grid">
+          <label class="qt-field"><span>Order quantity</span><input type="number" id="in-order" min="0" step="1" inputmode="numeric"></label>
+          <label class="qt-field"><span>Cut quantity</span><input type="number" id="in-cut" min="0" step="1" inputmode="numeric"></label>
+          <label class="qt-field"><span>Offered quantity</span><input type="number" id="in-offer" min="0" step="1" inputmode="numeric"></label>
+          <label class="qt-field"><span>Pieces checked <b class="qt-req">*</b></span><input type="number" id="in-checked" min="1" step="1" inputmode="numeric"></label>
+        </div>
+        <div class="qt-field">
+          <span class="qt-label">How Dynamic checked</span>
+          <div class="qt-choice">
+            <label><input type="radio" name="in-checktype" id="in-aql" value="AQL sample" checked> AQL sample</label>
+            <label><input type="radio" name="in-checktype" id="in-full" value="Every piece checked"> Every piece checked</label>
+          </div>
+        </div>
+        <div class="qt-form-grid" id="allowed-grid">
+          <label class="qt-field"><span>Major allowed</span><input type="number" id="in-major-allowed" min="0" step="1" inputmode="numeric"></label>
+          <label class="qt-field"><span>Minor allowed</span><input type="number" id="in-minor-allowed" min="0" step="1" inputmode="numeric"></label>
+        </div>
+      </fieldset>
+
+      <fieldset class="qt-fieldset">
+        <legend>Defects found</legend>
+        <p class="qt-note">One line for each defect on the report. The department fills in by itself from the defect type; change it if Dynamic wrote a different one.</p>
+        <div class="qt-lines" id="defect-lines"></div>
+        <div><button class="qt-btn" type="button" id="add-defect">Add a defect</button></div>
+        <p class="qt-sum" id="defect-sum"></p>
+      </fieldset>
+
+      <fieldset class="qt-fieldset">
+        <legend>Measurements out of tolerance</legend>
+        <div class="qt-lines" id="measure-lines"></div>
+        <div><button class="qt-btn" type="button" id="add-measure">Add a measurement</button></div>
+      </fieldset>
+
+      <fieldset class="qt-fieldset">
+        <legend>Result</legend>
+        <div class="qt-form-grid">
+          <label class="qt-field"><span>Result <b class="qt-req">*</b></span>
+            <select id="in-result"><option>Pass</option><option>Fail</option><option>Re-offer</option></select></label>
+          <label class="qt-field"><span>Hold for</span><input type="text" id="in-hold" placeholder="Size-wise ratio"></label>
+          <label class="qt-field"><span>TOP approved</span>
+            <select id="in-top"><option>Not written</option><option>Yes</option><option>No</option></select></label>
+        </div>
+        <label class="qt-field"><span>Dynamic's remarks</span><textarea id="in-remarks" rows="2"></textarea></label>
+      </fieldset>
+
+      <fieldset class="qt-fieldset">
+        <legend>Missing on the report</legend>
+        <p class="qt-note">Tick what Dynamic left blank or wrote wrong.</p>
+        <div class="qt-checks" id="gap-checks"></div>
+      </fieldset>
+
+      <div class="qt-form-foot">
+        <button class="qt-btn is-primary" type="submit" id="save-btn">Save report</button>
+        <button class="qt-btn" type="button" id="reset-btn">Clear the form</button>
+        <span class="qt-msg" id="form-msg" role="status"></span>
+      </div>
+    </form>
+    </details>
+    <datalist id="dl-factory"></datalist>
+    <datalist id="dl-buyer"></datalist>
+    <datalist id="dl-style"></datalist>
+  </section>
+
+  <!-- SHARE (only the owner sees this) -->
+  <section class="qt-view" id="view-share" aria-labelledby="tab-share" hidden>
+    <section class="qt-share" aria-labelledby="share-title">
+      <h2 id="share-title">Share this tracker</h2>
+      <ol class="qt-steps">
+        <li>Set a password below. The same password opens the website.</li>
+        <li>Send the website link and the password to anyone. They can open it on any phone or computer, without a Claude account.</li>
+      </ol>
+      <p class="qt-note">When you save a report here, the website shows it within about a minute. Reports are added only here, in the tracker. You own this tracker, so it never asks you for the password.</p>
+    </section>
+    <section class="qt-share" aria-labelledby="pw-title">
+      <h3 id="pw-title">Password</h3>
+      <p class="qt-pw-state" id="pw-state"></p>
+      <form class="qt-pw-form" id="pw-form" novalidate>
+        <label class="qt-field"><span>New password</span><input type="password" id="pw-new" autocomplete="new-password"></label>
+        <label class="qt-field"><span>Type it again</span><input type="password" id="pw-again" autocomplete="new-password"></label>
+        <button class="qt-btn is-primary" type="submit" id="pw-save">Save the password</button>
+      </form>
+      <p class="qt-note">Use at least 8 characters, with letters and numbers. A long password is what keeps the website's data safe.</p>
+      <p class="qt-msg" id="pw-msg" role="status"></p>
+    </section>
+    <section class="qt-share" aria-labelledby="web-title">
+      <h3 id="web-title">Website</h3>
+      <p id="web-state">The website is being set up. Its link will show here.</p>
+      <div class="qt-lock-row" id="web-row" hidden>
+        <input type="text" id="web-url" readonly aria-label="Website link">
+        <button class="qt-btn" type="button" id="web-copy">Copy link</button>
+        <a class="qt-btn" id="web-open" href="#" target="_blank" rel="noopener noreferrer">Open</a>
+      </div>
+      <div class="qt-lock-row" id="web-now-row" hidden>
+        <button class="qt-btn" type="button" id="web-now">Update the website now</button>
+      </div>
+      <p class="qt-msg" id="web-msg" role="status"></p>
+      <p class="qt-note" id="web-updated"></p>
+    </section>
+  </section>
+</div>
+</div>
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+  const KEY_STORE = 'qt-site-key-v1';
+  const REFRESH_MS = 60 * 1000;
+  
+  const hasGS = () => Boolean(window.google && window.google.script && window.google.script.run);
+  const callServer = (fn) => new Promise((resolve, reject) => { window.google.script.run.withSuccessHandler(resolve).withFailureHandler(reject)[fn](); });
+  const b64 = (buf) => { const u = new Uint8Array(buf); let s = ''; for (let i = 0; i < u.length; i += 1) s += String.fromCharCode(u[i]); return btoa(s); };
+  const unb64 = (s) => Uint8Array.from(atob(s), (ch) => ch.charCodeAt(0));
+  const when = (iso) => {
+    const d = new Date(iso);
+    return Number.isNaN(d.getTime()) ? '' : new Intl.DateTimeFormat('en-IN', {day: 'numeric', month: 'short', year: 'numeric', hour: 'numeric', minute: '2-digit'}).format(d);
+  };
+  const state = {bundle: null, key: null, reports: [], booted: false, subs: [], fileId: null, busy: false};
+
+  
+  const snapshot = () => ({docs: state.reports.map((r) => ({id: String(r.id), exists: true, data: () => { const c = JSON.parse(JSON.stringify(r)); delete c.id; return c; }}))});
+  const refuse = async () => { throw {code: 'invalid_argument', message: 'This website is read-only.'}; };
+  const noDoc = () => ({get: async () => ({exists: false, data: () => undefined}), set: refuse, update: refuse, delete: refuse});
+  const db = {
+    collection: (name) => ({
+      limit: () => ({onSnapshot: (cb) => { if (name === 'reports') { state.subs.push(cb); setTimeout(() => cb(snapshot()), 0); } return () => {}; }}),
+      add: refuse,
+      doc: noDoc
+    }),
+    doc: noDoc
+  };
+  const user = {id: async () => null, can: async () => false, isOwner: async () => false, canEdit: async () => false};
+  const downloads = {save: async ({filename, data}) => {
+    const blob = data instanceof Blob ? data : new Blob([data], {type: 'text/csv;charset=utf-8'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = filename;
+    document.body.append(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 10000);
+    return {status: 'saved'};
+  }};
+  const caps = () => (hasGS() ? {db, user} : {db, user, downloads});
+  const push = () => { const s = snapshot(); for (const cb of state.subs) cb(s); };
+  
+  let unlock = null;
+  const unlocked = new Promise((resolve) => { unlock = resolve; });
+  window.claude = {use: (name) => unlocked.then(() => caps()[name] || null)};
+  const checkStarted = () => {
+    const banner = $('status-banner');
+    const findings = $('findings');
+    const stuck = !banner || !findings || (!banner.hidden && /Loading/.test(banner.textContent)) || !findings.children.length;
+    if (!stuck) return;
+    const errs = (window.__siteErrors || []).slice(0, 6);
+    $('site-diag').hidden = false;
+    const missing = [...new Set(window.__siteMissing || [])].slice(0, 8);
+    $('site-error').textContent = `The reports could not be shown. Please send a screenshot of this message to Claude. Parts loaded: ${window.__trackerParts || 0} of ${4}. ${errs.length ? `Errors: ${errs.join(' | ')}` : 'No error message.'}${missing.length ? ` Missing: ${missing.join(', ')}` : ''}`;
+  };
+
+  
+  const fixHash = () => { if (location.hash === '#add' || location.hash === '#share') history.replaceState(null, '', '#overview'); };
+  fixHash();
+  window.addEventListener('hashchange', fixHash);
+
+  const gateMsg = (text, cls) => { const m = $('gate-msg'); m.className = `qt-msg${cls ? ` ${cls}` : ''}`; m.textContent = text; };
+  const showGate = (text, cls) => {
+    $('site-app').hidden = true;
+    $('site-gate').hidden = false;
+    gateMsg(text || '', cls);
+    $('gate-input').value = '';
+    setTimeout(() => $('gate-input').focus(), 0);
+  };
+  const DATA_API = 'https:\/\/script.google.com/macros/s/AKfycbwO3FpIpflmpbIZRKcID2DBzMMT4wEUwe4gYsRN-Js32Pg1j2Eo-7ZVfDTPq08vYDBv/exec';
+  const apiGet = async (what) => {
+    const res = await fetch(`${DATA_API}?api=${what}&t=${Date.now()}`, {credentials: 'omit', cache: 'no-store', redirect: 'follow'});
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return res.text();
+  };
+  const fetchInfo = async () => {
+    if (hasGS()) return callServer('getInfo');
+    if (DATA_API) {
+      const t = await apiGet('info');
+      try { return JSON.parse(t); } catch (e) { throw new Error('not ready'); }
+    }
+    return null;
+  };
+  const fetchBundle = async () => {
+    let text = '';
+    if (hasGS()) text = await callServer('getData');
+    else if (DATA_API) text = await apiGet('data');
+    else {
+      const res = await fetch(`data.json?t=${Date.now()}`, {cache: 'no-store'});
+      if (!res.ok) throw new Error(res.status === 404 ? 'not ready' : `HTTP ${res.status}`);
+      text = await res.text();
+    }
+    if (!text) throw new Error('not ready');
+    const b = JSON.parse(text);
+    if (!b || !b.wrap || !b.data) throw new Error('not ready');
+    return b;
+  };
+  const unwrapKey = async (password, wrap) => {
+    const base = await crypto.subtle.importKey('raw', new TextEncoder().encode(password), 'PBKDF2', false, ['deriveKey']);
+    const wk = await crypto.subtle.deriveKey({name: 'PBKDF2', salt: unb64(wrap.salt), iterations: wrap.iterations, hash: 'SHA-256'}, base, {name: 'AES-GCM', length: 256}, false, ['decrypt']);
+    return new Uint8Array(await crypto.subtle.decrypt({name: 'AES-GCM', iv: unb64(wrap.iv)}, wk, unb64(wrap.ct)));
+  };
+  const dataKey = (raw) => crypto.subtle.importKey('raw', raw, {name: 'AES-GCM'}, false, ['decrypt']);
+  const openData = async (key, data) => {
+    const pt = await crypto.subtle.decrypt({name: 'AES-GCM', iv: unb64(data.iv)}, key, unb64(data.ct));
+    const payload = JSON.parse(new TextDecoder().decode(pt));
+    return Array.isArray(payload.reports) ? payload.reports : [];
+  };
+  const remembered = () => { try { return JSON.parse(localStorage.getItem(KEY_STORE) || 'null'); } catch (e) { return null; } };
+  const remember = (wrapId, raw) => { try { localStorage.setItem(KEY_STORE, JSON.stringify({w: wrapId, k: b64(raw)})); } catch (e) {  } };
+  const forget = () => { try { localStorage.removeItem(KEY_STORE); } catch (e) {  } };
+
+  const showApp = () => {
+    $('site-gate').hidden = true;
+    $('site-app').hidden = false;
+    $('site-updated').textContent = state.bundle.updated_at ? `Last updated ${when(state.bundle.updated_at)}.` : '';
+    if (!state.booted) {
+      state.booted = true;
+      unlock();
+      setTimeout(checkStarted, 6000);
+    } else push();
+  };
+
+  const refresh = async () => {
+    if (!state.key || document.hidden || state.busy) return;
+    state.busy = true;
+    try {
+      let info = null;
+      if (hasGS() || DATA_API) {
+        info = await fetchInfo();
+        if (!info || info.id === state.fileId) return;
+      }
+      const b = await fetchBundle();
+      if (info) state.fileId = info.id;
+      if (b.wrap.id !== state.bundle.wrap.id) {
+        state.key = null; state.bundle = b; forget();
+        showGate('The password was changed. Type the new password.', 'is-bad');
+        return;
+      }
+      if (b.data.iv === state.bundle.data.iv) return;
+      state.reports = await openData(state.key, b.data);
+      state.bundle = b;
+      showApp();
+    } catch (e) {
+      
+    } finally {
+      state.busy = false;
+    }
+  };
+
+  $('gate-form').addEventListener('submit', async (ev) => {
+    ev.preventDefault();
+    const pw = $('gate-input').value;
+    if (!state.bundle) { gateMsg('The tracker is still loading. Try again in a moment.', 'is-bad'); return; }
+    if (!pw) { gateMsg('Type the password first.', 'is-bad'); $('gate-input').focus(); return; }
+    $('gate-go').disabled = true;
+    gateMsg('Checking\u2026');
+    try {
+      let raw = null;
+      try { raw = await unwrapKey(pw, state.bundle.wrap); } catch (e) { raw = null; }
+      if (!raw) {
+        try {
+          const fresh = await fetchBundle();
+          if (fresh.wrap.id !== state.bundle.wrap.id) { state.bundle = fresh; raw = await unwrapKey(pw, fresh.wrap); }
+        } catch (e) { raw = null; }
+      }
+      if (!raw) { gateMsg('That password is not right. Try again.', 'is-bad'); $('gate-input').select(); return; }
+      const key = await dataKey(raw);
+      state.reports = await openData(key, state.bundle.data);
+      state.key = key;
+      if ($('gate-remember').checked) remember(state.bundle.wrap.id, raw); else forget();
+      gateMsg('');
+      showApp();
+    } catch (e) {
+      gateMsg('The tracker could not be opened in this browser. Try Chrome, or update your browser.', 'is-bad');
+    } finally {
+      $('gate-go').disabled = false;
+    }
+  });
+
+  const start = async () => {
+    if (!window.crypto || !crypto.subtle) { gateMsg('This browser cannot open the tracker. Try Chrome, or update your browser.', 'is-bad'); return; }
+    gateMsg('Loading\u2026');
+    if (/googleusercontent\.com$/.test(location.hostname)) {
+      for (let i = 0; i < 30 && !hasGS(); i += 1) await new Promise((r) => setTimeout(r, 100));
+    }
+    try {
+      const info = await fetchInfo();
+      state.bundle = await fetchBundle();
+      if (info) state.fileId = info.id;
+    } catch (e) {
+      gateMsg(e && e.message === 'not ready' ? 'The tracker is not ready yet. Please try again later.' : 'The tracker could not be loaded. Check your internet and reload the page.', 'is-bad');
+      return;
+    }
+    gateMsg('');
+    const saved = remembered();
+    if (saved && saved.w === state.bundle.wrap.id) {
+      try {
+        const key = await dataKey(unb64(saved.k));
+        state.reports = await openData(key, state.bundle.data);
+        state.key = key;
+        showApp();
+      } catch (e) { forget(); }
+    }
+    if (!state.key) setTimeout(() => $('gate-input').focus(), 0);
+    setInterval(refresh, REFRESH_MS);
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) refresh(); });
+  };
+  start();
+})();
+</script>
+<script>
+
+  
+  const DEFECT_TYPES = [
+    ['Uncut thread', 'Finishing'], ['Uncut extra fabric', 'Finishing'], ['Poor pressing', 'Finishing'],
+    ['Soils/stains', 'Handling (stains)'], ['Damage', 'Not clear'],
+    ['Open seam', 'Stitching'], ['Broken seam', 'Stitching'], ['Skip/broken/run-off stitches', 'Stitching'],
+    ['Uneven/destroyed stitches', 'Stitching'], ['Pleat/pucker/fullness', 'Stitching'], ['Raw/frayed edges', 'Stitching'],
+    ['Hole/needle marks', 'Stitching'], ['Joint mismatch', 'Stitching'], ['Neck shape', 'Stitching'], ['Balancing', 'Stitching'],
+    ['Sticker stitched in', 'Stitching'], ['Wrong size label', 'Stitching'],
+    ['Fabric flaw', 'Fabric'], ['Yarn pull/ruptured', 'Fabric'], ['Mismatch shade', 'Cutting'],
+    ['Embroidery defects', 'Embroidery'], ['Lace damage', 'Not clear'], ['Other', 'Not clear']
+  ];
+  const DEPT_OF = Object.fromEntries(DEFECT_TYPES);
+  const DEPARTMENTS = ['Stitching', 'Finishing', 'Handling (stains)', 'Cutting', 'Fabric', 'Embroidery', 'Washing', 'Packing', 'Not clear'];
+  const SEVERITIES = ['Major', 'Minor', 'Not graded'];
+  const GAPS = [
+    ['report_no', 'Report number missing'], ['cut_qty', 'Cut quantity missing'], ['po', 'PO number missing'],
+    ['no_department', 'Department not written'], ['factory_wrong', 'Factory written wrong'], ['remarks_only', 'Defects only in remarks']
+  ];
+  const GAP_LABEL = Object.fromEntries(GAPS);
+  const ACTIONS = {
+    'Uncut thread': 'Add a thread-cutting check at the end of finishing, and have the last operator on each line trim threads.',
+    'Uncut extra fabric': 'Trim extra fabric before the finishing check.',
+    'Poor pressing': 'Check pressing and iron temperature in finishing.',
+    'Soils/stains': 'Keep tables and trolleys clean, cover finished pieces, and check handling in finishing and packing.',
+    'Damage': 'Find where pieces get damaged (trimming, handling or machines) and ask Dynamic to write the cause.',
+    'Open seam': 'Line supervisors check seams at the end of the line; check machine tension and needles.',
+    'Broken seam': 'Line supervisors check seams at the end of the line; check machine tension and needles.',
+    'Skip/broken/run-off stitches': 'Check machine timing, needles and thread tension on the operations involved.',
+    'Uneven/destroyed stitches': 'Check machine settings and operator skill on the operations involved.',
+    'Pleat/pucker/fullness': 'Check feeding and tension on the operation; supervisor checks at the end of the line.',
+    'Sticker stitched in': 'Remove layer stickers before panels reach the machines.',
+    'Wrong size label': 'Check labels against the size at the labelling operation.',
+    'Fabric flaw': 'Check fabric at inspection and cutting, and raise it with the fabric supplier.',
+    'Yarn pull/ruptured': 'Check fabric at inspection and cutting, and raise it with the fabric supplier.',
+    'Mismatch shade': 'Check shade sorting and bundling at cutting.',
+    'Embroidery defects': 'Check embroidery panels before they go to stitching.'
+  };
+  const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+  
+  const $ = (id) => document.getElementById(id) || (() => { const d = document.createElement('input'); d.type = 'file'; (window.__siteMissing = window.__siteMissing || []).push(id); return d; })();
+  const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text !== undefined && text !== null) e.textContent = text; return e; };
+  const num = (v) => (v === null || v === undefined || v === '' || Number.isNaN(Number(v))) ? null : Number(v);
+  const sum = (arr, f) => arr.reduce((s, x) => s + (num(f(x)) || 0), 0);
+  const nf = new Intl.NumberFormat('en-IN');
+  const fmt = (v) => (v === null || v === undefined) ? '' : nf.format(v);
+  const fmt1 = (v) => (v === null || v === undefined || !Number.isFinite(v)) ? '\u2013' : v.toFixed(1);
+  const pct = (a, b) => b ? Math.round(a / b * 100) : 0;
+  const day = (s) => { if (!s) return ''; const [y, m, d] = String(s).slice(0, 10).split('-'); return `${Number(d)} ${MONTHS[Number(m) - 1]} ${y}`; };
+  const monthKey = (s) => String(s || '').slice(0, 7);
+  const monthLabel = (k) => { const [y, m] = k.split('-'); return `${MONTHS[Number(m) - 1]} ${y}`; };
+  const weekStart = (s) => {
+    const d = new Date(`${String(s).slice(0, 10)}T00:00:00Z`);
+    if (Number.isNaN(d.getTime())) return '';
+    d.setUTCDate(d.getUTCDate() - ((d.getUTCDay() + 6) % 7));
+    return d.toISOString().slice(0, 10);
+  };
+  const plural = (n, one, many) => `${fmt(n)} ${n === 1 ? one : many}`;
+
+  const defectsOf = (r) => (Array.isArray(r.defects) ? r.defects : []).map((d) => ({...d, pieces: num(d.pieces) || 0}));
+  const majorOf = (r) => sum(defectsOf(r).filter((d) => d.severity === 'Major'), (d) => d.pieces);
+  const minorOf = (r) => sum(defectsOf(r).filter((d) => d.severity === 'Minor'), (d) => d.pieces);
+  const totalOf = (r) => sum(defectsOf(r), (d) => d.pieces);
+  const isFull = (r) => r.check_type === 'Every piece checked';
+  const isSampled = (r) => !isFull(r) && (num(r.major_allowed) !== null || num(r.minor_allowed) !== null);
+  const roomOf = (r) => {
+    const rooms = [];
+    if (num(r.major_allowed) !== null) rooms.push(num(r.major_allowed) - majorOf(r));
+    if (num(r.minor_allowed) !== null) rooms.push(num(r.minor_allowed) - minorOf(r));
+    return rooms.length ? Math.min(...rooms) : null;
+  };
+  const ofAllowed = (found, allowed) => `${found} of ${allowed === null || allowed === undefined ? '?' : allowed}`;
+  const topDefectOf = (r) => {
+    const m = new Map();
+    for (const d of defectsOf(r)) m.set(d.type, (m.get(d.type) || 0) + d.pieces);
+    let best = ''; let n = 0;
+    for (const [k, v] of m) if (v > n) { best = k; n = v; }
+    return best;
+  };
+  const measureArea = (p) => {
+    const s = String(p || '').toLowerCase();
+    if (s.includes('armhole')) return 'Armhole';
+    if (s.includes('sleeve') || s.includes('bicep')) return 'Sleeve';
+    if (s.includes('chest') || s.includes('bust')) return 'Chest';
+    if (s.includes('hip')) return 'Hip';
+    if (s.includes('waist')) return 'Waist';
+    if (s.includes('length')) return 'Length';
+    if (s.includes('sweep') || s.includes('hem')) return 'Sweep and hem';
+    if (s.includes('neck') || s.includes('shoulder')) return 'Neck and shoulder';
+    return 'Other';
+  };
+
+  
+  const state = {
+    reports: [], loaded: false, failed: false,
+    filters: {factory: '', buyer: '', type: '', month: ''},
+    search: '', expanded: new Set(), confirmDelete: null,
+    db: null, myId: null, canWrite: null, readOnly: false, editingId: null, downloads: null,
+    sample: null, imgLimits: null, autoBusy: false, autoCtl: null, autoStop: false,
+    isOwner: false, lock: null, locked: false, lockPreview: false, listening: false,
+    website: null, site: null, mcp: null
+  };
+
+  
+  const VIEWS = ['overview', 'reports', 'add', 'share'];
+  const showView = () => {
+    let v = VIEWS.includes(location.hash.slice(1)) ? location.hash.slice(1) : 'overview';
+    if (v === 'share' && !state.isOwner) v = 'overview';
+    const locked = state.locked;
+    for (const name of VIEWS) {
+      $(`view-${name}`).hidden = locked || name !== v;
+      $(`tab-${name}`).setAttribute('aria-selected', String(name === v));
+    }
+    $('tab-share').hidden = !state.isOwner;
+    $('tabs').hidden = locked;
+    $('lock-view').hidden = !locked;
+    $('filters').hidden = locked || v === 'add' || v === 'share';
+  };
+  for (const b of document.querySelectorAll('.qt-tab')) b.addEventListener('click', () => { location.hash = b.dataset.view; });
+  window.addEventListener('hashchange', showView);
+  showView();
+
+  
+  const filtered = () => state.reports.filter((r) =>
+    (!state.filters.factory || r.factory === state.filters.factory) &&
+    (!state.filters.buyer || r.buyer === state.filters.buyer) &&
+    (!state.filters.type || (r.inspection || 'Final') === state.filters.type) &&
+    (!state.filters.month || monthKey(r.date) === state.filters.month));
+
+  const fillSelect = (sel, values, label, current) => {
+    const keep = current && values.some((v) => v[0] === current) ? current : '';
+    sel.replaceChildren(new Option(label, ''), ...values.map(([v, t]) => new Option(t, v)));
+    sel.value = keep;
+    return keep;
+  };
+  const renderFilters = () => {
+    const uniq = (f) => [...new Set(state.reports.map(f).filter(Boolean))].sort((a, b) => String(a).localeCompare(String(b)));
+    state.filters.factory = fillSelect($('f-factory'), uniq((r) => r.factory).map((v) => [v, v]), 'All factories', state.filters.factory);
+    state.filters.buyer = fillSelect($('f-buyer'), uniq((r) => r.buyer).map((v) => [v, v]), 'All buyers', state.filters.buyer);
+    state.filters.type = fillSelect($('f-type'), uniq((r) => r.inspection || 'Final').map((v) => [v, v]), 'All inspections', state.filters.type);
+    state.filters.month = fillSelect($('f-month'), uniq((r) => monthKey(r.date)).reverse().map((v) => [v, monthLabel(v)]), 'All months', state.filters.month);
+    const n = filtered().length;
+    $('f-note').textContent = state.loaded ? `Showing ${plural(n, 'report', 'reports')} of ${fmt(state.reports.length)}` : '';
+  };
+  for (const [id, key] of [['f-factory', 'factory'], ['f-buyer', 'buyer'], ['f-type', 'type'], ['f-month', 'month']]) {
+    $(id).addEventListener('change', () => { state.filters[key] = $(id).value; renderAll(); });
+  }
+  $('f-clear').addEventListener('click', () => { state.filters = {factory: '', buyer: '', type: '', month: ''}; renderAll(); });
+
+  
+  const groupBy = (items, keyOf, valOf) => {
+    const m = new Map();
+    for (const it of items) {
+      const k = keyOf(it) || 'Not written';
+      const g = m.get(k) || {key: k, value: 0, reports: new Set()};
+      g.value += valOf(it);
+      if (it.reportId) g.reports.add(it.reportId);
+      m.set(k, g);
+    }
+    return [...m.values()].sort((a, b) => b.value - a.value || a.key.localeCompare(b.key));
+  };
+  const analyse = (rs) => {
+    const lines = rs.flatMap((r) => defectsOf(r).map((d) => ({...d, reportId: r.id})));
+    const lots = rs.length;
+    const checked = sum(rs, (r) => r.checked);
+    const defects = sum(lines, (d) => d.pieces);
+    const sampled = rs.filter(isSampled).map((r) => ({r, major: majorOf(r), minor: minorOf(r), room: roomOf(r)}));
+    const byType = groupBy(lines, (d) => d.type, (d) => d.pieces);
+    const byDept = groupBy(lines, (d) => d.department, (d) => d.pieces);
+    const measLines = rs.flatMap((r) => (Array.isArray(r.measurements) ? r.measurements : []).map((m) => ({...m, r})));
+    const measReports = new Set(measLines.map((m) => m.r.id));
+    const byArea = groupBy(measLines.map((m) => ({...m, reportId: m.r.id})), (m) => measureArea(m.point), () => 1);
+    const gapCounts = GAPS.map(([k, label]) => ({key: k, label, value: rs.filter((r) => Array.isArray(r.gaps) && r.gaps.includes(k)).length})).filter((g) => g.value > 0).sort((a, b) => b.value - a.value);
+    const clean = rs.filter((r) => !defectsOf(r).some((d) => (d.department === 'Stitching' || d.department === 'Finishing') && d.pieces > 0));
+    const groupRows = (keyOf) => {
+      const m = new Map();
+      for (const r of rs) {
+        const k = keyOf(r) || 'Not written';
+        const g = m.get(k) || {key: k, rs: []};
+        g.rs.push(r);
+        m.set(k, g);
+      }
+      return [...m.values()].map((g) => {
+        const c = sum(g.rs, (r) => r.checked);
+        const d = sum(g.rs, (r) => totalOf(r));
+        const types = groupBy(g.rs.flatMap((r) => defectsOf(r)), (x) => x.type, (x) => x.pieces);
+        return {
+          key: g.key, lots: g.rs.length, passed: g.rs.filter((r) => r.result === 'Pass').length, checked: c, defects: d,
+          per100: c ? d / c * 100 : null,
+          atLimit: g.rs.filter((r) => isSampled(r) && roomOf(r) <= 0).length,
+          meas: g.rs.filter((r) => Array.isArray(r.measurements) && r.measurements.length).length,
+          top: types.length ? types[0].key : '\u2013'
+        };
+      }).sort((a, b) => (b.per100 ?? -1) - (a.per100 ?? -1) || a.key.localeCompare(b.key));
+    };
+    const weeks = new Map();
+    for (const r of rs) {
+      const w = weekStart(r.date);
+      if (!w) continue;
+      const g = weeks.get(w) || {week: w, lots: 0, checked: 0, defects: 0};
+      g.lots += 1; g.checked += num(r.checked) || 0; g.defects += totalOf(r);
+      weeks.set(w, g);
+    }
+    return {
+      rs, lines, lots, checked, defects,
+      per100: checked ? defects / checked * 100 : null,
+      passed: rs.filter((r) => r.result === 'Pass').length,
+      failed: rs.filter((r) => r.result === 'Fail').length,
+      reoffer: rs.filter((r) => r.result === 'Re-offer').length,
+      sampled, atLimit: sampled.filter((x) => x.room === 0), over: sampled.filter((x) => x.room < 0), oneBelow: sampled.filter((x) => x.room === 1),
+      byType, byDept, measLines, measReports, byArea, gapCounts, clean,
+      byFactory: groupRows((r) => r.factory), byBuyer: groupRows((r) => r.buyer),
+      weeks: [...weeks.values()].sort((a, b) => a.week.localeCompare(b.week))
+    };
+  };
+
+  
+  const findings = (a) => {
+    const out = [];
+    const add = (level, what, todo) => out.push({level, what, todo});
+    if (!a.lots) return out;
+    const failedLots = a.rs.filter((r) => r.result === 'Fail' || r.result === 'Re-offer');
+    if (failedLots.length) {
+      add('bad', `${plural(failedLots.length, 'lot', 'lots')} of ${fmt(a.lots)} failed or had to be offered again.`,
+        `Fix the main defect of these lots before re-offer: ${failedLots.slice(0, 3).map((r) => r.style).join(', ')}.`);
+    }
+    if (a.atLimit.length) {
+      add('bad', `${plural(a.atLimit.length, 'lot was', 'lots were')} right at the AQL limit: one more defect and ${a.atLimit.length === 1 ? 'it' : 'they'} would have failed.`,
+        `Check these styles piece by piece in finishing before the next offer: ${a.atLimit.slice(0, 3).map((x) => x.r.style).join(', ')}.`);
+    }
+    if (a.byType.length && a.defects) {
+      const t = a.byType[0];
+      add('warn', `${t.key} is the biggest problem: ${plural(t.value, 'piece', 'pieces')}, ${pct(t.value, a.defects)}% of all defects, found in ${fmt(t.reports.size)} of ${plural(a.lots, 'report', 'reports')}.`,
+        ACTIONS[t.key] || 'Find the cause with the department and add a check before Dynamic comes.');
+    }
+    if (a.byDept.length && a.defects) {
+      const d = a.byDept[0];
+      add('warn', `${d.key} causes ${pct(d.value, a.defects)}% of all defects (${fmt(d.value)} of ${fmt(a.defects)} pieces).`,
+        d.key === 'Not clear' ? 'Ask Dynamic to write the responsible department for every defect.' : `The ${d.key.replace(' (stains)', '').toLowerCase()} in-charge should review these defects with the team this week.`);
+    }
+    if (a.measReports.size) {
+      const area = a.byArea[0];
+      add(a.measReports.size * 2 >= a.lots ? 'warn' : 'info',
+        `${fmt(a.measReports.size)} of ${plural(a.lots, 'report', 'reports')} had a measurement outside the buyer's tolerance${area && area.value > 1 ? `, most often ${area.key.toLowerCase()}` : ''}.`,
+        'Measure a size set from every line before final inspection, and check the pattern if the same point keeps failing.');
+    }
+    if (a.byBuyer.length > 1 && a.byBuyer[0].per100 !== null) {
+      const b = a.byBuyer[0];
+      add('info', `${b.key} has the highest defect rate: ${fmt1(b.per100)} per 100 pieces, against ${fmt1(a.per100)} overall.`,
+        `Review the running styles of ${b.key} with the line supervisors.`);
+    }
+    if (a.lots && a.clean.length * 2 < a.lots) {
+      add('info', a.clean.length === 0
+        ? `None of the ${plural(a.lots, 'report', 'reports')} was free of stitching and finishing defects.`
+        : `Only ${fmt(a.clean.length)} of ${plural(a.lots, 'report', 'reports')} had no stitching or finishing defect at all.`,
+        'This is the "clean checks" number for the incentive plan. Raise it by stopping mistakes on the line and in finishing.');
+    }
+    const toCheck = a.rs.filter((r) => r.needs_check);
+    if (toCheck.length) {
+      add('warn', `${plural(toCheck.length, 'report was', 'reports were')} read automatically and ${toCheck.length === 1 ? 'needs' : 'need'} a quick check.`,
+        'They are marked Check in All reports until someone confirms them.');
+    }
+    if (a.gapCounts.length) {
+      const g = a.gapCounts[0];
+      add('info', `${g.label} on ${fmt(g.value)} of ${plural(a.lots, 'report', 'reports')}.`, 'Ask Dynamic to fill every box on the report, including the department for each defect.');
+    }
+    const rank = {bad: 0, warn: 1, info: 2};
+    return out.sort((x, y) => rank[x.level] - rank[y.level]);
+  };
+
+  
+  const empty = (box, text) => box.replaceChildren(el('p', 'qt-empty', text));
+
+  const renderFindings = (a) => {
+    const box = $('findings');
+    const list = findings(a);
+    if (!list.length) { box.replaceChildren(el('li', 'qt-empty', a.lots ? 'Nothing stands out in these reports.' : 'No reports match these filters.')); return; }
+    box.replaceChildren(...list.map((f) => {
+      const li = el('li', `qt-find is-${f.level}`);
+      const body = el('div');
+      body.append(el('p', 'qt-find-what', f.what));
+      const todo = el('p', 'qt-find-do');
+      todo.append(el('b', '', 'What to do: '), document.createTextNode(f.todo));
+      body.append(todo);
+      li.append(body);
+      return li;
+    }));
+  };
+
+  const tile = (label, main, small, note, bad) => {
+    const t = el('div', `qt-tile${bad ? ' is-bad' : ''}`);
+    t.append(el('span', 'qt-tile-label', label));
+    const n = el('span', 'qt-tile-num', main);
+    if (small) { n.append(' '); n.append(el('small', '', small)); }
+    t.append(n);
+    if (note) t.append(el('span', 'qt-tile-note', note));
+    return t;
+  };
+  const renderTiles = (a) => {
+    $('tiles').replaceChildren(
+      tile('Lots passed', fmt(a.passed), `of ${fmt(a.lots)}`, a.lots ? `${pct(a.passed, a.lots)}% passed` : ''),
+      tile('Defects per 100 pieces', fmt1(a.per100), '', `${fmt(a.defects)} defects in ${fmt(a.checked)} pieces checked`),
+      tile('Lots at the AQL limit', fmt(a.atLimit.length + a.over.length), `of ${fmt(a.sampled.length)}`, 'One more defect fails them', a.atLimit.length + a.over.length > 0),
+      tile('Major defects', fmt(sum(a.lines.filter((d) => d.severity === 'Major'), (d) => d.pieces)), `of ${fmt(a.defects)}`, 'Major defects fail a lot sooner'),
+      tile('Measurement problems', fmt(a.measReports.size), `of ${fmt(a.lots)}`, 'Reports with a size out of tolerance'),
+      tile('Clean checks', fmt(a.clean.length), `of ${fmt(a.lots)}`, 'No stitching or finishing defect')
+    );
+  };
+
+  const bars = (box, rows, opts) => {
+    if (!rows.length) { empty(box, opts.emptyText); return; }
+    const max = Math.max(1, ...rows.map((r) => r.value));
+    const total = rows.reduce((s, r) => s + r.value, 0);
+    let cum = 0;
+    const out = [];
+    if (opts.cumulative) {
+      const head = el('div', 'qt-bar-row has-cum qt-bar-head');
+      head.append(el('span', '', 'Defect'), el('span', '', ''), el('span', 'qt-bar-val', 'Pieces'), el('span', 'qt-bar-cum', 'Running'));
+      out.push(head);
+    }
+    let keyDone = false;
+    for (const r of rows) {
+      const before = cum;
+      cum += r.value;
+      const isKey = opts.cumulative ? !keyDone : r === rows[0];
+      if (opts.cumulative && before / total < 0.8 && cum / total >= 0.8) keyDone = true;
+      const row = el('div', `qt-bar-row${opts.cumulative ? ' has-cum' : ''}`);
+      const name = el('span', 'qt-bar-name', r.key);
+      const track = el('span', 'qt-bar-track');
+      const fill = el('span', `qt-bar-fill${isKey ? ' is-key' : ''}`);
+      fill.style.width = `${r.value / max * 100}%`;
+      track.append(fill);
+      const val = el('span', 'qt-bar-val');
+      val.append(el('b', '', fmt(r.value)));
+      if (opts.suffix) val.append(` ${opts.suffix(r, total)}`);
+      row.append(name, track, val);
+      if (opts.cumulative) row.append(el('span', 'qt-bar-cum', `${pct(cum, total)}%`));
+      out.push(row);
+    }
+    box.replaceChildren(...out);
+  };
+
+  const renderTypes = (a) => bars($('chart-types'), a.byType, {
+    cumulative: true, emptyText: 'No defects in these reports.',
+    aria: (r, t) => `${r.key}: ${r.value} pieces, ${pct(r.value, t)}% of defects, in ${r.reports.size} reports`
+  });
+  const renderDepts = (a) => bars($('chart-depts'), a.byDept, {
+    emptyText: 'No defects in these reports.', suffix: (r, t) => `\u00b7 ${pct(r.value, t)}%`,
+    aria: (r, t) => `${r.key}: ${r.value} pieces, ${pct(r.value, t)}% of defects`
+  });
+  const renderGaps = (a) => bars($('chart-gaps'), a.gapCounts.map((g) => ({key: g.label, value: g.value})), {
+    emptyText: 'Nothing was left blank.', suffix: () => `of ${fmt(a.lots)}`,
+    aria: (r) => `${r.key}: ${r.value} of ${a.lots} reports`
+  });
+
+  const dots = (kind, found, allowed) => {
+    const cell = el('div', 'qt-dots');
+    cell.append(el('span', 'qt-dots-k', kind));
+    const known = allowed !== null && allowed !== undefined;
+    for (let i = 1; i <= Math.max(known ? allowed : 0, found); i += 1) cell.append(el('span', `qt-dot${i <= found ? (known && i > allowed ? ' is-over' : ' is-on') : ''}`));
+    if (known && found <= allowed) cell.append(el('span', 'qt-x', '\u2715'));
+    cell.append(el('span', 'qt-dots-txt', ofAllowed(found, known ? allowed : null)));
+    cell.setAttribute('aria-label', known ? `${kind}: ${found} found, ${allowed} allowed` : `${kind}: ${found} found, allowed number not read`);
+    return cell;
+  };
+  const renderMargin = (a) => {
+    const box = $('chart-margin');
+    if (!a.sampled.length) { empty(box, 'No lots checked by AQL sample in these reports.'); return; }
+    const rows = [...a.sampled].sort((x, y) => x.room - y.room || String(y.r.date).localeCompare(String(x.r.date)));
+    box.replaceChildren(...rows.map((x) => {
+      const row = el('div', 'qt-m-row');
+      const name = el('div', 'qt-m-name');
+      name.append(el('b', '', x.r.style), el('span', '', `${x.r.buyer} \u00b7 ${day(x.r.date)}`));
+      const status = x.room < 0 ? ['Over the limit', 'is-bad'] : x.room === 0 ? ['At the limit', 'is-bad'] : x.room === 1 ? ['One below the limit', 'is-warn'] : ['Room to spare', 'is-ok'];
+      row.append(name, dots('Major', x.major, num(x.r.major_allowed)), dots('Minor', x.minor, num(x.r.minor_allowed)), el('span', `qt-pill ${status[1]}`, status[0]));
+      return row;
+    }));
+  };
+
+  const renderTrend = (a) => {
+    const box = $('chart-trend');
+    const ws = a.weeks;
+    if (!ws.length) { empty(box, 'No reports in these filters.'); return; }
+    const width = Math.max(320, box.clientWidth || 640);
+    const height = 220;
+    const m = {top: 26, right: 12, bottom: 44, left: 12};
+    const maxV = Math.max(1, ...ws.map((w) => (w.checked ? w.defects / w.checked * 100 : 0)));
+    const band = (width - m.left - m.right) / ws.length;
+    const barW = Math.min(48, band * 0.6);
+    const ns = 'http:\/\/www.w3.org/2000/svg';
+    const svg = document.createElementNS(ns, 'svg');
+    svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
+    svg.setAttribute('class', 'qt-trend');
+    svg.setAttribute('role', 'img');
+    svg.setAttribute('aria-label', 'Defects per 100 pieces by week');
+    const mk = (tag, attrs, text) => { const n = document.createElementNS(ns, tag); for (const [k, v] of Object.entries(attrs)) n.setAttribute(k, v); if (text !== undefined) n.textContent = text; return n; };
+    svg.append(mk('line', {x1: m.left, x2: width - m.right, y1: height - m.bottom, y2: height - m.bottom, style: 'stroke: var(--line); stroke-width: 1'}));
+    ws.forEach((w, i) => {
+      const v = w.checked ? w.defects / w.checked * 100 : 0;
+      const h = (height - m.top - m.bottom) * (v / maxV);
+      const cx = m.left + band * i + band / 2;
+      const isLast = i === ws.length - 1;
+      svg.append(mk('rect', {x: cx - barW / 2, y: height - m.bottom - h, width: barW, height: Math.max(1, h), rx: 4, style: `fill: ${isLast ? 'var(--accent)' : 'var(--bar)'}`}));
+      svg.append(mk('text', {x: cx, y: height - m.bottom - h - 7, 'text-anchor': 'middle', class: 'qt-trend-val'}, fmt1(v)));
+      const [, mo, d] = w.week.split('-');
+      svg.append(mk('text', {x: cx, y: height - m.bottom + 17, 'text-anchor': 'middle'}, `${Number(d)} ${MONTHS[Number(mo) - 1]}`));
+      svg.append(mk('text', {x: cx, y: height - m.bottom + 33, 'text-anchor': 'middle'}, plural(w.lots, 'lot', 'lots')));
+    });
+    const wrap = el('div');
+    wrap.append(svg);
+    if (ws.length < 2) wrap.append(el('p', 'qt-note', 'Weeks start on Monday. The comparison gets useful once there are a few weeks of reports.'));
+    else wrap.append(el('p', 'qt-note', 'Weeks start on Monday. The latest week is dark.'));
+    box.replaceChildren(wrap);
+  };
+
+  const table = (cols, rows, opts = {}) => {
+    const t = el('table', `qt-table${opts.wide ? ' qt-table-wide' : ''}${opts.compact ? ' is-compact' : ''}`);
+    const thead = el('thead');
+    const hr = el('tr');
+    for (const c of cols) { const th = el('th', c.num ? 'num' : '', c.label); hr.append(th); }
+    thead.append(hr);
+    const tb = el('tbody');
+    for (const r of rows) {
+      const tr = el('tr');
+      for (const c of cols) {
+        const v = c.get(r);
+        const td = el('td', [c.num ? 'num' : '', c.nowrap ? 'nowrap' : '', (v === '' || v === null) && c.missing ? 'is-missing' : ''].filter(Boolean).join(' '));
+        td.textContent = (v === '' || v === null || v === undefined) ? (c.missing || '') : v;
+        tr.append(td);
+      }
+      tb.append(tr);
+    }
+    t.append(thead, tb);
+    return t;
+  };
+  const groupCols = (label) => [
+    {label, get: (g) => g.key},
+    {label: 'Lots', num: true, get: (g) => fmt(g.lots)},
+    {label: 'Passed', num: true, get: (g) => fmt(g.passed)},
+    {label: 'Per 100 pcs', num: true, get: (g) => fmt1(g.per100)},
+    {label: 'At limit', num: true, get: (g) => fmt(g.atLimit)},
+    {label: 'Size problems', num: true, get: (g) => fmt(g.meas)},
+    {label: 'Biggest defect', get: (g) => g.top}
+  ];
+  const renderGroups = (a) => {
+    const f = $('table-factories'); const b = $('table-buyers');
+    if (!a.lots) { empty(f, 'No reports in these filters.'); empty(b, 'No reports in these filters.'); return; }
+    f.replaceChildren(table(groupCols('Factory'), a.byFactory, {compact: true}));
+    b.replaceChildren(table(groupCols('Buyer'), a.byBuyer, {compact: true}));
+  };
+
+  const renderMeasures = (a) => {
+    const box = $('table-meas');
+    $('meas-note').textContent = a.lots ? `${fmt(a.measReports.size)} of ${plural(a.lots, 'report', 'reports')} had at least one measurement outside the buyer's tolerance.` : '';
+    if (!a.measLines.length) { empty(box, 'No measurement problems in these reports.'); return; }
+    const rows = [...a.measLines].sort((x, y) => String(y.r.date).localeCompare(String(x.r.date)));
+    box.replaceChildren(table([
+      {label: 'Style', get: (m) => m.r.style},
+      {label: 'Buyer', get: (m) => m.r.buyer},
+      {label: 'Measurement', get: (m) => m.point},
+      {label: 'Size', get: (m) => m.size, missing: 'Not written'},
+      {label: 'Found', nowrap: true, get: (m) => m.found},
+      {label: 'Pcs', num: true, get: (m) => (num(m.pieces) === null ? '\u2013' : fmt(num(m.pieces)))}
+    ], rows));
+  };
+
+window.__trackerParts = (window.__trackerParts || 0) + 1;
+</script>
+<script>
+  
+  const matchesSearch = (r) => {
+    const q = state.search.trim().toLowerCase();
+    if (!q) return true;
+    const hay = [r.style, r.style_no, r.buyer, r.po, r.factory, r.colour, r.remarks, ...defectsOf(r).map((d) => `${d.type} ${d.detail || ''}`)].join(' ').toLowerCase();
+    return hay.includes(q);
+  };
+  const statusOf = (r) => {
+    if (r.result === 'Fail') return ['Failed', 'is-bad'];
+    if (r.result === 'Re-offer') return ['Re-offer', 'is-bad'];
+    if (isFull(r)) return ['Passed, every piece checked', 'is-ok'];
+    if (!isSampled(r)) return ['Passed, limit not read', 'is-warn'];
+    const room = roomOf(r);
+    if (room < 0) return ['Over the limit', 'is-bad'];
+    if (room === 0) return ['Passed at the limit', 'is-bad'];
+    if (room === 1) return ['Passed, one below the limit', 'is-warn'];
+    return ['Passed', 'is-ok'];
+  };
+  const renderReports = () => {
+    const box = $('table-reports');
+    const rows = filtered().filter(matchesSearch).sort((x, y) => String(y.date).localeCompare(String(x.date)) || String(x.style).localeCompare(String(y.style)));
+    if (!rows.length) { empty(box, state.reports.length ? 'No reports match.' : 'No reports yet.'); return; }
+    const cols = ['Date', 'Inspection', 'Factory', 'Buyer', 'Style', 'Order', 'Cut', 'Offered', 'Checked', 'Major', 'Minor', 'Result', 'Biggest defect'];
+    const t = el('table', 'qt-table qt-table-wide');
+    const thead = el('thead'); const hr = el('tr');
+    cols.forEach((c, i) => hr.append(el('th', i >= 5 && i <= 10 ? 'num' : '', c)));
+    thead.append(hr);
+    const tb = el('tbody');
+    const canChange = !state.readOnly && state.canWrite !== false && state.db;
+    for (const r of rows) {
+      const tr = el('tr', 'qt-row-main');
+      tr.tabIndex = 0;
+      tr.setAttribute('aria-expanded', String(state.expanded.has(r.id)));
+      const toggle = () => { if (state.expanded.has(r.id)) state.expanded.delete(r.id); else state.expanded.add(r.id); state.confirmDelete = null; renderReports(); };
+      tr.addEventListener('click', toggle);
+      tr.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); } });
+      const full = isFull(r);
+      const cells = [
+        [day(r.date), 'nowrap'], [r.inspection || 'Final', ''], [r.factory || '', ''], [r.buyer || '', 'nowrap'], [r.style || '', 'nowrap'],
+        [num(r.order_qty) === null ? '' : fmt(num(r.order_qty)), 'num'], [num(r.cut_qty) === null ? 'Not written' : fmt(num(r.cut_qty)), num(r.cut_qty) === null ? 'num is-missing' : 'num'],
+        [num(r.offer_qty) === null ? '' : fmt(num(r.offer_qty)), 'num'], [fmt(num(r.checked)), 'num'],
+        [full ? 'n/a' : ofAllowed(majorOf(r), num(r.major_allowed)), 'num nowrap'], [full ? 'n/a' : ofAllowed(minorOf(r), num(r.minor_allowed)), 'num nowrap']
+      ];
+      for (const [v, c] of cells) tr.append(el('td', c, v));
+      if (r.needs_check) tr.children[4].append(el('span', 'qt-pill is-warn qt-check-pill', 'Check'));
+      const st = statusOf(r);
+      const tdSt = el('td', 'nowrap'); tdSt.append(el('span', `qt-pill ${st[1]}`, st[0])); tr.append(tdSt);
+      tr.append(el('td', 'nowrap', topDefectOf(r) || '\u2013'));
+      tb.append(tr);
+      if (state.expanded.has(r.id)) {
+        const dr = el('tr', 'qt-row-detail');
+        const td = el('td'); td.colSpan = cols.length;
+        const box2 = el('div', 'qt-detail');
+        const sec = (title, node) => { const s = el('div'); s.append(el('h4', '', title), node); return s; };
+        const dl = el('ul');
+        const ds = defectsOf(r);
+        if (!ds.length) dl.append(el('li', '', 'No defects written'));
+        for (const d of ds) dl.append(el('li', '', `${d.type}${d.detail ? ` (${d.detail})` : ''}: ${plural(d.pieces, 'piece', 'pieces')}, ${d.severity}, ${d.department}`));
+        box2.append(sec('Defects', dl));
+        const ml = el('ul');
+        const ms = Array.isArray(r.measurements) ? r.measurements : [];
+        if (!ms.length) ml.append(el('li', '', 'None written'));
+        for (const m of ms) ml.append(el('li', '', `${m.point}${m.size ? `, size ${m.size}` : ''}: ${m.found}${num(m.pieces) !== null ? ` (${plural(num(m.pieces), 'piece', 'pieces')})` : ''}`));
+        box2.append(sec('Measurements out of tolerance', ml));
+        const info = el('ul');
+        info.append(el('li', '', `Style number: ${r.style_no || 'not written'}`), el('li', '', `PO: ${r.po || 'not written'}`), el('li', '', `Colour: ${r.colour || 'not written'}`),
+          el('li', '', `TOP approved: ${r.top_approved || 'Not written'}`), el('li', '', `Hold: ${r.hold || 'none'}`));
+        box2.append(sec('Details', info));
+        const gl = el('ul');
+        const gs = Array.isArray(r.gaps) ? r.gaps : [];
+        if (!gs.length) gl.append(el('li', '', 'Nothing'));
+        for (const g of gs) gl.append(el('li', '', GAP_LABEL[g] || g));
+        box2.append(sec('Missing on the report', gl));
+        box2.append(sec("Dynamic's remarks", el('p', '', r.remarks || 'None')));
+        if (r.needs_check) {
+          const cl = el('ul');
+          const notes = Array.isArray(r.check_notes) && r.check_notes.length ? r.check_notes : ['Read automatically from the scanned report'];
+          for (const n of notes) cl.append(el('li', '', n));
+          box2.append(sec('Please check', cl));
+        }
+        if (r.file_name) box2.append(sec('Read from file', el('p', '', r.file_name)));
+        if (canChange) {
+          const act = el('div', 'qt-detail-actions');
+          const edit = el('button', 'qt-btn', 'Change this report');
+          edit.type = 'button';
+          edit.addEventListener('click', (e) => { e.stopPropagation(); startEdit(r); });
+          act.append(edit);
+          if (state.confirmDelete === r.id) {
+            act.append(el('span', 'qt-msg is-bad', 'Delete this report for everyone?'));
+            const yes = el('button', 'qt-btn is-danger', 'Yes, delete it'); yes.type = 'button';
+            const no = el('button', 'qt-btn', 'Keep it'); no.type = 'button';
+            yes.addEventListener('click', (e) => { e.stopPropagation(); deleteReport(r.id); });
+            no.addEventListener('click', (e) => { e.stopPropagation(); state.confirmDelete = null; renderReports(); });
+            act.append(yes, no);
+          } else {
+            const del = el('button', 'qt-btn is-danger', 'Delete'); del.type = 'button';
+            del.addEventListener('click', (e) => { e.stopPropagation(); state.confirmDelete = r.id; renderReports(); });
+            act.append(del);
+          }
+          box2.append(act);
+        }
+        td.append(box2); dr.append(td); tb.append(dr);
+      }
+    }
+    t.append(thead, tb);
+    box.replaceChildren(t);
+  };
+  $('r-search').addEventListener('input', () => { state.search = $('r-search').value; renderReports(); });
+
+  const deleteReport = async (id) => {
+    $('r-msg').className = 'qt-msg';
+    $('r-msg').textContent = 'Deleting\u2026';
+    try {
+      await state.db.doc(`reports/${id}`).delete();
+      state.expanded.delete(id); state.confirmDelete = null;
+      $('r-msg').className = 'qt-msg is-ok';
+      $('r-msg').textContent = 'Report deleted.';
+    } catch (e) {
+      $('r-msg').className = 'qt-msg is-bad';
+      $('r-msg').textContent = writeError(e);
+    }
+  };
+
+  
+  const csvCell = (v) => { const s = v === null || v === undefined ? '' : String(v); return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s; };
+  $('r-export').addEventListener('click', async () => {
+    const rows = filtered().filter(matchesSearch).sort((x, y) => String(y.date).localeCompare(String(x.date)));
+    const head = ['Date', 'Inspection', 'Factory', 'Buyer', 'Style', 'Style no', 'PO', 'Colour', 'Order', 'Cut', 'Offered', 'Checked', 'Check type', 'Major found', 'Major allowed', 'Minor found', 'Minor allowed', 'Not graded', 'Result', 'Hold', 'TOP approved', 'Defects', 'Measurements', 'Missing on report', 'Remarks'];
+    const lines = [head.join(',')];
+    for (const r of rows) {
+      lines.push([
+        r.date, r.inspection || 'Final', r.factory, r.buyer, r.style, r.style_no, r.po, r.colour, r.order_qty, r.cut_qty, r.offer_qty, r.checked, r.check_type,
+        majorOf(r), r.major_allowed, minorOf(r), r.minor_allowed, sum(defectsOf(r).filter((d) => d.severity === 'Not graded'), (d) => d.pieces), r.result, r.hold, r.top_approved,
+        defectsOf(r).map((d) => `${d.type}${d.detail ? ` (${d.detail})` : ''} x${d.pieces} ${d.severity} - ${d.department}`).join('; '),
+        (Array.isArray(r.measurements) ? r.measurements : []).map((m) => `${m.point} ${m.size || ''} ${m.found}`.trim()).join('; '),
+        (Array.isArray(r.gaps) ? r.gaps : []).map((g) => GAP_LABEL[g] || g).join('; '), r.remarks
+      ].map(csvCell).join(','));
+    }
+    try {
+      await state.downloads.save({filename: 'saivana-inspection-reports.csv', data: `\ufeff${lines.join('\n')}`});
+    } catch (e) {
+      if (e && e.code === 'declined') return;
+      $('r-msg').className = 'qt-msg is-bad';
+      $('r-msg').textContent = 'The download did not work here. Try again from the tracker page.';
+    }
+  });
+
+  
+  const deptOptions = (sel, value) => { sel.replaceChildren(...DEPARTMENTS.map((d) => new Option(d, d))); sel.value = value || 'Not clear'; };
+  let lineSeq = 0;
+  const field = (labelText, control, wide) => { const l = el('label', `qt-field${wide ? ' is-wide' : ''}`); l.append(el('span', '', labelText), control); return l; };
+  const addDefectLine = (d = {}) => {
+    lineSeq += 1;
+    const row = el('div', 'qt-line');
+    row.dataset.kind = 'defect';
+    const type = el('select'); type.id = `d-type-${lineSeq}`;
+    type.replaceChildren(...DEFECT_TYPES.map(([t]) => new Option(t, t)));
+    type.value = d.type && DEPT_OF[d.type] ? d.type : (d.type ? 'Other' : 'Uncut thread');
+    const detail = el('input'); detail.type = 'text'; detail.id = `d-detail-${lineSeq}`; detail.placeholder = 'Where, for example at hem'; detail.value = d.detail || (d.type && !DEPT_OF[d.type] ? d.type : '');
+    const sev = el('select'); sev.id = `d-sev-${lineSeq}`; sev.replaceChildren(...SEVERITIES.map((s) => new Option(s, s))); sev.value = d.severity || 'Minor';
+    const pcs = el('input'); pcs.type = 'number'; pcs.min = '1'; pcs.step = '1'; pcs.inputMode = 'numeric'; pcs.id = `d-pcs-${lineSeq}`; pcs.value = d.pieces || 1;
+    const dept = el('select'); dept.id = `d-dept-${lineSeq}`; deptOptions(dept, d.department || DEPT_OF[type.value]);
+    dept.dataset.touched = d.department ? '1' : '';
+    type.addEventListener('change', () => { if (!dept.dataset.touched) dept.value = DEPT_OF[type.value] || 'Not clear'; updateDefectSum(); });
+    dept.addEventListener('change', () => { dept.dataset.touched = '1'; });
+    for (const c of [sev, pcs]) c.addEventListener('input', updateDefectSum);
+    const rm = el('button', 'qt-btn is-quiet', 'Remove'); rm.type = 'button';
+    rm.addEventListener('click', () => { row.remove(); updateDefectSum(); });
+    row.append(field('Defect type', type, true), field('Detail', detail, true), field('Severity', sev), field('Pieces', pcs), field('Department', dept), rm);
+    $('defect-lines').append(row);
+    updateDefectSum();
+  };
+  const addMeasureLine = (m = {}) => {
+    lineSeq += 1;
+    const row = el('div', 'qt-line is-measure');
+    row.dataset.kind = 'measure';
+    const point = el('input'); point.type = 'text'; point.id = `m-point-${lineSeq}`; point.placeholder = 'Back body length'; point.value = m.point || '';
+    const size = el('input'); size.type = 'text'; size.id = `m-size-${lineSeq}`; size.placeholder = 'M'; size.value = m.size || '';
+    const found = el('input'); found.type = 'text'; found.id = `m-found-${lineSeq}`; found.placeholder = '+1/2 in'; found.value = m.found || '';
+    const pcs = el('input'); pcs.type = 'number'; pcs.min = '0'; pcs.step = '1'; pcs.inputMode = 'numeric'; pcs.id = `m-pcs-${lineSeq}`; pcs.value = num(m.pieces) === null ? '' : m.pieces;
+    const rm = el('button', 'qt-btn is-quiet', 'Remove'); rm.type = 'button';
+    rm.addEventListener('click', () => row.remove());
+    row.append(field('Measurement', point, true), field('Size', size), field('Found against spec', found), field('Pieces', pcs), rm);
+    $('measure-lines').append(row);
+  };
+  const readDefects = () => [...$('defect-lines').querySelectorAll('.qt-line')].map((row) => {
+    const [type, detail, sev, pcs, dept] = row.querySelectorAll('select, input');
+    return {type: type.value, detail: detail.value.trim(), severity: sev.value, pieces: num(pcs.value), department: dept.value};
+  });
+  const readMeasures = () => [...$('measure-lines').querySelectorAll('.qt-line')].map((row) => {
+    const [point, size, found, pcs] = row.querySelectorAll('input');
+    return {point: point.value.trim(), size: size.value.trim(), found: found.value.trim(), pieces: num(pcs.value)};
+  }).filter((m) => m.point || m.found);
+  function updateDefectSum() {
+    const ds = readDefects();
+    const maj = sum(ds.filter((d) => d.severity === 'Major'), (d) => d.pieces);
+    const min = sum(ds.filter((d) => d.severity === 'Minor'), (d) => d.pieces);
+    const ng = sum(ds.filter((d) => d.severity === 'Not graded'), (d) => d.pieces);
+    const s = $('defect-sum');
+    s.replaceChildren(document.createTextNode('Totals: '), el('b', '', `${fmt(maj)} major`), document.createTextNode(', '), el('b', '', `${fmt(min)} minor`));
+    if (ng) { s.append(', '); s.append(el('b', '', `${fmt(ng)} not graded`)); }
+  }
+
+  const gapBox = $('gap-checks');
+  gapBox.replaceChildren(...GAPS.map(([k, label]) => {
+    const l = el('label');
+    const c = el('input'); c.type = 'checkbox'; c.value = k; c.id = `gap-${k}`;
+    l.append(c, el('span', '', label));
+    return l;
+  }));
+
+  const syncCheckType = () => {
+    const full = $('in-full').checked;
+    $('allowed-grid').hidden = full;
+  };
+  $('in-aql').addEventListener('change', syncCheckType);
+  $('in-full').addEventListener('change', syncCheckType);
+
+  const today = () => {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  };
+  const resetForm = (keepMsg) => {
+    $('report-form').reset();
+    $('in-date').value = today();
+    $('defect-lines').replaceChildren();
+    $('measure-lines').replaceChildren();
+    addDefectLine();
+    state.editingId = null;
+    $('edit-banner').hidden = true;
+    $('save-btn').textContent = 'Save report';
+    syncCheckType();
+    updateDefectSum();
+    if (!keepMsg) { $('form-msg').textContent = ''; $('form-msg').className = 'qt-msg'; }
+  };
+  $('reset-btn').addEventListener('click', () => resetForm());
+  $('cancel-edit').addEventListener('click', () => resetForm());
+  $('add-defect').addEventListener('click', () => addDefectLine());
+  $('add-measure').addEventListener('click', () => addMeasureLine());
+
+  const startEdit = (r) => {
+    resetForm();
+    state.editingId = r.id;
+    $('in-date').value = String(r.date || '').slice(0, 10);
+    $('in-type').value = r.inspection || 'Final';
+    $('in-factory').value = r.factory || '';
+    $('in-buyer').value = r.buyer || '';
+    $('in-style').value = r.style || '';
+    $('in-styleno').value = r.style_no || '';
+    $('in-po').value = r.po || '';
+    $('in-colour').value = r.colour || '';
+    $('in-order').value = num(r.order_qty) ?? '';
+    $('in-cut').value = num(r.cut_qty) ?? '';
+    $('in-offer').value = num(r.offer_qty) ?? '';
+    $('in-checked').value = num(r.checked) ?? '';
+    $('in-full').checked = r.check_type === 'Every piece checked';
+    $('in-aql').checked = r.check_type !== 'Every piece checked';
+    $('in-major-allowed').value = num(r.major_allowed) ?? '';
+    $('in-minor-allowed').value = num(r.minor_allowed) ?? '';
+    $('in-result').value = r.result || 'Pass';
+    $('in-hold').value = r.hold || '';
+    $('in-top').value = r.top_approved || 'Not written';
+    $('in-remarks').value = r.remarks || '';
+    $('defect-lines').replaceChildren();
+    for (const d of defectsOf(r)) addDefectLine(d);
+    if (!defectsOf(r).length) addDefectLine();
+    for (const m of (Array.isArray(r.measurements) ? r.measurements : [])) addMeasureLine(m);
+    for (const c of gapBox.querySelectorAll('input')) c.checked = Array.isArray(r.gaps) && r.gaps.includes(c.value);
+    syncCheckType();
+    updateDefectSum();
+    $('edit-banner').hidden = false;
+    $('save-btn').textContent = 'Save changes';
+    $('manual-box').open = true;
+    location.hash = 'add';
+    setTimeout(() => $('manual-box').scrollIntoView({block: 'start'}), 0);
+  };
+
+  const writeError = (e) => {
+    const code = e && e.code;
+    if (code === 'invalid_argument') {
+      state.readOnly = true;
+      applyWriteAccess();
+      return 'This tracker would not save it. You may only have view access; ask the owner to share it with you as a Contributor.';
+    }
+    if (code === 'quota_exceeded') return 'The tracker is full. Delete old reports you no longer need, then try again.';
+    if (code === 'resource_exhausted') return 'Too many saves at once. Wait a moment and try again.';
+    return 'Could not save just now. Check your connection and try again.';
+  };
+
+  $('report-form').addEventListener('submit', async (ev) => {
+    ev.preventDefault();
+    const msg = $('form-msg');
+    msg.className = 'qt-msg is-bad';
+    if (!state.db) { msg.textContent = 'Reports cannot be saved in this view. Open the tracker in Claude to add reports.'; return; }
+    const full = $('in-full').checked;
+    const req = [['in-date', 'date'], ['in-factory', 'factory'], ['in-buyer', 'buyer'], ['in-style', 'style name'], ['in-checked', 'pieces checked']];
+    const missing = req.filter(([id]) => String($(id).value).trim() === '');
+    if (missing.length) { msg.textContent = `Please fill in: ${missing.map((m) => m[1]).join(', ')}.`; $(missing[0][0]).focus(); return; }
+    if (!(num($('in-checked').value) > 0)) { msg.textContent = 'Pieces checked must be more than 0.'; $('in-checked').focus(); return; }
+    const defects = readDefects();
+    if (defects.some((d) => !(d.pieces >= 1) || !Number.isInteger(d.pieces))) { msg.textContent = 'Each defect line needs a whole number of pieces, 1 or more. Remove empty lines.'; return; }
+    const doc = {
+      date: $('in-date').value,
+      inspection: $('in-type').value,
+      factory: $('in-factory').value.trim(),
+      buyer: $('in-buyer').value.trim(),
+      style: $('in-style').value.trim(),
+      style_no: $('in-styleno').value.trim(),
+      po: $('in-po').value.trim(),
+      colour: $('in-colour').value.trim(),
+      order_qty: num($('in-order').value),
+      cut_qty: num($('in-cut').value),
+      offer_qty: num($('in-offer').value),
+      checked: num($('in-checked').value),
+      check_type: full ? 'Every piece checked' : 'AQL sample',
+      major_allowed: full ? null : num($('in-major-allowed').value),
+      minor_allowed: full ? null : num($('in-minor-allowed').value),
+      result: $('in-result').value,
+      hold: $('in-hold').value.trim(),
+      top_approved: $('in-top').value,
+      remarks: $('in-remarks').value.trim(),
+      defects,
+      measurements: readMeasures(),
+      gaps: [...gapBox.querySelectorAll('input:checked')].map((c) => c.value),
+      source: 'Entered in the tracker',
+      file_name: '',
+      needs_check: false,
+      check_notes: [],
+      saved_at: new Date().toISOString(),
+      saved_by: state.myId || null
+    };
+    if (state.editingId) {
+      const old = state.reports.find((x) => x.id === state.editingId);
+      if (old && old.source) doc.source = old.source;
+      if (old && old.file_name) doc.file_name = old.file_name;
+    }
+    const btn = $('save-btn');
+    btn.disabled = true;
+    msg.className = 'qt-msg';
+    msg.textContent = 'Saving\u2026';
+    try {
+      if (state.editingId) await state.db.doc(`reports/${state.editingId}`).set(doc);
+      else await state.db.collection('reports').add(doc);
+      const wasEdit = Boolean(state.editingId);
+      resetForm(true);
+      msg.className = 'qt-msg is-ok';
+      msg.textContent = wasEdit ? 'Changes saved. The overview is updated.' : 'Report saved. The overview is updated. You can add the next one.';
+    } catch (e) {
+      msg.className = 'qt-msg is-bad';
+      msg.textContent = writeError(e);
+    } finally {
+      btn.disabled = false;
+    }
+  });
+
+  const renderDatalists = () => {
+    const uniq = (f) => [...new Set(state.reports.map(f).filter(Boolean))].sort();
+    const factories = [...new Set(['166', '96', '73', ...uniq((r) => r.factory)])];
+    $('dl-factory').replaceChildren(...factories.map((v) => new Option(v)));
+    const af = $('auto-factory');
+    const keep = af.value;
+    af.replaceChildren(new Option('As written on the report', ''), ...factories.map((v) => new Option(v, v)));
+    af.value = factories.includes(keep) ? keep : '';
+    $('dl-buyer').replaceChildren(...uniq((r) => r.buyer).map((v) => new Option(v)));
+    $('dl-style').replaceChildren(...uniq((r) => r.style).map((v) => new Option(v)));
+  };
+
+  const applyWriteAccess = () => {
+    const blocked = state.readOnly || state.canWrite === false || !state.db;
+    const noWrite = state.loaded && (state.readOnly || state.canWrite === false);
+    $('add-readonly').hidden = !noWrite;
+    $('manual-box').hidden = noWrite;
+    const autoReady = Boolean(state.sample && state.imgLimits && state.db) && !noWrite;
+    $('auto-section').hidden = state.loaded && !autoReady;
+    $('auto-off').hidden = !(state.loaded && !autoReady && !noWrite && state.db);
+    $('r-export').hidden = !state.downloads;
+    if (blocked && state.loaded) renderReports();
+  };
+
+window.__trackerParts = (window.__trackerParts || 0) + 1;
+</script>
+<script>
+  
+  const TYPE_LIST = DEFECT_TYPES.map(([t]) => t).join(', ');
+  const EXTRACT_PROMPT = [
+    'The images show page 1 of a scanned "DYNAMIC AGENCIES - INSPECTION REPORT" for a garment order. Most of it is handwritten. Some images show only a part of the page, zoomed in so the small handwriting is easier to read: read every number and word from the clearest image, and do not count anything twice where parts overlap.',
+    'Reply with only one JSON object and no other text, in exactly this shape:',
+    '{"date":"YYYY-MM-DD","inspection":"Final","factory":"","buyer":"","style":"","style_no":"","po":"","colour":"","order_qty":null,"cut_qty":null,"offer_qty":null,"checked":null,"check_type":"AQL sample","major_allowed":null,"minor_allowed":null,"total_major":null,"total_minor":null,"result":"Pass","hold":"","top_approved":"Not written","remarks":"","defects":[{"name":"","type":"","detail":"","severity":"Minor","pieces":1,"department":""}],"measurements":[{"point":"","size":"","found":"","pieces":null}],"gaps":[]}',
+    'Rules:',
+    '- date: the DATE box, written day/month/year. A two-digit year such as 26 means 2026.',
+    '- inspection: the report type that is circled or boxed. Write "Final", "Midline" (for MID), "Inline" or "Endline".',
+    '- factory: the FACTORY box without "/FBD". If the printed factory is crossed out and another is written by hand, use the handwritten one and add "factory_wrong" to gaps.',
+    '- buyer. style: the style name, for example the name written in brackets. style_no: the style code or number. po: every P.O. number joined with " / ". colour: every colour joined with ", ".',
+    '- order_qty, cut_qty, offer_qty, checked: the TOTAL row of ORDER QTY, CUT QTY, OFFER QTY and AQL QTY. If the TOTAL row is blank, add up the colour rows above it. Use null only when the whole column is blank. "05" means 5.',
+    '- check_type: "Every piece checked" if the remarks say 100% checked, otherwise "AQL sample".',
+    '- major_allowed and minor_allowed: the ALLOWED (PER AQL) row. total_major and total_minor: the TOTAL DEFECTS row. Use null when blank.',
+    `- defects: one item for each defect line with a number in the MAJOR or MINOR column, in both defect lists, including handwritten rows. name: the defect as written. type: the closest of: ${TYPE_LIST}. detail: a few words of extra detail as written, such as "At bottom" or "Handling", else "". severity: "Major" or "Minor", from the column the number is in. pieces: that number. department: only if the report itself names the responsible department, else "".`,
+    '- If the defect table is empty but the remarks list defects or altered pieces (for example "alter 3 pcs: yarn pull 1, uncut thread 2"), add them as defects with severity "Not graded" and add "remarks_only" to gaps.',
+    '- measurements: each filled line of MEASUREMENT AUDIT. point: the measurement name. size: the COLOR/SIZE value, "" if blank. found: the FOUND (+/-) value with its unit, such as "+1/2 in", "-3/4 in" or "+1.5 cm". pieces: the COUNT, null if blank.',
+    '- result: "Pass", "Fail" or "Re-offer", whichever is ticked or circled under RECOMMENDED ACTION.',
+    '- hold: what the goods are held for if the remarks say hold, else "". top_approved: "Yes" if the remarks say TOP approved, else "Not written". remarks: the remarks in plain words.',
+    '- gaps: also add "report_no" if the REPORT NO. box is empty, "cut_qty" if CUT QTY is blank, "po" if P.O. NO. is blank, and "no_department" if no responsible department is written for the defects.',
+    '- Never guess a number you cannot read. Use null instead.'
+  ].join('\n');
+
+  const normalizeRead = (j, fileName, factoryChoice) => {
+    const s = (v) => (v === null || v === undefined) ? '' : String(v).trim();
+    const whole = (v) => { const x = num(v); return x === null ? null : Math.round(x); };
+    const src = j && typeof j === 'object' && !Array.isArray(j) ? j : {};
+    const defects = (Array.isArray(src.defects) ? src.defects : []).filter((d) => d && typeof d === 'object').map((d) => {
+      const raw = s(d.type);
+      const type = DEPT_OF[raw] ? raw : 'Other';
+      const dept = s(d.department);
+      return {
+        type,
+        detail: s(d.detail) || (type === 'Other' ? s(d.name) : ''),
+        severity: ['Major', 'Minor', 'Not graded'].includes(s(d.severity)) ? s(d.severity) : 'Minor',
+        pieces: whole(d.pieces) || 1,
+        department: DEPARTMENTS.includes(dept) ? dept : (DEPT_OF[type] || 'Not clear')
+      };
+    });
+    const measurements = (Array.isArray(src.measurements) ? src.measurements : []).filter((m) => m && typeof m === 'object')
+      .map((m) => ({point: s(m.point), size: s(m.size), found: s(m.found), pieces: whole(m.pieces)}))
+      .filter((m) => m.point || m.found);
+    const dateOk = /^\d{4}-\d{2}-\d{2}$/.test(s(src.date));
+    const full = s(src.check_type) === 'Every piece checked';
+    const readFactory = s(src.factory).replace(/\s*\/\s*FBD\s*$/i, '').trim();
+    const resultOk = ['Pass', 'Fail', 'Re-offer'].includes(s(src.result));
+    const doc = {
+      date: dateOk ? s(src.date) : today(),
+      inspection: ['Final', 'Endline', 'Midline', 'Inline'].includes(s(src.inspection)) ? s(src.inspection) : 'Final',
+      factory: factoryChoice || readFactory || 'Not written',
+      buyer: s(src.buyer) || 'Not read',
+      style: s(src.style) || s(src.style_no) || 'Not read',
+      style_no: s(src.style_no),
+      po: s(src.po),
+      colour: s(src.colour),
+      order_qty: whole(src.order_qty),
+      cut_qty: whole(src.cut_qty),
+      offer_qty: whole(src.offer_qty),
+      checked: whole(src.checked),
+      check_type: full ? 'Every piece checked' : 'AQL sample',
+      major_allowed: full ? null : whole(src.major_allowed),
+      minor_allowed: full ? null : whole(src.minor_allowed),
+      result: resultOk ? s(src.result) : 'Pass',
+      hold: s(src.hold),
+      top_approved: s(src.top_approved) === 'Yes' ? 'Yes' : 'Not written',
+      remarks: s(src.remarks),
+      defects,
+      measurements,
+      gaps: [...new Set((Array.isArray(src.gaps) ? src.gaps : []).map(s).filter((g) => GAP_LABEL[g]))],
+      source: 'Read automatically by Claude',
+      file_name: fileName,
+      saved_at: new Date().toISOString(),
+      saved_by: state.myId || null
+    };
+    const notes = [];
+    if (!dateOk) notes.push('The date could not be read, so today was used.');
+    if (doc.factory === 'Not written') notes.push('The factory could not be read. Pick the factory before reading next time.');
+    if (doc.buyer === 'Not read') notes.push('The buyer could not be read.');
+    if (doc.style === 'Not read') notes.push('The style could not be read.');
+    if (!(doc.checked > 0)) notes.push('The pieces checked could not be read.');
+    if (!full && (doc.major_allowed === null || doc.minor_allowed === null)) notes.push('The allowed numbers (AQL) could not be read.');
+    const tMaj = whole(src.total_major);
+    const tMin = whole(src.total_minor);
+    if (tMaj !== null && tMaj !== majorOf(doc)) notes.push(`The report's major total is ${tMaj}, but the defect lines add up to ${majorOf(doc)}.`);
+    if (tMin !== null && tMin !== minorOf(doc)) notes.push(`The report's minor total is ${tMin}, but the defect lines add up to ${minorOf(doc)}.`);
+    if (!resultOk) notes.push('The result could not be read, so Pass was used.');
+    doc.needs_check = notes.length > 0;
+    doc.check_notes = notes;
+    return doc;
+  };
+
+  const sameText = (v) => String(v || '').trim().toLowerCase().replace(/\s+/g, ' ');
+  const findDuplicate = (doc) => state.reports.find((r) => (r.file_name && sameText(r.file_name) === sameText(doc.file_name)) ||
+    (r.date === doc.date && sameText(r.style) === sameText(doc.style) && sameText(r.buyer) === sameText(doc.buyer) &&
+    sameText(r.po) === sameText(doc.po) && num(r.offer_qty) === num(doc.offer_qty)));
+
+  const canvasBlob = (canvas) => new Promise((res) => canvas.toBlob(res, 'image/jpeg', 0.9));
+  const cropBlob = async (src, sx, sy, sw, sh, maxSide) => {
+    const k = Math.min(1, maxSide / Math.max(sw, sh));
+    const c = document.createElement('canvas');
+    c.width = Math.max(1, Math.round(sw * k));
+    c.height = Math.max(1, Math.round(sh * k));
+    const x = c.getContext('2d');
+    x.fillStyle = '#ffffff';
+    x.fillRect(0, 0, c.width, c.height);
+    x.drawImage(src, sx, sy, sw, sh, 0, 0, c.width, c.height);
+    const b = await canvasBlob(c);
+    if (!b) throw {code: 'pdf_unavailable'};
+    return b;
+  };
+  const pageSource = async (file) => {
+    const isPdf = file.type === 'application/pdf' || /\.pdf$/i.test(file.name);
+    if (!isPdf) {
+      const types = state.imgLimits ? state.imgLimits.mediaTypes : [];
+      if (!types.includes(file.type)) throw {code: 'bad_file'};
+      try { return await createImageBitmap(file); } catch (e) { throw {code: 'bad_file'}; }
+    }
+    const lib = window.pdfjsLib;
+    if (!lib) throw {code: 'pdf_unavailable'};
+    let pdf = null;
+    try {
+      pdf = await lib.getDocument({data: new Uint8Array(await file.arrayBuffer()), isEvalSupported: false}).promise;
+      const page = await pdf.getPage(1);
+      const base = page.getViewport({scale: 1});
+      const vp = page.getViewport({scale: Math.min(4, 2800 / Math.max(base.width, base.height))});
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.round(vp.width);
+      canvas.height = Math.round(vp.height);
+      const ctx = canvas.getContext('2d');
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      await page.render({canvasContext: ctx, viewport: vp}).promise;
+      return canvas;
+    } catch (e) {
+      throw {code: 'pdf_unavailable'};
+    } finally {
+      if (pdf) pdf.destroy();
+    }
+  };
+  const toImages = async (file) => {
+    const src = await pageSource(file);
+    const w = src.width;
+    const h = src.height;
+    const max = state.imgLimits && state.imgLimits.maxCount ? state.imgLimits.maxCount : 1;
+    const part = (a, b) => cropBlob(src, 0, Math.round(h * a), w, Math.round(h * (b - a)), 2000);
+    if (max >= 4) return [await cropBlob(src, 0, 0, w, h, 1600), await part(0, 0.38), await part(0.3, 0.7), await part(0.62, 1)];
+    if (max === 3) return [await part(0, 0.38), await part(0.3, 0.7), await part(0.62, 1)];
+    if (max === 2) return [await part(0, 0.55), await part(0.45, 1)];
+    return [await cropBlob(src, 0, 0, w, h, 1600)];
+  };
+  const toImage = async (file) => {
+    const isPdf = file.type === 'application/pdf' || /\.pdf$/i.test(file.name);
+    if (isPdf) {
+      const lib = window.pdfjsLib;
+      if (!lib) throw {code: 'pdf_unavailable'};
+      let pdf = null;
+      try {
+        pdf = await lib.getDocument({data: new Uint8Array(await file.arrayBuffer()), isEvalSupported: false}).promise;
+        const page = await pdf.getPage(1);
+        const base = page.getViewport({scale: 1});
+        const vp = page.getViewport({scale: Math.min(3, 1800 / Math.max(base.width, base.height))});
+        const canvas = document.createElement('canvas');
+        canvas.width = Math.round(vp.width);
+        canvas.height = Math.round(vp.height);
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        await page.render({canvasContext: ctx, viewport: vp}).promise;
+        const blob = await new Promise((res) => canvas.toBlob(res, 'image/jpeg', 0.92));
+        if (!blob) throw new Error('no image');
+        return blob;
+      } catch (e) {
+        throw {code: 'pdf_unavailable'};
+      } finally {
+        if (pdf) pdf.destroy();
+      }
+    }
+    const types = state.imgLimits ? state.imgLimits.mediaTypes : [];
+    if (!types.includes(file.type)) throw {code: 'bad_file'};
+    if (state.imgLimits && file.size > state.imgLimits.maxInputBytes) throw {code: 'too_big'};
+    return file;
+  };
+
+  const READ_STOP = ['not_granted', 'sampling_disabled', 'not_declared', 'images_unavailable', 'capability_disabled', 'capability_removed', 'session_expired', 'rate_limited'];
+  const readError = (e) => {
+    switch (e && e.code) {
+      case 'pdf_unavailable': return 'This PDF could not be opened here. Try a photo or screenshot of page 1.';
+      case 'bad_file': return 'This kind of file cannot be read. Use the PDF or a photo (JPG or PNG).';
+      case 'too_big': return 'This photo is too large. Use a smaller photo.';
+      case 'not_granted': return 'Claude was not allowed to read reports. Reload the tracker and choose Allow when it asks.';
+      case 'session_expired': return 'Please sign in to Claude again, then try.';
+      case 'rate_limited': return 'Claude is busy or your usage limit is reached. Wait a while and try again.';
+      case 'image_rejected': return 'This image could not be used. Try a clearer photo.';
+      case 'cancelled': return 'Stopped. This report was not saved.';
+      case 'sampling_disabled': case 'not_declared': case 'images_unavailable': case 'capability_disabled': case 'capability_removed':
+        return 'Automatic reading is not available here. Type the report by hand below.';
+      default: return 'The report could not be read. Try again, or type it by hand below.';
+    }
+  };
+
+  const autoItem = (fileName) => {
+    const li = el('li', 'qt-auto-item');
+    const left = el('div');
+    const status = el('div', 'qt-auto-status', 'Waiting');
+    const more = el('div', 'qt-auto-more');
+    left.append(el('div', 'qt-auto-file', fileName), status, more);
+    const acts = el('div', 'qt-auto-acts');
+    li.append(left, acts);
+    $('auto-list').append(li);
+    return {
+      set: (text, cls) => { status.className = `qt-auto-status${cls ? ` ${cls}` : ''}`; status.textContent = text; },
+      actions: (...btns) => acts.replaceChildren(...btns),
+      details: (...nodes) => more.replaceChildren(...nodes)
+    };
+  };
+  const readDetails = (doc) => {
+    const out = [];
+    const allowedTxt = (v) => (num(v) === null ? 'not read' : fmt(num(v)));
+    const qty = [`${num(doc.checked) === null ? 'not read' : fmt(num(doc.checked))} pieces checked`];
+    if (num(doc.offer_qty) !== null) qty.push(`${fmt(num(doc.offer_qty))} offered`);
+    if (num(doc.order_qty) !== null) qty.push(`order ${fmt(num(doc.order_qty))}`);
+    out.push(el('div', '', `Factory ${doc.factory} \u00b7 ${qty.join(', ')} \u00b7 Result: ${doc.result}`));
+    out.push(el('div', '', isFull(doc) ? 'Every piece was checked.' : `Major ${majorOf(doc)} (allowed ${allowedTxt(doc.major_allowed)}) \u00b7 Minor ${minorOf(doc)} (allowed ${allowedTxt(doc.minor_allowed)})`));
+    const ds = defectsOf(doc);
+    out.push(el('div', '', ds.length ? `Defects: ${ds.map((d) => `${d.type === 'Other' && d.detail ? d.detail : d.type} ${d.pieces}`).join(', ')}` : 'Defects: none written'));
+    const ms = Array.isArray(doc.measurements) ? doc.measurements : [];
+    out.push(el('div', '', ms.length ? `Measurements out of tolerance: ${ms.map((m) => `${m.point} ${m.found}`.trim()).join('; ')}` : 'Measurements out of tolerance: none written'));
+    for (const n of (Array.isArray(doc.check_notes) ? doc.check_notes : [])) out.push(el('div', 'is-warn', `Please check: ${n}`));
+    return out;
+  };
+  const openBtn = (id, doc) => {
+    const b = el('button', 'qt-btn', doc.needs_check ? 'Check it' : 'Open it');
+    b.type = 'button';
+    b.addEventListener('click', () => startEdit(state.reports.find((r) => r.id === id) || {id, ...doc}));
+    return b;
+  };
+
+  const updateAutoButton = () => {
+    $('auto-go').disabled = state.autoBusy || !$('auto-files').files.length || !state.sample || !state.db;
+  };
+  $('auto-files').addEventListener('change', updateAutoButton);
+  $('auto-stop').addEventListener('click', () => { state.autoStop = true; if (state.autoCtl) state.autoCtl.abort(); });
+  $('auto-go').addEventListener('click', async () => {
+    const all = [...$('auto-files').files];
+    const files = all.slice(0, 10);
+    if (!files.length || !state.sample || !state.db || state.autoBusy) return;
+    state.autoBusy = true;
+    state.autoStop = false;
+    updateAutoButton();
+    $('auto-stop').hidden = false;
+    $('auto-list').replaceChildren();
+    const choice = $('auto-factory').value;
+    const items = files.map((f) => ({f, ui: autoItem(f.name)}));
+    if (all.length > 10) {
+      const extra = autoItem(`${all.length - 10} more ${all.length - 10 === 1 ? 'file' : 'files'}`);
+      extra.set('Not read: choose up to 10 files at a time.', 'is-warn');
+    }
+    let stopAll = '';
+    const tally = {saved: 0, check: 0, dup: 0, failed: 0};
+    for (const it of items) {
+      if (stopAll || state.autoStop) { it.ui.set(stopAll || 'Not read, because you pressed Stop.', 'is-warn'); tally.failed += 1; continue; }
+      it.ui.set('Reading\u2026 this can take a minute or two.');
+      let doc = null;
+      try {
+        const imgs = await toImages(it.f);
+        state.autoCtl = new AbortController();
+        const answer = await state.sample.json(EXTRACT_PROMPT, {images: imgs, modelTier: 'complex', signal: state.autoCtl.signal});
+        doc = normalizeRead(answer, it.f.name, choice);
+      } catch (e) {
+        tally.failed += 1;
+        it.ui.set(readError(e), e && e.code === 'cancelled' ? 'is-warn' : 'is-bad');
+        if (e && READ_STOP.includes(e.code)) stopAll = `Not read. ${readError(e)}`;
+        if (e && e.code === 'cancelled') state.autoStop = true;
+        continue;
+      } finally {
+        state.autoCtl = null;
+      }
+      const dup = findDuplicate(doc);
+      if (dup) {
+        tally.dup += 1;
+        it.ui.set(`Already in the tracker (${dup.style}, ${dup.buyer}, ${day(dup.date)}), so it was not saved again. If this new reading is better, replace the old one.`, 'is-warn');
+        it.ui.details(...readDetails(doc));
+        const keepDoc = doc;
+        const dupId = dup.id;
+        const rep = el('button', 'qt-btn', 'Replace the old one');
+        rep.type = 'button';
+        const asNew = el('button', 'qt-btn', 'Save as a new report');
+        asNew.type = 'button';
+        const busy = (on) => { rep.disabled = on; asNew.disabled = on; };
+        rep.addEventListener('click', async () => {
+          busy(true);
+          try {
+            await state.db.doc(`reports/${dupId}`).set(keepDoc);
+            it.ui.set(keepDoc.needs_check ? 'Replaced with the new reading, but please check it.' : 'Replaced with the new reading.', keepDoc.needs_check ? 'is-warn' : 'is-ok');
+            it.ui.actions(openBtn(dupId, keepDoc));
+          } catch (e) { it.ui.set(writeError(e), 'is-bad'); busy(false); }
+        });
+        asNew.addEventListener('click', async () => {
+          busy(true);
+          try {
+            const ref2 = await state.db.collection('reports').add(keepDoc);
+            it.ui.set(keepDoc.needs_check ? 'Saved as a new report, but please check it.' : 'Saved as a new report.', keepDoc.needs_check ? 'is-warn' : 'is-ok');
+            it.ui.actions(openBtn(ref2.id, keepDoc));
+          } catch (e) { it.ui.set(writeError(e), 'is-bad'); busy(false); }
+        });
+        it.ui.actions(rep, asNew);
+        continue;
+      }
+      try {
+        const ref = await state.db.collection('reports').add(doc);
+        const savedId = ref.id;
+        tally.saved += 1;
+        if (doc.needs_check) tally.check += 1;
+        const summary = `${doc.style}, ${doc.buyer}, ${day(doc.date)}, ${plural(totalOf(doc), 'defect', 'defects')}`;
+        it.ui.set(doc.needs_check ? `Saved, but please check it: ${summary}` : `Saved: ${summary}`, doc.needs_check ? 'is-warn' : 'is-ok');
+        it.ui.details(...readDetails(doc));
+        const open = openBtn(savedId, doc);
+        const del = el('button', 'qt-btn is-danger', 'Delete');
+        del.type = 'button';
+        del.addEventListener('click', async () => {
+          del.disabled = true;
+          try { await state.db.doc(`reports/${savedId}`).delete(); it.ui.set('Deleted.', 'is-warn'); it.ui.actions(); }
+          catch (e) { it.ui.set(writeError(e), 'is-bad'); del.disabled = false; }
+        });
+        it.ui.actions(open, del);
+      } catch (e) {
+        tally.failed += 1;
+        it.ui.set(writeError(e), 'is-bad');
+        stopAll = `Not saved. ${writeError(e)}`;
+      }
+    }
+    const sumLi = el('li', 'qt-auto-item');
+    const parts = [`Saved ${tally.saved} of ${items.length}`];
+    if (tally.check) parts.push(`${tally.check} of them ${tally.check === 1 ? 'needs' : 'need'} a quick check`);
+    if (tally.dup) parts.push(`${tally.dup} ${tally.dup === 1 ? 'was' : 'were'} already in the tracker`);
+    if (tally.failed) parts.push(`${tally.failed} could not be read`);
+    sumLi.append(el('div', 'qt-auto-file', `${parts.join('. ')}.`));
+    $('auto-list').prepend(sumLi);
+    state.autoBusy = false;
+    $('auto-stop').hidden = true;
+    $('auto-files').value = '';
+    updateAutoButton();
+  });
+
+  
+  const renderAll = () => {
+    renderFilters();
+    const banner = $('status-banner');
+    if (state.locked) banner.hidden = true;
+    else if (state.failed) { banner.hidden = false; banner.className = 'qt-banner is-bad'; banner.textContent = 'The reports could not be loaded here. Open this tracker in Claude to see and add reports.'; }
+    else if (!state.loaded) { banner.hidden = false; banner.className = 'qt-banner'; banner.textContent = 'Loading reports\u2026'; }
+    else if (!state.reports.length) { banner.hidden = false; banner.className = 'qt-banner'; banner.textContent = 'No reports yet.'; }
+    else banner.hidden = true;
+    const a = analyse(filtered());
+    renderFindings(a); renderTiles(a); renderTypes(a); renderDepts(a); renderMargin(a); renderTrend(a); renderGroups(a); renderMeasures(a); renderGaps(a);
+    renderReports();
+    renderDatalists();
+  };
+
+  let resizeTimer = null;
+  window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(() => renderTrend(analyse(filtered())), 150); });
+
+  resetForm();
+  renderAll();
+
+  
+  const LOCK_PATH = 'settings/lock';
+  const UNLOCK_KEY = 'qt-unlock-v1';
+  const b64 = (buf) => btoa(String.fromCharCode(...new Uint8Array(buf)));
+  const unb64 = (s) => Uint8Array.from(atob(s), (ch) => ch.charCodeAt(0));
+  const hashPassword = async (password, saltB64, iterations) => {
+    const key = await crypto.subtle.importKey('raw', new TextEncoder().encode(password), 'PBKDF2', false, ['deriveBits']);
+    const bits = await crypto.subtle.deriveBits({name: 'PBKDF2', salt: unb64(saltB64), iterations, hash: 'SHA-256'}, key, 256);
+    return b64(bits);
+  };
+  const validLock = (d) => (d && typeof d.hash === 'string' && d.hash && typeof d.salt === 'string' && d.salt && Number.isInteger(d.iterations) && d.iterations > 0)
+    ? {hash: d.hash, salt: d.salt, iterations: d.iterations, set_at: typeof d.set_at === 'string' ? d.set_at : ''} : null;
+  const remembered = () => { try { return localStorage.getItem(UNLOCK_KEY) || ''; } catch (e) { return ''; } };
+  const remember = (v) => { try { localStorage.setItem(UNLOCK_KEY, v); } catch (e) {  } };
+  const SITE_PATH = 'private/site';
+  const WEBSITE_PATH = 'settings/website';
+  const when = (iso) => {
+    const d = new Date(iso);
+    return Number.isNaN(d.getTime()) ? '' : new Intl.DateTimeFormat('en-IN', {day: 'numeric', month: 'short', year: 'numeric', hour: 'numeric', minute: '2-digit'}).format(d);
+  };
+  
+  const wrapSiteKey = async (kB64, password) => {
+    const salt = crypto.getRandomValues(new Uint8Array(16));
+    const iv = crypto.getRandomValues(new Uint8Array(12));
+    const iterations = 310000;
+    const base = await crypto.subtle.importKey('raw', new TextEncoder().encode(password), 'PBKDF2', false, ['deriveKey']);
+    const wk = await crypto.subtle.deriveKey({name: 'PBKDF2', salt, iterations, hash: 'SHA-256'}, base, {name: 'AES-GCM', length: 256}, false, ['encrypt']);
+    const ct = await crypto.subtle.encrypt({name: 'AES-GCM', iv}, wk, unb64(kB64));
+    return {id: b64(crypto.getRandomValues(new Uint8Array(9))), salt: b64(salt), iterations, iv: b64(iv), ct: b64(ct)};
+  };
+
+window.__trackerParts = (window.__trackerParts || 0) + 1;
+</script>
+<script>
+  
+  const DRIVE = 'Google Drive';
+  const DATA_TITLE = 'saivana-quality-data.json';
+  const PAGE_TITLE = 'saivana-quality-website.html';
+  const SITE_PAGE_VERSION = '2026-10-31.3';
+  const pub = {timer: null, busy: false, again: false, fileArgs: null};
+  const b64big = (buf) => { const u = new Uint8Array(buf); let s = ''; for (let i = 0; i < u.length; i += 0x8000) s += String.fromCharCode.apply(null, u.subarray(i, i + 0x8000)); return btoa(s); };
+  const stableJson = (v) => {
+    if (Array.isArray(v)) return `[${v.map(stableJson).join(',')}]`;
+    if (v && typeof v === 'object') return `{${Object.keys(v).sort().map((k) => `${JSON.stringify(k)}:${stableJson(v[k])}`).join(',')}}`;
+    return JSON.stringify(v === undefined ? null : v);
+  };
+  const sha256 = async (text) => b64(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text)));
+  const encryptForSite = async (kB64, obj) => {
+    const key = await crypto.subtle.importKey('raw', unb64(kB64), {name: 'AES-GCM'}, false, ['encrypt']);
+    const iv = crypto.getRandomValues(new Uint8Array(12));
+    const ct = await crypto.subtle.encrypt({name: 'AES-GCM', iv}, key, new TextEncoder().encode(JSON.stringify(obj)));
+    return {iv: b64(iv), ct: b64big(ct)};
+  };
+  const loadSitePage = () => new Promise((resolve, reject) => {
+    if (window.__SITE_PAGE__ && window.__SITE_PAGE__.html) { resolve(window.__SITE_PAGE__); return; }
+    const s = document.createElement('script');
+    s.src = `website.js?v=${encodeURIComponent(SITE_PAGE_VERSION)}`;
+    s.onload = () => (window.__SITE_PAGE__ && window.__SITE_PAGE__.html ? resolve(window.__SITE_PAGE__) : reject({code: 'page_missing'}));
+    s.onerror = () => reject({code: 'page_missing'});
+    document.head.append(s);
+  });
+  const driveCreate = async (title, text, mime) => {
+    const input = {title, parentId: state.website.folder_id, contentMimeType: mime, disableConversionToGoogleType: true};
+    if (new Blob([text]).size > 900000) {
+      if (pub.fileArgs === null) { try { pub.fileArgs = Boolean((await state.mcp.listTools()).fileArgs); } catch (e) { pub.fileArgs = false; } }
+      if (!pub.fileArgs) throw {code: 'too_big'};
+      input.base64Content = {$file: {data: new Blob([text], {type: mime}), name: title, type: mime}};
+    } else input.textContent = text;
+    const res = await state.mcp.callTool(DRIVE, 'create_file', input, {cache: false});
+    const p = res && res.payload;
+    const id = p && typeof p === 'object' && typeof p.id === 'string' ? p.id : '';
+    if (!id) throw {code: 'no_file'};
+    return id;
+  };
+  const driveTrash = async (id) => {
+    if (!id) return;
+    try { await state.mcp.callTool(DRIVE, 'trash_file', {fileId: id}, {cache: false}); } catch (e) {  }
+  };
+  const driveError = (e) => {
+    switch (e && e.code) {
+      case 'server_not_connected': case 'needs_reauth': case 'server_not_found':
+        return 'Google Drive is not connected. Connect it in Claude under Settings \u2192 Connectors, then open this tracker again.';
+      case 'not_in_manifest': case 'blocked_by_policy': case 'approval_required':
+        return 'This tracker is not allowed to use Google Drive. Reload the tracker and choose Allow when Claude asks.';
+      case 'selection_required':
+        return 'Claude needs you to choose which Google Drive to use. Reload the tracker and pick one.';
+      case 'too_big':
+        return 'There are too many reports to send in one go. Ask Claude to make the website file smaller.';
+      case 'page_missing':
+        return 'The website page could not be loaded. Reload the tracker and try again.';
+      default:
+        return 'Something went wrong while sending to Google Drive. Click "Update the website now" in Share to try again.';
+    }
+  };
+  const setWebNote = (text, isError) => {
+    $('web-msg').className = `qt-msg${isError ? ' is-bad' : (text ? ' is-ok' : '')}`;
+    $('web-msg').textContent = text;
+    $('web-alert').hidden = !(isError && text);
+    $('web-alert').textContent = isError && text ? `The website was not updated. ${text}` : '';
+  };
+  const updateSite = async (fields) => {
+    await state.db.doc(SITE_PATH).update(fields);
+    state.site = {...state.site, ...fields};
+  };
+  const schedulePublish = (delay) => {
+    if (!state.isOwner) return;
+    clearTimeout(pub.timer);
+    pub.timer = setTimeout(() => { publishWebsite(false); }, delay === undefined ? 3000 : delay);
+  };
+  const publishWebsite = async (manual) => {
+    if (!state.isOwner || !state.db || !state.loaded || state.failed) return;
+    if (pub.busy) { pub.again = true; return; }
+    const site = state.site;
+    if (!state.website || !state.website.folder_id) return;
+    if (!site || !site.k || !site.wrap) { setWebNote('Set the password above. The website opens only with a password.', false); return; }
+    if (!state.mcp) { setWebNote('Google Drive is not available in this view. Open the tracker in Claude on the web or in the desktop app.', true); return; }
+    pub.busy = true;
+    $('web-now').disabled = true;
+    if (manual) setWebNote('Updating the website\u2026', false);
+    let sent = false;
+    try {
+      if (site.page_version !== SITE_PAGE_VERSION || !site.page_file_id) {
+        const page = await loadSitePage();
+        if (page.version !== SITE_PAGE_VERSION) throw {code: 'page_missing'};
+        const pageId = await driveCreate(PAGE_TITLE, page.html, 'text/html');
+        const oldPage = state.site.page_file_id;
+        await updateSite({page_file_id: pageId, page_version: SITE_PAGE_VERSION});
+        await driveTrash(oldPage);
+        sent = true;
+      }
+      const reports = [...state.reports].sort((a, b) => String(a.id).localeCompare(String(b.id)));
+      const hash = await sha256(`${state.site.wrap.id}|${stableJson(reports)}`);
+      if (hash !== state.site.published_hash || !state.site.data_file_id) {
+        const now = new Date().toISOString();
+        const bundle = {v: 1, updated_at: now, wrap: state.site.wrap, data: await encryptForSite(state.site.k, {v: 1, reports})};
+        const dataId = await driveCreate(DATA_TITLE, JSON.stringify(bundle), 'application/json');
+        const oldData = state.site.data_file_id;
+        await updateSite({data_file_id: dataId, published_hash: hash, last_sync: now});
+        await driveTrash(oldData);
+        sent = true;
+      }
+      setWebNote(manual ? (sent ? 'The website is updated.' : 'The website is already up to date.') : '', false);
+    } catch (e) {
+      setWebNote(driveError(e), true);
+    } finally {
+      pub.busy = false;
+      $('web-now').disabled = false;
+      renderShare();
+      if (pub.again) { pub.again = false; schedulePublish(500); }
+    }
+  };
+  const startReports = () => {
+    if (state.listening || !state.db) return;
+    state.listening = true;
+    state.db.collection('reports').limit(1000).onSnapshot((snap) => {
+      state.reports = snap.docs.filter((d) => d.exists).map((d) => ({id: d.id, ...d.data()}));
+      state.loaded = true; state.failed = false;
+      renderAll();
+      applyWriteAccess();
+      if (state.isOwner) schedulePublish();
+    }, () => {
+      state.failed = true; state.loaded = true;
+      renderAll();
+      applyWriteAccess();
+    });
+  };
+  const setLocked = (on, preview) => {
+    state.locked = on;
+    state.lockPreview = Boolean(on && preview);
+    $('lock-cancel').hidden = !state.lockPreview;
+    $('lock-msg').className = 'qt-msg';
+    $('lock-msg').textContent = '';
+    $('lock-input').value = '';
+    showView();
+    if (on) { $('status-banner').hidden = true; setTimeout(() => $('lock-input').focus(), 0); } else renderAll();
+  };
+  $('lock-form').addEventListener('submit', async (ev) => {
+    ev.preventDefault();
+    const msg = $('lock-msg');
+    if (!state.lock) { setLocked(false); startReports(); return; }
+    const pw = $('lock-input').value;
+    if (!pw) { msg.className = 'qt-msg is-bad'; msg.textContent = 'Type the password first.'; $('lock-input').focus(); return; }
+    $('lock-go').disabled = true;
+    msg.className = 'qt-msg';
+    msg.textContent = 'Checking\u2026';
+    try {
+      const h = await hashPassword(pw, state.lock.salt, state.lock.iterations);
+      if (h !== state.lock.hash) { msg.className = 'qt-msg is-bad'; msg.textContent = 'That password is not right. Try again.'; $('lock-input').select(); return; }
+      if (state.lockPreview) { setLocked(false); location.hash = 'share'; showPwMsg('The password works. Your team will see the same lock screen.', 'is-ok'); return; }
+      if ($('lock-remember').checked) remember(h);
+      setLocked(false);
+      startReports();
+    } catch (e) {
+      msg.className = 'qt-msg is-bad';
+      msg.textContent = 'The password could not be checked in this browser. Try another browser or the Claude app.';
+    } finally {
+      $('lock-go').disabled = false;
+    }
+  });
+  $('lock-cancel').addEventListener('click', () => { setLocked(false); location.hash = 'share'; });
+
+  
+  const showPwMsg = (text, cls) => { const m = $('pw-msg'); m.className = `qt-msg${cls ? ` ${cls}` : ''}`; m.textContent = text; };
+  const renderShare = () => {
+    const on = Boolean(state.lock);
+    const st = $('pw-state');
+    st.className = `qt-pw-state ${on ? 'is-on' : 'is-off'}`;
+    st.textContent = on
+      ? `The password is on${state.lock.set_at ? ` (set on ${day(state.lock.set_at)})` : ''}.`
+      : 'No password yet. Set one so the website can be opened.';
+    $('pw-save').textContent = on ? 'Change the password' : 'Save the password';
+    const w = state.website;
+    const hasUrl = Boolean(w && typeof w.url === 'string' && /^https:[/][/]/.test(w.url));
+    $('web-row').hidden = !hasUrl;
+    $('web-now-row').hidden = !(w && w.folder_id && state.site && state.site.wrap);
+    if (hasUrl) {
+      $('web-state').textContent = on ? 'Send this link and the password to anyone.' : 'Set the password above before you send this link.';
+      $('web-url').value = w.url;
+      $('web-open').href = w.url;
+    } else if (w && w.folder_id) {
+      $('web-state').textContent = 'The website link will show here once its Google script is published.';
+    }
+    const last = state.site && state.site.last_sync;
+    $('web-updated').textContent = last ? `Website last updated: ${when(last)}.` : '';
+  };
+  $('pw-form').addEventListener('submit', async (ev) => {
+    ev.preventDefault();
+    if (!state.isOwner || !state.db) return;
+    const a = $('pw-new').value;
+    const b = $('pw-again').value;
+    if (a.length < 8 || !/[0-9]/.test(a) || !/[^0-9]/.test(a)) { showPwMsg('Use at least 8 characters, with letters and numbers.', 'is-bad'); $('pw-new').focus(); return; }
+    if (a !== b) { showPwMsg('The two passwords are not the same. Type them again.', 'is-bad'); $('pw-again').focus(); return; }
+    $('pw-save').disabled = true;
+    showPwMsg('Saving\u2026');
+    try {
+      const salt = b64(crypto.getRandomValues(new Uint8Array(16)));
+      const lock = {salt, iterations: 150000, hash: '', set_at: new Date().toISOString()};
+      lock.hash = await hashPassword(a, salt, lock.iterations);
+      const siteRef = state.db.doc(SITE_PATH);
+      const siteSnap = await siteRef.get();
+      const site = siteSnap.exists ? siteSnap.data() : null;
+      const k = site && typeof site.k === 'string' && site.k ? site.k : b64(crypto.getRandomValues(new Uint8Array(32)));
+      const wrap = await wrapSiteKey(k, a);
+      if (siteSnap.exists) await siteRef.update({k, wrap, wrap_set_at: lock.set_at});
+      else await siteRef.set({k, wrap, wrap_set_at: lock.set_at, last_sync: ''});
+      await state.db.doc(LOCK_PATH).set(lock);
+      state.lock = lock;
+      state.site = {...(site || {}), k, wrap, wrap_set_at: lock.set_at};
+      $('pw-new').value = '';
+      $('pw-again').value = '';
+      renderShare();
+      showPwMsg('Password saved. The website uses it from its next update, in about a minute.', 'is-ok');
+      schedulePublish(200);
+    } catch (e) {
+      showPwMsg(e && e.code ? writeError(e) : 'The password could not be saved in this browser.', 'is-bad');
+    } finally {
+      $('pw-save').disabled = false;
+    }
+  });
+  $('web-copy').addEventListener('click', async () => {
+    const m = $('web-msg');
+    try {
+      await navigator.clipboard.writeText($('web-url').value);
+      m.className = 'qt-msg is-ok'; m.textContent = 'Link copied.';
+    } catch (e) {
+      $('web-url').focus(); $('web-url').select();
+      m.className = 'qt-msg'; m.textContent = 'The link is selected. Copy it with Ctrl+C, or press and hold on a phone.';
+    }
+  });
+  $('web-now').addEventListener('click', () => { clearTimeout(pub.timer); publishWebsite(true); });
+
+  
+  (async () => {
+    const c = window.claude;
+    const db = c && typeof c.use === 'function' ? await c.use('db') : null;
+    if (!db) { state.failed = true; state.loaded = true; renderAll(); applyWriteAccess(); return; }
+    state.db = db;
+    const user = await c.use('user');
+    if (user) {
+      try { state.myId = await user.id(); } catch (e) { state.myId = null; }
+      try { state.canWrite = await user.can('data.write'); } catch (e) { state.canWrite = null; }
+      try { state.isOwner = Boolean(await user.isOwner()); } catch (e) { state.isOwner = false; }
+    }
+    state.downloads = await c.use('downloads');
+    const sampleFn = await c.use('sample');
+    if (sampleFn) {
+      try {
+        const lim = await sampleFn.limits();
+        if (lim && lim.images) { state.sample = sampleFn; state.imgLimits = lim.images; }
+      } catch (e) { state.sample = null; }
+    }
+    updateAutoButton();
+    let lockOk = true;
+    try {
+      const snap = await db.doc(LOCK_PATH).get();
+      state.lock = snap.exists ? validLock(snap.data()) : null;
+    } catch (e) { lockOk = false; state.lock = null; }
+    if (state.isOwner) {
+      try { const w = await db.doc(WEBSITE_PATH).get(); state.website = w.exists ? w.data() : null; } catch (e) { state.website = null; }
+      try { const s = await db.doc(SITE_PATH).get(); state.site = s.exists ? s.data() : null; } catch (e) { state.site = null; }
+      try { state.mcp = await c.use('mcp'); } catch (e) { state.mcp = null; }
+    }
+    renderShare();
+    showView();
+    if (!lockOk && !state.isOwner) { state.failed = true; state.loaded = true; renderAll(); applyWriteAccess(); return; }
+    if (!state.isOwner && state.lock && remembered() !== state.lock.hash) { setLocked(true); return; }
+    startReports();
+  })();
+
+window.__trackerParts = (window.__trackerParts || 0) + 1;
+</script>
+</body>
+</html>
