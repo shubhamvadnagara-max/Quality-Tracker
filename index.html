@@ -244,10 +244,75 @@ textarea { resize: vertical; min-height: 64px; width: 100%; }
   .qt-bar-fill { transition: width .35s ease-out; }
 }
 
+/* ---------- new: report cards, early warnings, Claude ---------- */
+.qt-card-head { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; justify-content: space-between; }
+.qt-seg { display: inline-flex; gap: 2px; padding: 3px; background: var(--soft); border-radius: 999px; }
+.qt-seg button { border: 0; background: transparent; padding: 5px 12px; border-radius: 999px; cursor: pointer; font-weight: 700; font-size: .85rem; color: var(--muted); }
+.qt-seg button[aria-pressed="true"] { background: var(--panel); color: var(--ink); box-shadow: 0 1px 2px rgba(0,0,0,.08); }
+.qt-rc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 15.5rem), 1fr)); gap: 12px; }
+.qt-rc { position: relative; text-align: left; border: 1px solid var(--line); border-radius: var(--radius); background: var(--bg); padding: 12px 14px; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 2px 12px; align-items: center; cursor: pointer; }
+.qt-rc:hover { border-color: var(--accent); }
+.qt-rc-grade { grid-row: 1 / span 2; font-family: var(--font-display); font-weight: 700; font-size: 2.4rem; line-height: 1; width: 3.2rem; height: 3.2rem; display: grid; place-items: center; border-radius: 10px; background: var(--soft); }
+.qt-rc.is-gA .qt-rc-grade, .qt-rc.is-gB .qt-rc-grade { background: var(--ok-soft); color: var(--ok); }
+.qt-rc.is-gC .qt-rc-grade { background: var(--accent-soft); color: var(--accent); }
+.qt-rc.is-gD .qt-rc-grade { background: var(--warn-soft); color: var(--warn); }
+.qt-rc.is-gF .qt-rc-grade { background: var(--bad-soft); color: var(--bad); }
+.qt-rc-name { font-weight: 700; padding-right: 2rem; overflow-wrap: anywhere; align-self: end; }
+.qt-rc-score { color: var(--muted); font-size: .82rem; align-self: start; }
+.qt-rc-rank { position: absolute; top: 9px; right: 11px; font-size: .78rem; color: var(--muted); font-weight: 700; }
+.qt-rc-bar { grid-column: 1 / -1; height: 6px; background: var(--soft); border-radius: 3px; overflow: hidden; margin-top: 8px; }
+.qt-rc-bar span { display: block; height: 100%; background: var(--accent); border-radius: 3px; }
+.qt-rc.is-gD .qt-rc-bar span { background: var(--warn); }
+.qt-rc.is-gF .qt-rc-bar span { background: var(--bad); }
+.qt-rc.is-gA .qt-rc-bar span, .qt-rc.is-gB .qt-rc-bar span { background: var(--ok); }
+.qt-rc-stats { grid-column: 1 / -1; margin: 6px 0 0; padding: 0; list-style: none; font-size: .84rem; display: grid; gap: 1px; }
+.qt-rc-trend { grid-column: 1 / -1; font-size: .82rem; font-weight: 700; color: var(--muted); margin-top: 4px; }
+.qt-rc-trend.is-bad { color: var(--bad); }
+.qt-rc-trend.is-ok { color: var(--ok); }
+.qt-find.is-ok::before { background: var(--ok); }
+.qt-warnings h2 .qt-pulse { display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: var(--bad); margin-left: 8px; vertical-align: middle; }
+@media (prefers-reduced-motion: no-preference) {
+  .qt-pulse { animation: qt-pulse 1.8s ease-in-out infinite; }
+  @keyframes qt-pulse { 0%, 100% { opacity: 1; } 50% { opacity: .35; } }
+}
+.qt-ask { background: linear-gradient(135deg, var(--accent-soft), var(--panel) 70%); }
+.qt-ask-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.qt-ask-row input { flex: 1 1 16rem; }
+.qt-ask-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.qt-chip { border: 1px solid var(--line); background: var(--panel); border-radius: 999px; padding: 4px 11px; font-size: .82rem; cursor: pointer; }
+.qt-chip:hover { border-color: var(--accent); }
+.qt-ask-answer { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; }
+.qt-ask-answer p { margin: 0 0 6px; }
+.qt-ask-answer ul { margin: 0 0 6px; padding-left: 20px; }
+.qt-ask-answer > :last-child { margin-bottom: 0; }
+.qt-ask-do { font-weight: 700; color: var(--accent); }
+.qt-ai { grid-column: 1 / -1; background: var(--panel); border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 8px; padding: 10px 12px; display: grid; gap: 6px; justify-items: start; }
+.qt-ai.is-high { border-left-color: var(--bad); }
+.qt-ai.is-medium { border-left-color: var(--warn); }
+.qt-ai.is-low { border-left-color: var(--ok); }
+.qt-ai-head { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.qt-ai-head h4 { margin: 0; }
+.qt-ai-headline { font-weight: 700; }
+.qt-ai-cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr)); gap: 6px 20px; width: 100%; }
+.qt-ai-pattern { color: var(--muted); font-style: italic; }
+.qt-bulk { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; padding: 8px 10px; background: var(--soft); border-radius: 8px; font-size: .9rem; }
+.qt-bulk label { display: inline-flex; gap: 6px; align-items: center; cursor: pointer; font-weight: 700; }
+.qt-bulk .qt-grow { flex: 1 1 auto; color: var(--muted); }
+.qt-row-acts { display: flex; gap: 4px; }
+.qt-btn.is-small { padding: 3px 9px; font-size: .8rem; }
+.qt-sel { width: 1.1rem; height: 1.1rem; cursor: pointer; margin: 0; }
+.qt-sel-cell { width: 2rem; }
+.qt-table tr.is-selected td { background: var(--accent-soft); }
+.qt-filters #pdf-go { margin-left: 4px; }
+#add-site-note p { margin: 0; }
+#add-site-note a.qt-btn { text-decoration: none; display: inline-block; }
 </style>
 <style>
 /* Website: only the read-only views exist. */
-#tab-add, #view-add, #tab-share, #view-share, #lock-view { display: none !important; }
+#tab-share, #view-share, #lock-view { display: none !important; }
+#view-add > :not(#add-site-note) { display: none !important; }
+#add-site-note { display: grid !important; }
+#ask-section, #bulk-bar, #rename-box { display: none !important; }
 .qt-site-foot { color: var(--muted); font-size: .8rem; text-align: center; margin: 0; }
 </style>
 </head>
@@ -289,7 +354,7 @@ textarea { resize: vertical; min-height: 64px; width: 100%; }
     </nav>
   </header>
 
-  <div class="qt-banner" id="status-banner">Loading reports…</div>
+  <div class="qt-banner" id="status-banner">Loading reports&#x2026;</div>
   <div class="qt-banner is-bad" id="web-alert" role="alert" hidden></div>
 
   <section class="qt-lock" id="lock-view" aria-labelledby="lock-title" hidden>
@@ -312,18 +377,49 @@ textarea { resize: vertical; min-height: 64px; width: 100%; }
     <label class="qt-field"><span>Inspection</span><select id="f-type"><option value="">All inspections</option></select></label>
     <label class="qt-field"><span>Month</span><select id="f-month"><option value="">All months</option></select></label>
     <button class="qt-btn" type="button" id="f-clear">Clear filters</button>
+    <button class="qt-btn is-primary" type="button" id="pdf-go" title="A printable report for the month in the Month filter, or the latest month">Monthly PDF</button>
     <span class="qt-filter-note" id="f-note"></span>
   </section>
 
   <!-- OVERVIEW -->
   <main class="qt-view" id="view-overview" aria-labelledby="tab-overview">
+    <section class="qt-card qt-ask" id="ask-section" aria-labelledby="ask-title" hidden>
+      <h3 id="ask-title">Ask the tracker</h3>
+      <p class="qt-note">Ask anything about the reports shown. Claude answers from your own data, and the filters above apply.</p>
+      <form class="qt-ask-row" id="ask-form" novalidate>
+        <label class="qt-sr" for="ask-input">Your question</label>
+        <input type="text" id="ask-input" placeholder="Why did factory 73 have more defects this month?" autocomplete="off">
+        <button class="qt-btn is-primary" type="submit" id="ask-go">Ask</button>
+      </form>
+      <div class="qt-ask-chips" id="ask-chips"></div>
+      <div class="qt-ask-answer" id="ask-answer" aria-live="polite" hidden></div>
+    </section>
+
     <section class="qt-findings" aria-labelledby="find-title">
       <h2 id="find-title">What is going wrong</h2>
       <p class="qt-note">Worked out from the reports below, worst first. Each line says what to do about it.</p>
       <ul class="qt-find-list" id="findings"></ul>
     </section>
 
+    <section class="qt-findings qt-warnings" aria-labelledby="warn-title">
+      <h2 id="warn-title">Early warnings</h2>
+      <p class="qt-note">What is getting worse, found by comparing the last 4 weeks with the 4 weeks before. Act on these before lots start failing.</p>
+      <ul class="qt-find-list" id="warnings"></ul>
+    </section>
+
     <section class="qt-tiles" id="tiles" aria-label="Headline figures"></section>
+
+    <section class="qt-card" aria-labelledby="cards-title">
+      <div class="qt-card-head">
+        <h3 id="cards-title">Report cards</h3>
+        <div class="qt-seg" id="cards-seg" role="group" aria-label="Grade">
+          <button type="button" data-k="factory" aria-pressed="true">Factories</button>
+          <button type="button" data-k="buyer" aria-pressed="false">Buyers</button>
+        </div>
+      </div>
+      <p class="qt-note">A grade from A to F, best first. It weighs lots passed (35%), defects per 100 pieces (35%), lots kept away from the AQL limit (20%) and sizes in tolerance (10%). Click a card to see only that one.</p>
+      <div class="qt-rc-grid" id="cards"></div>
+    </section>
 
     <div class="qt-grid">
       <article class="qt-card">
@@ -344,7 +440,7 @@ textarea { resize: vertical; min-height: 64px; width: 100%; }
       <div class="qt-legend" aria-hidden="true">
         <span><span class="qt-dot is-on"></span>Defect found</span>
         <span><span class="qt-dot"></span>Still allowed</span>
-        <span><span class="qt-x">✕</span>Fails the lot</span>
+        <span><span class="qt-x">&#x2715;</span>Fails the lot</span>
       </div>
       <div class="qt-margin" id="chart-margin"></div>
     </article>
@@ -389,7 +485,26 @@ textarea { resize: vertical; min-height: 64px; width: 100%; }
         <label class="qt-field"><span>Search</span><input type="search" id="r-search" placeholder="Style, buyer, PO or defect"></label>
         <button class="qt-btn" type="button" id="r-export" hidden>Download for Excel (CSV)</button>
       </div>
-      <p class="qt-note">Newest first. Click a line to see its defects and measurements.</p>
+      <p class="qt-note">Newest first. Click a line to see its defects, measurements and Claude's analysis.</p>
+      <div class="qt-bulk" id="bulk-bar" hidden>
+        <label><input type="checkbox" class="qt-sel" id="sel-all"> Select all shown</label>
+        <span class="qt-grow" id="sel-count"></span>
+        <button class="qt-btn" type="button" id="sel-checked" disabled>Mark as checked</button>
+        <button class="qt-btn is-danger" type="button" id="sel-delete" disabled>Delete selected</button>
+        <button class="qt-btn" type="button" id="sel-cancel" hidden>Keep them</button>
+        <button class="qt-btn" type="button" id="ai-all" hidden>Analyse with Claude</button>
+      </div>
+      <details class="qt-manual" id="rename-box" hidden>
+        <summary>Fix a name in every report</summary>
+        <p class="qt-note">For example, when Dynamic writes the same buyer in two ways. Every chart updates after the change.</p>
+        <div class="qt-auto-row">
+          <label class="qt-field"><span>What</span><select id="rn-field"><option value="factory">Factory</option><option value="buyer">Buyer</option><option value="style">Style name</option><option value="colour">Colour</option></select></label>
+          <label class="qt-field"><span>Change this name</span><select id="rn-from"></select></label>
+          <label class="qt-field"><span>To</span><input type="text" id="rn-to"></label>
+          <button class="qt-btn is-primary" type="button" id="rn-go">Change everywhere</button>
+        </div>
+        <p class="qt-msg" id="rn-msg" role="status"></p>
+      </details>
       <div class="qt-table-wrap" id="table-reports"></div>
       <p class="qt-msg" id="r-msg" role="status"></p>
     </article>
@@ -397,6 +512,12 @@ textarea { resize: vertical; min-height: 64px; width: 100%; }
 
   <!-- ADD A REPORT -->
   <section class="qt-view" id="view-add" aria-labelledby="tab-add" hidden>
+    <section class="qt-card" id="add-site-note" hidden>
+      <h3>Add, edit or delete reports</h3>
+      <p>Reports are added in the Saivana Quality Tracker in Claude. Claude reads each Dynamic report, analyses it and updates every chart. This website shows the changes within about a minute, for everyone who has the link.</p>
+      <p><a class="qt-btn is-primary" href="https://claude.ai/artifact/3xW32KdHPUjHoghkfhEmDZ" target="_blank" rel="noopener noreferrer">Open the tracker in Claude</a></p>
+      <p class="qt-note">Only people the owner has shared the tracker with can open it there.</p>
+    </section>
     <div class="qt-banner" id="add-readonly" hidden>You can see the reports but cannot add or change them. Ask the owner to share this tracker with you as a Contributor.</div>
 
     <section class="qt-auto" id="auto-section" aria-labelledby="auto-title">
@@ -404,7 +525,7 @@ textarea { resize: vertical; min-height: 64px; width: 100%; }
       <ol class="qt-steps">
         <li>Pick the factory. If the factory on the report is right, leave it as it is.</li>
         <li>Choose the report files Dynamic sent you, as PDFs or photos. You can choose up to 10 at once.</li>
-        <li>Click <b>Read and save</b>. Claude reads each report and saves it with all its details.</li>
+        <li>Click <b>Read and save</b>. Claude reads each report, saves it with all its details, then analyses it: why it went wrong and what to do. Every chart updates by itself.</li>
       </ol>
       <div class="qt-auto-row">
         <label class="qt-field"><span>Factory</span>
@@ -597,7 +718,7 @@ textarea { resize: vertical; min-height: 64px; width: 100%; }
   };
 
   
-  const fixHash = () => { if (location.hash === '#add' || location.hash === '#share') history.replaceState(null, '', '#overview'); };
+  const fixHash = () => { if (location.hash === '#share') history.replaceState(null, '', '#overview'); };
   fixHash();
   window.addEventListener('hashchange', fixHash);
 
@@ -752,8 +873,7 @@ textarea { resize: vertical; min-height: 64px; width: 100%; }
 })();
 </script>
 <script>
-
-  
+(() => {
   const DEFECT_TYPES = [
     ['Uncut thread', 'Finishing'], ['Uncut extra fabric', 'Finishing'], ['Poor pressing', 'Finishing'],
     ['Soils/stains', 'Handling (stains)'], ['Damage', 'Not clear'],
@@ -791,8 +911,6 @@ textarea { resize: vertical; min-height: 64px; width: 100%; }
     'Embroidery defects': 'Check embroidery panels before they go to stitching.'
   };
   const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-
-  
   const $ = (id) => document.getElementById(id) || (() => { const d = document.createElement('input'); d.type = 'file'; (window.__siteMissing = window.__siteMissing || []).push(id); return d; })();
   const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text !== undefined && text !== null) e.textContent = text; return e; };
   const num = (v) => (v === null || v === undefined || v === '' || Number.isNaN(Number(v))) ? null : Number(v);
@@ -811,7 +929,6 @@ textarea { resize: vertical; min-height: 64px; width: 100%; }
     return d.toISOString().slice(0, 10);
   };
   const plural = (n, one, many) => `${fmt(n)} ${n === 1 ? one : many}`;
-
   const defectsOf = (r) => (Array.isArray(r.defects) ? r.defects : []).map((d) => ({...d, pieces: num(d.pieces) || 0}));
   const majorOf = (r) => sum(defectsOf(r).filter((d) => d.severity === 'Major'), (d) => d.pieces);
   const minorOf = (r) => sum(defectsOf(r).filter((d) => d.severity === 'Minor'), (d) => d.pieces);
@@ -844,8 +961,6 @@ textarea { resize: vertical; min-height: 64px; width: 100%; }
     if (s.includes('neck') || s.includes('shoulder')) return 'Neck and shoulder';
     return 'Other';
   };
-
-  
   const state = {
     reports: [], loaded: false, failed: false,
     filters: {factory: '', buyer: '', type: '', month: ''},
@@ -855,8 +970,6 @@ textarea { resize: vertical; min-height: 64px; width: 100%; }
     isOwner: false, lock: null, locked: false, lockPreview: false, listening: false,
     website: null, site: null, mcp: null
   };
-
-  
   const VIEWS = ['overview', 'reports', 'add', 'share'];
   const showView = () => {
     let v = VIEWS.includes(location.hash.slice(1)) ? location.hash.slice(1) : 'overview';
@@ -874,14 +987,11 @@ textarea { resize: vertical; min-height: 64px; width: 100%; }
   for (const b of document.querySelectorAll('.qt-tab')) b.addEventListener('click', () => { location.hash = b.dataset.view; });
   window.addEventListener('hashchange', showView);
   showView();
-
-  
   const filtered = () => state.reports.filter((r) =>
     (!state.filters.factory || r.factory === state.filters.factory) &&
     (!state.filters.buyer || r.buyer === state.filters.buyer) &&
     (!state.filters.type || (r.inspection || 'Final') === state.filters.type) &&
     (!state.filters.month || monthKey(r.date) === state.filters.month));
-
   const fillSelect = (sel, values, label, current) => {
     const keep = current && values.some((v) => v[0] === current) ? current : '';
     sel.replaceChildren(new Option(label, ''), ...values.map(([v, t]) => new Option(t, v)));
@@ -901,8 +1011,6 @@ textarea { resize: vertical; min-height: 64px; width: 100%; }
     $(id).addEventListener('change', () => { state.filters[key] = $(id).value; renderAll(); });
   }
   $('f-clear').addEventListener('click', () => { state.filters = {factory: '', buyer: '', type: '', month: ''}; renderAll(); });
-
-  
   const groupBy = (items, keyOf, valOf) => {
     const m = new Map();
     for (const it of items) {
@@ -968,8 +1076,6 @@ textarea { resize: vertical; min-height: 64px; width: 100%; }
       weeks: [...weeks.values()].sort((a, b) => a.week.localeCompare(b.week))
     };
   };
-
-  
   const findings = (a) => {
     const out = [];
     const add = (level, what, todo) => out.push({level, what, todo});
@@ -1022,10 +1128,7 @@ textarea { resize: vertical; min-height: 64px; width: 100%; }
     const rank = {bad: 0, warn: 1, info: 2};
     return out.sort((x, y) => rank[x.level] - rank[y.level]);
   };
-
-  
   const empty = (box, text) => box.replaceChildren(el('p', 'qt-empty', text));
-
   const renderFindings = (a) => {
     const box = $('findings');
     const list = findings(a);
@@ -1041,7 +1144,6 @@ textarea { resize: vertical; min-height: 64px; width: 100%; }
       return li;
     }));
   };
-
   const tile = (label, main, small, note, bad) => {
     const t = el('div', `qt-tile${bad ? ' is-bad' : ''}`);
     t.append(el('span', 'qt-tile-label', label));
@@ -1061,7 +1163,6 @@ textarea { resize: vertical; min-height: 64px; width: 100%; }
       tile('Clean checks', fmt(a.clean.length), `of ${fmt(a.lots)}`, 'No stitching or finishing defect')
     );
   };
-
   const bars = (box, rows, opts) => {
     if (!rows.length) { empty(box, opts.emptyText); return; }
     const max = Math.max(1, ...rows.map((r) => r.value));
@@ -1094,7 +1195,6 @@ textarea { resize: vertical; min-height: 64px; width: 100%; }
     }
     box.replaceChildren(...out);
   };
-
   const renderTypes = (a) => bars($('chart-types'), a.byType, {
     cumulative: true, emptyText: 'No defects in these reports.',
     aria: (r, t) => `${r.key}: ${r.value} pieces, ${pct(r.value, t)}% of defects, in ${r.reports.size} reports`
@@ -1107,7 +1207,6 @@ textarea { resize: vertical; min-height: 64px; width: 100%; }
     emptyText: 'Nothing was left blank.', suffix: () => `of ${fmt(a.lots)}`,
     aria: (r) => `${r.key}: ${r.value} of ${a.lots} reports`
   });
-
   const dots = (kind, found, allowed) => {
     const cell = el('div', 'qt-dots');
     cell.append(el('span', 'qt-dots-k', kind));
@@ -1131,7 +1230,6 @@ textarea { resize: vertical; min-height: 64px; width: 100%; }
       return row;
     }));
   };
-
   const renderTrend = (a) => {
     const box = $('chart-trend');
     const ws = a.weeks;
@@ -1167,7 +1265,6 @@ textarea { resize: vertical; min-height: 64px; width: 100%; }
     else wrap.append(el('p', 'qt-note', 'Weeks start on Monday. The latest week is dark.'));
     box.replaceChildren(wrap);
   };
-
   const table = (cols, rows, opts = {}) => {
     const t = el('table', `qt-table${opts.wide ? ' qt-table-wide' : ''}${opts.compact ? ' is-compact' : ''}`);
     const thead = el('thead');
@@ -1203,7 +1300,6 @@ textarea { resize: vertical; min-height: 64px; width: 100%; }
     f.replaceChildren(table(groupCols('Factory'), a.byFactory, {compact: true}));
     b.replaceChildren(table(groupCols('Buyer'), a.byBuyer, {compact: true}));
   };
-
   const renderMeasures = (a) => {
     const box = $('table-meas');
     $('meas-note').textContent = a.lots ? `${fmt(a.measReports.size)} of ${plural(a.lots, 'report', 'reports')} had at least one measurement outside the buyer's tolerance.` : '';
@@ -1218,11 +1314,6 @@ textarea { resize: vertical; min-height: 64px; width: 100%; }
       {label: 'Pcs', num: true, get: (m) => (num(m.pieces) === null ? '\u2013' : fmt(num(m.pieces)))}
     ], rows));
   };
-
-window.__trackerParts = (window.__trackerParts || 0) + 1;
-</script>
-<script>
-  
   const matchesSearch = (r) => {
     const q = state.search.trim().toLowerCase();
     if (!q) return true;
@@ -1243,21 +1334,46 @@ window.__trackerParts = (window.__trackerParts || 0) + 1;
   const renderReports = () => {
     const box = $('table-reports');
     const rows = filtered().filter(matchesSearch).sort((x, y) => String(y.date).localeCompare(String(x.date)) || String(x.style).localeCompare(String(y.style)));
-    if (!rows.length) { empty(box, state.reports.length ? 'No reports match.' : 'No reports yet.'); return; }
+    state.shownIds = rows.map((r) => r.id);
+    for (const id of [...state.selected]) if (!state.reports.some((r) => r.id === id)) state.selected.delete(id);
+    renderBulk();
+    if (!rows.length) { empty(box, state.reports.length ? 'No reports match.' : 'No reports yet. Add the first one in "Add a report".'); return; }
+    const canChange = canChangeNow();
+    const canAi = Boolean(canChange && state.ai);
     const cols = ['Date', 'Inspection', 'Factory', 'Buyer', 'Style', 'Order', 'Cut', 'Offered', 'Checked', 'Major', 'Minor', 'Result', 'Biggest defect'];
+    const off = canChange ? 2 : 0;
     const t = el('table', 'qt-table qt-table-wide');
     const thead = el('thead'); const hr = el('tr');
+    if (canChange) { const th = el('th'); th.append(el('span', 'qt-sr', 'Select')); hr.append(th, el('th', '', 'Change')); }
     cols.forEach((c, i) => hr.append(el('th', i >= 5 && i <= 10 ? 'num' : '', c)));
     thead.append(hr);
     const tb = el('tbody');
-    const canChange = !state.readOnly && state.canWrite !== false && state.db;
     for (const r of rows) {
-      const tr = el('tr', 'qt-row-main');
+      const tr = el('tr', `qt-row-main${state.selected.has(r.id) ? ' is-selected' : ''}`);
       tr.tabIndex = 0;
       tr.setAttribute('aria-expanded', String(state.expanded.has(r.id)));
       const toggle = () => { if (state.expanded.has(r.id)) state.expanded.delete(r.id); else state.expanded.add(r.id); state.confirmDelete = null; renderReports(); };
       tr.addEventListener('click', toggle);
-      tr.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); } });
+      tr.addEventListener('keydown', (e) => { if (e.target === tr && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); toggle(); } });
+      if (canChange) {
+        const td = el('td', 'qt-sel-cell');
+        const cb = el('input', 'qt-sel'); cb.type = 'checkbox'; cb.checked = state.selected.has(r.id);
+        cb.setAttribute('aria-label', `Select ${r.style || 'report'} of ${day(r.date)}`);
+        td.addEventListener('click', (e) => e.stopPropagation());
+        cb.addEventListener('change', () => { if (cb.checked) state.selected.add(r.id); else state.selected.delete(r.id); state.confirmBulk = false; tr.classList.toggle('is-selected', cb.checked); renderBulk(); });
+        td.append(cb); tr.append(td);
+      }
+      if (canChange) {
+        const td = el('td', 'nowrap');
+        const acts = el('div', 'qt-row-acts');
+        const eb = el('button', 'qt-btn is-small', 'Edit'); eb.type = 'button';
+        eb.setAttribute('aria-label', `Edit ${r.style || 'report'} of ${day(r.date)}`);
+        eb.addEventListener('click', (e) => { e.stopPropagation(); startEdit(r); });
+        const db2 = el('button', 'qt-btn is-small is-danger', 'Delete'); db2.type = 'button';
+        db2.setAttribute('aria-label', `Delete ${r.style || 'report'} of ${day(r.date)}`);
+        db2.addEventListener('click', (e) => { e.stopPropagation(); state.confirmDelete = r.id; state.expanded.add(r.id); renderReports(); });
+        acts.append(eb, db2); td.append(acts); tr.append(td);
+      }
       const full = isFull(r);
       const cells = [
         [day(r.date), 'nowrap'], [r.inspection || 'Final', ''], [r.factory || '', ''], [r.buyer || '', 'nowrap'], [r.style || '', 'nowrap'],
@@ -1266,16 +1382,21 @@ window.__trackerParts = (window.__trackerParts || 0) + 1;
         [full ? 'n/a' : ofAllowed(majorOf(r), num(r.major_allowed)), 'num nowrap'], [full ? 'n/a' : ofAllowed(minorOf(r), num(r.minor_allowed)), 'num nowrap']
       ];
       for (const [v, c] of cells) tr.append(el('td', c, v));
-      if (r.needs_check) tr.children[4].append(el('span', 'qt-pill is-warn qt-check-pill', 'Check'));
+      const styleCell = tr.children[4 + off];
+      if (r.needs_check) styleCell.append(el('span', 'qt-pill is-warn qt-check-pill', 'Check'));
+      if (r.analysis && r.analysis.risk === 'High') styleCell.append(el('span', 'qt-pill is-bad qt-check-pill', 'High risk'));
+      if (state.aiBusy.has(r.id)) styleCell.append(el('span', 'qt-pill qt-check-pill', 'Analysing'));
       const st = statusOf(r);
       const tdSt = el('td', 'nowrap'); tdSt.append(el('span', `qt-pill ${st[1]}`, st[0])); tr.append(tdSt);
       tr.append(el('td', 'nowrap', topDefectOf(r) || '\u2013'));
       tb.append(tr);
       if (state.expanded.has(r.id)) {
         const dr = el('tr', 'qt-row-detail');
-        const td = el('td'); td.colSpan = cols.length;
+        const td = el('td'); td.colSpan = cols.length + off;
         const box2 = el('div', 'qt-detail');
         const sec = (title, node) => { const s = el('div'); s.append(el('h4', '', title), node); return s; };
+        const ai = aiSection(r, canAi);
+        if (ai) box2.append(ai);
         const dl = el('ul');
         const ds = defectsOf(r);
         if (!ds.length) dl.append(el('li', '', 'No defects written'));
@@ -1297,15 +1418,22 @@ window.__trackerParts = (window.__trackerParts || 0) + 1;
         box2.append(sec('Missing on the report', gl));
         box2.append(sec("Dynamic's remarks", el('p', '', r.remarks || 'None')));
         if (r.needs_check) {
+          const wrap = el('div');
           const cl = el('ul');
           const notes = Array.isArray(r.check_notes) && r.check_notes.length ? r.check_notes : ['Read automatically from the scanned report'];
           for (const n of notes) cl.append(el('li', '', n));
-          box2.append(sec('Please check', cl));
+          wrap.append(cl);
+          if (canChange) {
+            const ok = el('button', 'qt-btn is-small', 'It is correct: mark as checked'); ok.type = 'button';
+            ok.addEventListener('click', (e) => { e.stopPropagation(); ok.disabled = true; markChecked(r.id); });
+            wrap.append(ok);
+          }
+          box2.append(sec('Please check', wrap));
         }
         if (r.file_name) box2.append(sec('Read from file', el('p', '', r.file_name)));
         if (canChange) {
           const act = el('div', 'qt-detail-actions');
-          const edit = el('button', 'qt-btn', 'Change this report');
+          const edit = el('button', 'qt-btn', 'Edit this report');
           edit.type = 'button';
           edit.addEventListener('click', (e) => { e.stopPropagation(); startEdit(r); });
           act.append(edit);
@@ -1330,7 +1458,6 @@ window.__trackerParts = (window.__trackerParts || 0) + 1;
     box.replaceChildren(t);
   };
   $('r-search').addEventListener('input', () => { state.search = $('r-search').value; renderReports(); });
-
   const deleteReport = async (id) => {
     $('r-msg').className = 'qt-msg';
     $('r-msg').textContent = 'Deleting\u2026';
@@ -1344,8 +1471,6 @@ window.__trackerParts = (window.__trackerParts || 0) + 1;
       $('r-msg').textContent = writeError(e);
     }
   };
-
-  
   const csvCell = (v) => { const s = v === null || v === undefined ? '' : String(v); return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s; };
   $('r-export').addEventListener('click', async () => {
     const rows = filtered().filter(matchesSearch).sort((x, y) => String(y.date).localeCompare(String(x.date)));
@@ -1368,8 +1493,6 @@ window.__trackerParts = (window.__trackerParts || 0) + 1;
       $('r-msg').textContent = 'The download did not work here. Try again from the tracker page.';
     }
   });
-
-  
   const deptOptions = (sel, value) => { sel.replaceChildren(...DEPARTMENTS.map((d) => new Option(d, d))); sel.value = value || 'Not clear'; };
   let lineSeq = 0;
   const field = (labelText, control, wide) => { const l = el('label', `qt-field${wide ? ' is-wide' : ''}`); l.append(el('span', '', labelText), control); return l; };
@@ -1424,7 +1547,6 @@ window.__trackerParts = (window.__trackerParts || 0) + 1;
     s.replaceChildren(document.createTextNode('Totals: '), el('b', '', `${fmt(maj)} major`), document.createTextNode(', '), el('b', '', `${fmt(min)} minor`));
     if (ng) { s.append(', '); s.append(el('b', '', `${fmt(ng)} not graded`)); }
   }
-
   const gapBox = $('gap-checks');
   gapBox.replaceChildren(...GAPS.map(([k, label]) => {
     const l = el('label');
@@ -1432,14 +1554,12 @@ window.__trackerParts = (window.__trackerParts || 0) + 1;
     l.append(c, el('span', '', label));
     return l;
   }));
-
   const syncCheckType = () => {
     const full = $('in-full').checked;
     $('allowed-grid').hidden = full;
   };
   $('in-aql').addEventListener('change', syncCheckType);
   $('in-full').addEventListener('change', syncCheckType);
-
   const today = () => {
     const d = new Date();
     return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
@@ -1461,7 +1581,6 @@ window.__trackerParts = (window.__trackerParts || 0) + 1;
   $('cancel-edit').addEventListener('click', () => resetForm());
   $('add-defect').addEventListener('click', () => addDefectLine());
   $('add-measure').addEventListener('click', () => addMeasureLine());
-
   const startEdit = (r) => {
     resetForm();
     state.editingId = r.id;
@@ -1498,7 +1617,6 @@ window.__trackerParts = (window.__trackerParts || 0) + 1;
     location.hash = 'add';
     setTimeout(() => $('manual-box').scrollIntoView({block: 'start'}), 0);
   };
-
   const writeError = (e) => {
     const code = e && e.code;
     if (code === 'invalid_argument') {
@@ -1510,7 +1628,6 @@ window.__trackerParts = (window.__trackerParts || 0) + 1;
     if (code === 'resource_exhausted') return 'Too many saves at once. Wait a moment and try again.';
     return 'Could not save just now. Check your connection and try again.';
   };
-
   $('report-form').addEventListener('submit', async (ev) => {
     ev.preventDefault();
     const msg = $('form-msg');
@@ -1563,12 +1680,14 @@ window.__trackerParts = (window.__trackerParts || 0) + 1;
     msg.className = 'qt-msg';
     msg.textContent = 'Saving\u2026';
     try {
+      let savedId = state.editingId;
       if (state.editingId) await state.db.doc(`reports/${state.editingId}`).set(doc);
-      else await state.db.collection('reports').add(doc);
+      else savedId = (await state.db.collection('reports').add(doc)).id;
       const wasEdit = Boolean(state.editingId);
       resetForm(true);
+      queueAnalysis(savedId, doc);
       msg.className = 'qt-msg is-ok';
-      msg.textContent = wasEdit ? 'Changes saved. The overview is updated.' : 'Report saved. The overview is updated. You can add the next one.';
+      msg.textContent = `${wasEdit ? 'Changes saved.' : 'Report saved.'} Every chart is updated${state.ai ? ', and Claude is analysing it' : ''}.${wasEdit ? '' : ' You can add the next one.'}`;
     } catch (e) {
       msg.className = 'qt-msg is-bad';
       msg.textContent = writeError(e);
@@ -1576,7 +1695,6 @@ window.__trackerParts = (window.__trackerParts || 0) + 1;
       btn.disabled = false;
     }
   });
-
   const renderDatalists = () => {
     const uniq = (f) => [...new Set(state.reports.map(f).filter(Boolean))].sort();
     const factories = [...new Set(['166', '96', '73', ...uniq((r) => r.factory)])];
@@ -1588,7 +1706,6 @@ window.__trackerParts = (window.__trackerParts || 0) + 1;
     $('dl-buyer').replaceChildren(...uniq((r) => r.buyer).map((v) => new Option(v)));
     $('dl-style').replaceChildren(...uniq((r) => r.style).map((v) => new Option(v)));
   };
-
   const applyWriteAccess = () => {
     const blocked = state.readOnly || state.canWrite === false || !state.db;
     const noWrite = state.loaded && (state.readOnly || state.canWrite === false);
@@ -1600,11 +1717,6 @@ window.__trackerParts = (window.__trackerParts || 0) + 1;
     $('r-export').hidden = !state.downloads;
     if (blocked && state.loaded) renderReports();
   };
-
-window.__trackerParts = (window.__trackerParts || 0) + 1;
-</script>
-<script>
-  
   const TYPE_LIST = DEFECT_TYPES.map(([t]) => t).join(', ');
   const EXTRACT_PROMPT = [
     'The images show page 1 of a scanned "DYNAMIC AGENCIES - INSPECTION REPORT" for a garment order. Most of it is handwritten. Some images show only a part of the page, zoomed in so the small handwriting is easier to read: read every number and word from the clearest image, and do not count anything twice where parts overlap.',
@@ -1626,7 +1738,6 @@ window.__trackerParts = (window.__trackerParts || 0) + 1;
     '- gaps: also add "report_no" if the REPORT NO. box is empty, "cut_qty" if CUT QTY is blank, "po" if P.O. NO. is blank, and "no_department" if no responsible department is written for the defects.',
     '- Never guess a number you cannot read. Use null instead.'
   ].join('\n');
-
   const normalizeRead = (j, fileName, factoryChoice) => {
     const s = (v) => (v === null || v === undefined) ? '' : String(v).trim();
     const whole = (v) => { const x = num(v); return x === null ? null : Math.round(x); };
@@ -1694,12 +1805,10 @@ window.__trackerParts = (window.__trackerParts || 0) + 1;
     doc.check_notes = notes;
     return doc;
   };
-
   const sameText = (v) => String(v || '').trim().toLowerCase().replace(/\s+/g, ' ');
   const findDuplicate = (doc) => state.reports.find((r) => (r.file_name && sameText(r.file_name) === sameText(doc.file_name)) ||
     (r.date === doc.date && sameText(r.style) === sameText(doc.style) && sameText(r.buyer) === sameText(doc.buyer) &&
     sameText(r.po) === sameText(doc.po) && num(r.offer_qty) === num(doc.offer_qty)));
-
   const canvasBlob = (canvas) => new Promise((res) => canvas.toBlob(res, 'image/jpeg', 0.9));
   const cropBlob = async (src, sx, sy, sw, sh, maxSide) => {
     const k = Math.min(1, maxSide / Math.max(sw, sh));
@@ -1786,7 +1895,6 @@ window.__trackerParts = (window.__trackerParts || 0) + 1;
     if (state.imgLimits && file.size > state.imgLimits.maxInputBytes) throw {code: 'too_big'};
     return file;
   };
-
   const READ_STOP = ['not_granted', 'sampling_disabled', 'not_declared', 'images_unavailable', 'capability_disabled', 'capability_removed', 'session_expired', 'rate_limited'];
   const readError = (e) => {
     switch (e && e.code) {
@@ -1803,7 +1911,6 @@ window.__trackerParts = (window.__trackerParts || 0) + 1;
       default: return 'The report could not be read. Try again, or type it by hand below.';
     }
   };
-
   const autoItem = (fileName) => {
     const li = el('li', 'qt-auto-item');
     const left = el('div');
@@ -1840,7 +1947,6 @@ window.__trackerParts = (window.__trackerParts || 0) + 1;
     b.addEventListener('click', () => startEdit(state.reports.find((r) => r.id === id) || {id, ...doc}));
     return b;
   };
-
   const updateAutoButton = () => {
     $('auto-go').disabled = state.autoBusy || !$('auto-files').files.length || !state.sample || !state.db;
   };
@@ -1897,6 +2003,7 @@ window.__trackerParts = (window.__trackerParts || 0) + 1;
           busy(true);
           try {
             await state.db.doc(`reports/${dupId}`).set(keepDoc);
+            queueAnalysis(dupId, keepDoc);
             it.ui.set(keepDoc.needs_check ? 'Replaced with the new reading, but please check it.' : 'Replaced with the new reading.', keepDoc.needs_check ? 'is-warn' : 'is-ok');
             it.ui.actions(openBtn(dupId, keepDoc));
           } catch (e) { it.ui.set(writeError(e), 'is-bad'); busy(false); }
@@ -1905,6 +2012,7 @@ window.__trackerParts = (window.__trackerParts || 0) + 1;
           busy(true);
           try {
             const ref2 = await state.db.collection('reports').add(keepDoc);
+            queueAnalysis(ref2.id, keepDoc);
             it.ui.set(keepDoc.needs_check ? 'Saved as a new report, but please check it.' : 'Saved as a new report.', keepDoc.needs_check ? 'is-warn' : 'is-ok');
             it.ui.actions(openBtn(ref2.id, keepDoc));
           } catch (e) { it.ui.set(writeError(e), 'is-bad'); busy(false); }
@@ -1915,6 +2023,7 @@ window.__trackerParts = (window.__trackerParts || 0) + 1;
       try {
         const ref = await state.db.collection('reports').add(doc);
         const savedId = ref.id;
+        queueAnalysis(savedId, doc);
         tally.saved += 1;
         if (doc.needs_check) tally.check += 1;
         const summary = `${doc.style}, ${doc.buyer}, ${day(doc.date)}, ${plural(totalOf(doc), 'defect', 'defects')}`;
@@ -1940,6 +2049,7 @@ window.__trackerParts = (window.__trackerParts || 0) + 1;
     if (tally.check) parts.push(`${tally.check} of them ${tally.check === 1 ? 'needs' : 'need'} a quick check`);
     if (tally.dup) parts.push(`${tally.dup} ${tally.dup === 1 ? 'was' : 'were'} already in the tracker`);
     if (tally.failed) parts.push(`${tally.failed} could not be read`);
+    if (tally.saved && state.ai) parts.push('Claude is now analysing each saved report; you can see it in All reports');
     sumLi.append(el('div', 'qt-auto-file', `${parts.join('. ')}.`));
     $('auto-list').prepend(sumLi);
     state.autoBusy = false;
@@ -1947,8 +2057,567 @@ window.__trackerParts = (window.__trackerParts || 0) + 1;
     $('auto-files').value = '';
     updateAutoButton();
   });
-
-  
+  state.selected = new Set();
+  state.aiBusy = new Set();
+  state.ai = null;
+  state.cardKey = 'factory';
+  state.confirmBulk = false;
+  const DAY_MS = 86400000;
+  const dateMs = (s) => { const t = Date.parse(`${String(s || '').slice(0, 10)}T00:00:00Z`); return Number.isNaN(t) ? null : t; };
+  const per100Of = (rs) => { const c = sum(rs, (r) => r.checked); return c ? sum(rs, (r) => totalOf(r)) / c * 100 : null; };
+  const placeName = (key, v) => (key === 'factory' && /^\d+$/.test(String(v)) ? `Factory ${v}` : String(v));
+  const shortDate = (iso) => { const d = new Date(iso); return Number.isNaN(d.getTime()) ? '' : new Intl.DateTimeFormat('en-IN', {day: 'numeric', month: 'short', hour: 'numeric', minute: '2-digit'}).format(d); };
+  const trendBase = () => state.reports.filter((r) =>
+    (!state.filters.factory || r.factory === state.filters.factory) &&
+    (!state.filters.buyer || r.buyer === state.filters.buyer) &&
+    (!state.filters.type || (r.inspection || 'Final') === state.filters.type));
+  const windows = (rs, days) => {
+    const end = Math.max(0, ...rs.map((r) => dateMs(r.date) || 0));
+    const recent = []; const prior = [];
+    for (const r of rs) {
+      const t = dateMs(r.date);
+      if (t === null) continue;
+      const age = (end - t) / DAY_MS;
+      if (age < days) recent.push(r); else if (age < days * 2) prior.push(r);
+    }
+    return {recent, prior};
+  };
+  const topTypeOf = (rs) => { const g = groupBy(rs.flatMap((r) => defectsOf(r)), (d) => d.type, (d) => d.pieces); return g.length ? g[0].key : ''; };
+  const canChangeNow = () => Boolean(!state.readOnly && state.canWrite !== false && state.db);
+  const gradeOf = (s) => (s >= 85 ? 'A' : s >= 70 ? 'B' : s >= 55 ? 'C' : s >= 40 ? 'D' : 'F');
+  const scoreOf = (rs) => {
+    const lots = rs.length;
+    if (!lots) return 0;
+    const passRate = rs.filter((r) => r.result === 'Pass').length / lots;
+    const p = per100Of(rs);
+    const defScore = p === null ? 0.5 : Math.max(0, 1 - p / 10);
+    const sampled = rs.filter(isSampled);
+    const safe = sampled.length ? sampled.filter((r) => roomOf(r) > 0).length / sampled.length : 1;
+    const measOk = rs.filter((r) => !(Array.isArray(r.measurements) && r.measurements.length)).length / lots;
+    return Math.round(passRate * 35 + defScore * 35 + safe * 20 + measOk * 10);
+  };
+  const trendOf = (rsAll) => {
+    const {recent, prior} = windows(rsAll, 28);
+    const now = per100Of(recent); const before = per100Of(prior);
+    if (!recent.length || !prior.length || now === null || before === null) return {kind: 'none', text: 'Trend shows after two months of reports'};
+    if (now > before * 1.15 && now - before >= 0.5) return {kind: 'bad', text: `\u25b2 Getting worse: ${fmt1(before)} \u2192 ${fmt1(now)} per 100 pcs`, now, before};
+    if (now < before * 0.85 && before - now >= 0.5) return {kind: 'ok', text: `\u25bc Getting better: ${fmt1(before)} \u2192 ${fmt1(now)} per 100 pcs`, now, before};
+    return {kind: 'flat', text: `Steady: about ${fmt1(now)} per 100 pcs`, now, before};
+  };
+  const buildCards = (rs, key, base) => {
+    const m = new Map();
+    for (const r of rs) { const k = r[key] || 'Not written'; if (!m.has(k)) m.set(k, []); m.get(k).push(r); }
+    const cards = [...m.entries()].map(([k, list]) => {
+      const score = scoreOf(list);
+      return {
+        key: k, list, score, grade: gradeOf(score), lots: list.length,
+        passPct: pct(list.filter((r) => r.result === 'Pass').length, list.length),
+        per100: per100Of(list), top: topTypeOf(list),
+        trend: trendOf(base.filter((r) => (r[key] || 'Not written') === k))
+      };
+    });
+    cards.sort((a, b) => b.score - a.score || b.lots - a.lots || String(a.key).localeCompare(String(b.key)));
+    cards.forEach((c, i) => { c.rank = i + 1; });
+    return cards;
+  };
+  const renderCards = () => {
+    const box = $('cards');
+    for (const b of document.querySelectorAll('#cards-seg button')) b.setAttribute('aria-pressed', String(b.dataset.k === state.cardKey));
+    const cards = buildCards(filtered(), state.cardKey, trendBase());
+    if (!cards.length) { empty(box, 'No reports in these filters.'); return; }
+    box.replaceChildren(...cards.map((c) => {
+      const card = el('button', `qt-rc is-g${c.grade}`);
+      card.type = 'button';
+      card.title = `Show only ${placeName(state.cardKey, c.key)}`;
+      card.append(el('span', 'qt-rc-rank', `#${c.rank}`), el('span', 'qt-rc-grade', c.grade));
+      card.append(el('span', 'qt-rc-name', placeName(state.cardKey, c.key)));
+      card.append(el('span', 'qt-rc-score', `Score ${c.score} of 100${c.lots < 3 ? ' \u00b7 few lots yet' : ''}`));
+      const bar = el('span', 'qt-rc-bar'); const fill = el('span'); fill.style.width = `${c.score}%`; bar.append(fill); card.append(bar);
+      const ul = el('ul', 'qt-rc-stats');
+      ul.append(el('li', '', `${plural(c.lots, 'lot', 'lots')} \u00b7 ${c.passPct}% passed`));
+      ul.append(el('li', '', `${fmt1(c.per100)} defects per 100 pieces`));
+      if (c.top) ul.append(el('li', '', `Biggest defect: ${c.top}`));
+      card.append(ul);
+      card.append(el('span', `qt-rc-trend is-${c.trend.kind}`, c.trend.text));
+      card.addEventListener('click', () => {
+        state.filters[state.cardKey] = c.key;
+        renderAll();
+        $('filters').scrollIntoView({behavior: 'smooth', block: 'start'});
+      });
+      return card;
+    }));
+  };
+  for (const b of document.querySelectorAll('#cards-seg button')) b.addEventListener('click', () => { state.cardKey = b.dataset.k; renderCards(); });
+  const earlyWarnings = (rs) => {
+    const out = [];
+    if (rs.length < 2) return out;
+    const add = (level, weight, what, todo) => out.push({level, weight, what, todo});
+    const {recent, prior} = windows(rs, 28);
+    const checkedIn = (set) => sum(set, (r) => r.checked);
+    const piecesOf = (set, type) => sum(set.flatMap((r) => defectsOf(r)).filter((d) => d.type === type), (d) => d.pieces);
+    for (const t of [...new Set(recent.flatMap((r) => defectsOf(r)).map((d) => d.type))]) {
+      const pcs = piecesOf(recent, t);
+      const cNow = checkedIn(recent); const cBefore = checkedIn(prior);
+      if (pcs < 3 || !cNow) continue;
+      const now = pcs / cNow * 100;
+      const before = cBefore ? piecesOf(prior, t) / cBefore * 100 : null;
+      const todo = ACTIONS[t] || 'Find where it starts on the line and add a check before the next inspection.';
+      if (before === null || before === 0) {
+        if (prior.length >= 2) add('warn', 2 + now, `${t} is new: ${plural(pcs, 'piece', 'pieces')} in the last 4 weeks, none in the 4 weeks before.`, todo);
+      } else if (now >= before * 1.5 && now - before >= 0.5) {
+        add(now >= before * 2 ? 'bad' : 'warn', now / before, `${t} is rising: ${fmt1(now)} per 100 pieces in the last 4 weeks, up from ${fmt1(before)}.`, todo);
+      }
+    }
+    for (const key of ['factory', 'buyer']) {
+      for (const k of [...new Set(recent.map((r) => r[key]).filter(Boolean))]) {
+        const a = recent.filter((r) => r[key] === k); const b = prior.filter((r) => r[key] === k);
+        if (a.length < 2 || !b.length) continue;
+        const now = per100Of(a); const before = per100Of(b);
+        if (now === null || before === null || !(now >= before * 1.3 && now - before >= 1)) continue;
+        const top = topTypeOf(a);
+        add('bad', 3 + now / Math.max(before, 0.1), `${placeName(key, k)} is getting worse: ${fmt1(now)} defects per 100 pieces in the last 4 weeks, up from ${fmt1(before)}.`,
+          key === 'factory' ? `Walk the lines of ${placeName(key, k).toLowerCase()} with the in-charge this week${top ? `, starting with ${top.toLowerCase()}` : ''}.`
+            : `Review the running ${k} styles with the line supervisors${top ? ` and stop ${top.toLowerCase()}` : ''}.`);
+      }
+    }
+    for (const k of [...new Set(rs.map((r) => r.factory).filter(Boolean))]) {
+      const lots = rs.filter((r) => r.factory === k && isSampled(r)).sort((x, y) => String(y.date).localeCompare(String(x.date))).slice(0, 3);
+      if (lots.length === 3 && lots.every((r) => roomOf(r) <= 1)) {
+        add('bad', 6, `${placeName('factory', k)}: the last 3 lots all came within one defect of failing.`, 'Do a full piece-by-piece check in finishing before the next offer, until a lot passes with room to spare.');
+      }
+    }
+    const styleFails = new Map();
+    for (const r of rs) if (r.result === 'Fail' || r.result === 'Re-offer') styleFails.set(r.style, (styleFails.get(r.style) || 0) + 1);
+    for (const [s, n] of styleFails) {
+      if (n >= 2 && s && s !== 'Not read') add('bad', 5 + n, `Style ${s} has failed or been re-offered ${n} times.`, `Hold a short meeting on ${s} with cutting, stitching and finishing before the next lot is offered.`);
+    }
+    const areas = groupBy(recent.flatMap((r) => (Array.isArray(r.measurements) ? r.measurements : []).map((m) => ({area: measureArea(m.point), reportId: r.id}))), (m) => m.area, () => 1);
+    for (const g of areas) {
+      if (g.reports.size >= 3) add('warn', 2 + g.reports.size, `${g.key} measurements went out of tolerance in ${g.reports.size} reports in the last 4 weeks.`, 'Check the pattern and measure a size set from each line before final inspection.');
+    }
+    const waiting = rs.filter((r) => r.needs_check).length;
+    if (waiting >= 3) add('warn', 1, `${plural(waiting, 'report is', 'reports are')} still marked Check, so the numbers above may be off.`, 'Open All reports and confirm or correct the lines marked Check.');
+    const rank = {bad: 0, warn: 1};
+    return out.sort((x, y) => rank[x.level] - rank[y.level] || y.weight - x.weight).slice(0, 8);
+  };
+  const renderWarnings = () => {
+    const box = $('warnings');
+    const list = earlyWarnings(trendBase());
+    if (!list.length) {
+      const li = el('li', 'qt-find is-ok'); const body = el('div');
+      body.append(el('p', 'qt-find-what', state.reports.length ? 'No early warnings. Nothing is getting worse right now.' : 'Warnings show here once there are reports.'));
+      li.append(body); box.replaceChildren(li);
+      return;
+    }
+    box.replaceChildren(...list.map((f) => {
+      const li = el('li', `qt-find is-${f.level}`);
+      const body = el('div');
+      body.append(el('p', 'qt-find-what', f.what));
+      const todo = el('p', 'qt-find-do');
+      todo.append(el('b', '', 'What to do: '), document.createTextNode(f.todo));
+      body.append(todo);
+      li.append(body);
+      return li;
+    }));
+  };
+  const reportLine = (r) => {
+    const ds = defectsOf(r).map((d) => `${d.type}${d.detail ? ` (${d.detail})` : ''} x${d.pieces} ${d.severity}, ${d.department}`).join('; ');
+    const ms = (Array.isArray(r.measurements) ? r.measurements : []).map((m) => `${m.point} ${m.size || ''} ${m.found}`.replace(/\s+/g, ' ').trim()).join('; ');
+    const limit = isFull(r) ? 'every piece checked' : `major ${majorOf(r)} of ${num(r.major_allowed) ?? '?'} allowed, minor ${minorOf(r)} of ${num(r.minor_allowed) ?? '?'} allowed`;
+    return [r.date, `${r.inspection || 'Final'} inspection`, `factory ${r.factory}`, `buyer ${r.buyer}`, `style ${r.style}`,
+      `checked ${num(r.checked) ?? '?'}`, limit, `result ${r.result}`, `defects: ${ds || 'none'}`, `size problems: ${ms || 'none'}`,
+      r.remarks ? `remarks: ${r.remarks}` : '', r.analysis && r.analysis.risk ? `risk ${r.analysis.risk}` : ''].filter(Boolean).join(' | ');
+  };
+  const AI_STOP = ['not_granted', 'sampling_disabled', 'not_declared', 'capability_disabled', 'capability_removed', 'session_expired', 'rate_limited'];
+  const aiError = (e) => {
+    switch (e && e.code) {
+      case 'not_granted': return 'Claude was not allowed to analyse. Reload the tracker and choose Allow when it asks.';
+      case 'rate_limited': return 'Claude is busy or your usage limit is reached. Try again later.';
+      case 'session_expired': return 'Please sign in to Claude again, then try.';
+      case 'cancelled': return 'Stopped.';
+      case 'sampling_disabled': case 'not_declared': case 'capability_disabled': case 'capability_removed': return 'Claude is not available in this view.';
+      default: return 'Claude could not answer just now. Try again.';
+    }
+  };
+  const analysisPrompt = (r) => {
+    const others = state.reports.filter((x) => x.id !== r.id).sort((x, y) => String(y.date).localeCompare(String(x.date)));
+    const hist = (f, n) => others.filter(f).slice(0, n).map((x) => `- ${reportLine(x)}`).join('\n') || '- none';
+    return [
+      'You are a garment quality expert working for Saivana, a garment maker in India. Dynamic Agencies, the buyer\'s inspection agency, inspected one lot. Analyse this inspection report together with the history below.',
+      'Reply with only one JSON object and no other text, in exactly this shape:',
+      '{"risk":"High","headline":"","why":[""],"actions":[""],"pattern":""}',
+      'Rules:',
+      '- risk: "High" if the lot failed or was re-offered, was at or over the AQL limit, or a major defect or size problem repeats from earlier lots; "Medium" if it was one defect below the limit or a defect type repeats from the history; otherwise "Low".',
+      '- headline: one sentence of at most 25 words saying what matters most about this lot.',
+      '- why: 2 or 3 likely root causes, at most 18 words each, tied to the defects and departments on the report.',
+      '- actions: 2 or 3 concrete actions for the factory, at most 18 words each, naming the department or operation.',
+      '- pattern: one sentence on whether this repeats in the history (same factory, style or buyer), or "" if there is no pattern.',
+      '- Use plain, simple English for factory supervisors. Never invent numbers that are not in the data.',
+      '',
+      `THIS REPORT: ${reportLine(r)}`,
+      '',
+      `SAME FACTORY, newest first:\n${hist((x) => x.factory === r.factory, 10)}`,
+      `SAME STYLE:\n${hist((x) => sameText(x.style) === sameText(r.style), 6)}`,
+      `SAME BUYER:\n${hist((x) => x.buyer === r.buyer, 6)}`
+    ].join('\n');
+  };
+  const normalizeAnalysis = (j) => {
+    if (!j || typeof j !== 'object' || Array.isArray(j)) return null;
+    const s = (v) => (typeof v === 'string' ? v.trim() : '');
+    const list = (v) => (Array.isArray(v) ? v.map(s).filter(Boolean).slice(0, 4) : []);
+    const a = {risk: ['High', 'Medium', 'Low'].includes(s(j.risk)) ? s(j.risk) : 'Medium', headline: s(j.headline), why: list(j.why), actions: list(j.actions), pattern: s(j.pattern), at: new Date().toISOString()};
+    return a.headline || a.why.length || a.actions.length ? a : null;
+  };
+  const aiQueue = [];
+  let aiRunning = false;
+  const setRMsg = (text, cls) => { $('r-msg').className = `qt-msg${cls ? ` ${cls}` : ''}`; $('r-msg').textContent = text; };
+  const queueAnalysis = (id, doc) => {
+    if (!state.ai || !state.db || !id || state.aiBusy.has(id)) return;
+    state.aiBusy.add(id);
+    aiQueue.push({id, doc});
+    renderReports();
+    runAiQueue();
+  };
+  const runAiQueue = async () => {
+    if (aiRunning) return;
+    aiRunning = true;
+    while (aiQueue.length) {
+      const {id, doc} = aiQueue.shift();
+      try {
+        let r = state.reports.find((x) => x.id === id);
+        if (!r && doc) r = {id, ...doc};
+        if (!r) continue;
+        const answer = await state.ai.json(analysisPrompt(r), {modelTier: 'default'});
+        const analysis = normalizeAnalysis(answer);
+        if (analysis && state.reports.some((x) => x.id === id)) await state.db.doc(`reports/${id}`).update({analysis});
+      } catch (e) {
+        if (e && AI_STOP.includes(e.code)) {
+          for (const q of aiQueue) state.aiBusy.delete(q.id);
+          aiQueue.length = 0;
+          setRMsg(`Analysis stopped. ${aiError(e)}`, 'is-bad');
+        }
+      } finally {
+        state.aiBusy.delete(id);
+        renderReports();
+      }
+    }
+    aiRunning = false;
+  };
+  const aiSection = (r, canAi) => {
+    const a = r.analysis && typeof r.analysis === 'object' ? r.analysis : null;
+    const busy = state.aiBusy.has(r.id);
+    if (!a && !canAi && !busy) return null;
+    const risk = a && ['High', 'Medium', 'Low'].includes(a.risk) ? a.risk : '';
+    const box = el('div', `qt-ai${risk ? ` is-${risk.toLowerCase()}` : ''}`);
+    const head = el('div', 'qt-ai-head');
+    head.append(el('h4', '', "Claude's analysis"));
+    if (risk) head.append(el('span', `qt-pill ${risk === 'High' ? 'is-bad' : risk === 'Medium' ? 'is-warn' : 'is-ok'}`, `${risk} risk`));
+    box.append(head);
+    if (busy) box.append(el('p', 'qt-note', 'Claude is analysing this report\u2026'));
+    else if (a) {
+      if (a.headline) box.append(el('p', 'qt-ai-headline', a.headline));
+      const lists = el('div', 'qt-ai-cols');
+      const mk = (title, items) => { if (!Array.isArray(items) || !items.length) return; const d = el('div'); d.append(el('b', '', title)); const ul = el('ul'); for (const x of items) ul.append(el('li', '', x)); d.append(ul); lists.append(d); };
+      mk('Why it happened', a.why);
+      mk('What to do', a.actions);
+      if (lists.children.length) box.append(lists);
+      if (a.pattern) box.append(el('p', 'qt-ai-pattern', a.pattern));
+      if (a.at) box.append(el('p', 'qt-note', `Analysed ${shortDate(a.at)}`));
+    } else box.append(el('p', 'qt-note', 'Not analysed yet.'));
+    if (canAi && !busy) {
+      const b = el('button', 'qt-btn', a ? 'Analyse again' : 'Analyse with Claude');
+      b.type = 'button';
+      b.addEventListener('click', (e) => { e.stopPropagation(); queueAnalysis(r.id); });
+      box.append(b);
+    }
+    return box;
+  };
+  const updateMany = async (ids, fields, label) => {
+    let done = 0;
+    for (const id of ids) {
+      setRMsg(`${label} ${done + 1} of ${ids.length}\u2026`);
+      const f = typeof fields === 'function' ? fields(id) : fields;
+      if (f === null) await state.db.doc(`reports/${id}`).delete(); else await state.db.doc(`reports/${id}`).update(f);
+      done += 1;
+    }
+    return done;
+  };
+  const renderBulk = () => {
+    const can = canChangeNow() && state.loaded && state.reports.length > 0;
+    $('bulk-bar').hidden = !can;
+    $('rename-box').hidden = !can;
+    if (!can) return;
+    const shown = state.shownIds || [];
+    const n = state.selected.size;
+    $('sel-all').checked = shown.length > 0 && shown.every((id) => state.selected.has(id));
+    $('sel-count').textContent = n ? `${plural(n, 'report', 'reports')} selected` : 'Tick reports to change many at once';
+    $('sel-checked').disabled = !n;
+    $('sel-delete').disabled = !n;
+    $('sel-delete').textContent = state.confirmBulk && n ? `Yes, delete ${plural(n, 'report', 'reports')} for everyone` : 'Delete selected';
+    $('sel-cancel').hidden = !(state.confirmBulk && n);
+    const missing = state.reports.filter((r) => !r.analysis).length;
+    $('ai-all').hidden = !state.ai;
+    $('ai-all').disabled = !missing || aiQueue.length > 0;
+    $('ai-all').textContent = missing ? `Analyse ${plural(Math.min(missing, 30), 'report', 'reports')} with Claude` : 'Every report is analysed';
+    const field = $('rn-field').value || 'factory';
+    const keep = $('rn-from').value;
+    const vals = [...new Set(state.reports.map((r) => r[field]).filter(Boolean))].sort((a, b) => String(a).localeCompare(String(b)));
+    $('rn-from').replaceChildren(...vals.map((v) => new Option(`${v} (${state.reports.filter((r) => r[field] === v).length})`, v)));
+    if (vals.includes(keep)) $('rn-from').value = keep;
+  };
+  $('sel-all').addEventListener('change', () => {
+    for (const id of state.shownIds || []) { if ($('sel-all').checked) state.selected.add(id); else state.selected.delete(id); }
+    state.confirmBulk = false;
+    renderReports();
+  });
+  $('sel-cancel').addEventListener('click', () => { state.confirmBulk = false; renderBulk(); });
+  $('sel-delete').addEventListener('click', async () => {
+    const ids = [...state.selected];
+    if (!ids.length) return;
+    if (!state.confirmBulk) { state.confirmBulk = true; renderBulk(); return; }
+    state.confirmBulk = false;
+    $('sel-delete').disabled = true;
+    try {
+      const n = await updateMany(ids, null, 'Deleting');
+      state.selected.clear();
+      setRMsg(`${plural(n, 'report', 'reports')} deleted. Every chart is updated.`, 'is-ok');
+    } catch (e) { setRMsg(writeError(e), 'is-bad'); }
+    renderBulk();
+  });
+  $('sel-checked').addEventListener('click', async () => {
+    const ids = [...state.selected];
+    if (!ids.length) return;
+    $('sel-checked').disabled = true;
+    try {
+      const n = await updateMany(ids, {needs_check: false, check_notes: []}, 'Marking');
+      state.selected.clear();
+      setRMsg(`${plural(n, 'report', 'reports')} marked as checked.`, 'is-ok');
+    } catch (e) { setRMsg(writeError(e), 'is-bad'); }
+    renderBulk();
+  });
+  $('ai-all').addEventListener('click', () => {
+    const ids = state.reports.filter((r) => !r.analysis).sort((x, y) => String(y.date).localeCompare(String(x.date))).slice(0, 30).map((r) => r.id);
+    setRMsg(`Claude is analysing ${plural(ids.length, 'report', 'reports')}. You can keep working; each one updates when it is done.`);
+    for (const id of ids) queueAnalysis(id);
+    renderBulk();
+  });
+  $('rn-field').addEventListener('change', renderBulk);
+  $('rn-go').addEventListener('click', async () => {
+    const field = $('rn-field').value; const from = $('rn-from').value; const to = $('rn-to').value.trim();
+    const msg = $('rn-msg');
+    if (!from || !to) { msg.className = 'qt-msg is-bad'; msg.textContent = 'Pick the name to change and type the new name.'; return; }
+    if (from === to) { msg.className = 'qt-msg is-bad'; msg.textContent = 'The new name is the same as the old one.'; return; }
+    const ids = state.reports.filter((r) => r[field] === from).map((r) => r.id);
+    $('rn-go').disabled = true;
+    msg.className = 'qt-msg'; msg.textContent = 'Changing\u2026';
+    try {
+      const n = await updateMany(ids, {[field]: to}, 'Changing');
+      msg.className = 'qt-msg is-ok';
+      msg.textContent = `Changed "${from}" to "${to}" in ${plural(n, 'report', 'reports')}.`;
+      setRMsg('');
+      $('rn-to').value = '';
+    } catch (e) { msg.className = 'qt-msg is-bad'; msg.textContent = writeError(e); }
+    $('rn-go').disabled = false;
+  });
+  const markChecked = async (id) => {
+    try { await state.db.doc(`reports/${id}`).update({needs_check: false, check_notes: []}); setRMsg('Marked as checked.', 'is-ok'); }
+    catch (e) { setRMsg(writeError(e), 'is-bad'); }
+  };
+  const ASK_EXAMPLES = ['Which factory needs the most attention, and why?', 'What should we fix first this week?', 'Compare this month with last month.', 'Which styles keep failing, and what is the common cause?'];
+  let askCtl = null;
+  const renderAsk = () => {
+    $('ask-section').hidden = !state.ai || state.locked;
+    if ($('ask-chips').children.length) return;
+    $('ask-chips').replaceChildren(...ASK_EXAMPLES.map((q) => {
+      const b = el('button', 'qt-chip', q); b.type = 'button';
+      b.addEventListener('click', () => { $('ask-input').value = q; askNow(); });
+      return b;
+    }));
+  };
+  const showAnswer = (text) => {
+    const box = $('ask-answer');
+    box.hidden = false;
+    const out = []; let ul = null;
+    for (const raw of String(text).split('\n')) {
+      const line = raw.replace(/\*\*/g, '').trim();
+      if (!line) { ul = null; continue; }
+      if (/^[-\u2022*]\s+/.test(line)) { if (!ul) { ul = el('ul'); out.push(ul); } ul.append(el('li', '', line.replace(/^[-\u2022*]\s+/, ''))); }
+      else { ul = null; const p = el('p', /^do this:/i.test(line) ? 'qt-ask-do' : '', line); out.push(p); }
+    }
+    box.replaceChildren(...out);
+  };
+  const askNow = async () => {
+    const q = $('ask-input').value.trim();
+    if (!q || !state.ai) return;
+    if (askCtl) askCtl.abort();
+    askCtl = new AbortController();
+    const rs = filtered().sort((x, y) => String(y.date).localeCompare(String(x.date))).slice(0, 400);
+    const a = analyse(rs);
+    const f = state.filters;
+    const scope = [f.factory && `factory ${f.factory}`, f.buyer && `buyer ${f.buyer}`, f.type && `${f.type} inspections`, f.month && monthLabel(f.month)].filter(Boolean).join(', ') || 'all reports';
+    const prompt = [
+      'You are the quality analyst for Saivana, a garment maker in India. Dynamic Agencies inspects lots for the buyers. Answer the question using only the inspection reports below.',
+      'Be specific: name factories, styles, buyers, defect types, numbers and dates. Keep it under 170 words, in plain simple English. Use short lines and "- " for bullet points. No headings, no tables.',
+      'End with one line that starts with "Do this:" and gives the single most useful action. If the data cannot answer the question, say so plainly.',
+      `Today is ${today()}. Showing: ${scope}. ${a.lots} lots, ${a.passed} passed, ${fmt1(a.per100)} defects per 100 pieces checked.`,
+      '',
+      `QUESTION: ${q}`,
+      '',
+      'REPORTS (newest first):',
+      ...rs.map((r) => `- ${reportLine(r)}`)
+    ].join('\n');
+    $('ask-go').disabled = true;
+    showAnswer('Thinking\u2026');
+    try {
+      const res = await state.ai(prompt, {modelTier: 'default', signal: askCtl.signal, cache: false, onText: ({text}) => showAnswer(text || 'Thinking\u2026')});
+      showAnswer(res && res.text ? res.text : 'No answer came back. Try asking in a different way.');
+    } catch (e) {
+      if (!(e && e.code === 'cancelled')) showAnswer(aiError(e));
+    } finally {
+      $('ask-go').disabled = false;
+    }
+  };
+  $('ask-form').addEventListener('submit', (ev) => { ev.preventDefault(); askNow(); });
+  const loadScript = (src) => new Promise((resolve, reject) => { const s = document.createElement('script'); s.src = src; s.onload = resolve; s.onerror = reject; document.head.append(s); });
+  const pdfReady = () => Boolean(window.jspdf && window.jspdf.jsPDF && window.jspdf.jsPDF.API && window.jspdf.jsPDF.API.autoTable);
+  const loadPdfLib = async () => {
+    if (pdfReady()) return window.jspdf.jsPDF;
+    const CDN = 'https:' + '/' + '/cdnjs.cloudflare.com/ajax/libs/';
+    const sets = [['vendor/jspdf.umd.min.js', 'vendor/jspdf.plugin.autotable.min.js'], [`${CDN}jspdf/2.5.1/jspdf.umd.min.js`, `${CDN}jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js`]];
+    for (const [a, b] of sets) {
+      try {
+        if (!(window.jspdf && window.jspdf.jsPDF)) await loadScript(a);
+        if (!pdfReady()) await loadScript(b);
+        if (pdfReady()) return window.jspdf.jsPDF;
+      } catch (e) {  }
+    }
+    throw {code: 'pdf_lib'};
+  };
+  const pdfText = (v) => String(v === null || v === undefined ? '' : v)
+    .replace(/[\u2013\u2014]/g, '-').replace(/\u00b7/g, '|').replace(/\u2026/g, '...').replace(/[\u2018\u2019]/g, "'").replace(/[\u201c\u201d]/g, '"')
+    .replace(/\u2192/g, '->').replace(/\u25b2/g, '').replace(/\u25bc/g, '').replace(/\u2715/g, 'x').replace(/\u20b9/g, 'Rs ')
+    .replace(/[^\x09\x0A\x0D\x20-\x7E\xA0-\xFF]/g, '').trim();
+  const makePdf = async () => {
+    const btn = $('pdf-go');
+    const label = btn.textContent;
+    btn.disabled = true; btn.textContent = 'Making the PDF\u2026';
+    try {
+      const months = [...new Set(state.reports.map((r) => monthKey(r.date)).filter(Boolean))].sort();
+      const month = state.filters.month || months[months.length - 1];
+      if (!month) { $('f-note').textContent = 'Add reports first, then download the monthly PDF.'; return; }
+      const JsPDF = await loadPdfLib();
+      const base = trendBase();
+      const upTo = base.filter((r) => monthKey(r.date) <= month);
+      const rs = base.filter((r) => monthKey(r.date) === month);
+      const a = analyse(rs);
+      const prevKey = months.filter((m) => m < month).pop();
+      const prev = prevKey ? analyse(base.filter((r) => monthKey(r.date) === prevKey)) : null;
+      const f = state.filters;
+      const scope = [f.factory && `Factory ${f.factory}`, f.buyer && `Buyer ${f.buyer}`, f.type && `${f.type} inspections`].filter(Boolean).join(' | ');
+      const doc = new JsPDF({unit: 'pt', format: 'a4'});
+      const W = doc.internal.pageSize.getWidth(); const H = doc.internal.pageSize.getHeight(); const M = 40;
+      const ACC = [50, 67, 166]; const INK = [26, 31, 46]; const MUTED = [91, 98, 118];
+      let y = 0;
+      const room = (need) => { if (y + need > H - 50) { doc.addPage(); y = M; } };
+      doc.setFillColor(...ACC); doc.rect(0, 0, W, 78, 'F');
+      doc.setTextColor(255, 255, 255); doc.setFont('helvetica', 'bold'); doc.setFontSize(21);
+      doc.text('Saivana Quality Report', M, 36);
+      doc.setFont('helvetica', 'normal'); doc.setFontSize(11);
+      doc.text(pdfText(`${monthLabel(month)}  |  Dynamic Agencies inspections${scope ? `  |  ${scope}` : ''}`), M, 58);
+      y = 92;
+      const heading = (t) => { room(56); y += 18; doc.setFont('helvetica', 'bold'); doc.setFontSize(13); doc.setTextColor(...ACC); doc.text(pdfText(t), M, y); y += 6; doc.setTextColor(...INK); };
+      const para = (t, o = {}) => {
+        const size = o.size || 10; const indent = o.indent || 0;
+        doc.setFont('helvetica', o.bold ? 'bold' : 'normal'); doc.setFontSize(size); doc.setTextColor(...(o.muted ? MUTED : INK));
+        for (const ln of doc.splitTextToSize(pdfText(t), W - 2 * M - indent)) { room(size * 1.4); doc.text(ln, M + indent, y + size); y += size * 1.38; }
+        doc.setTextColor(...INK);
+      };
+      const tbl = (head, body, o = {}) => {
+        if (!body.length) { para('Nothing to show.', {muted: true}); y += 8; return; }
+        doc.autoTable({startY: y + 4, head: [head.map(pdfText)], body: body.map((row) => row.map(pdfText)), margin: {left: M, right: M, bottom: 50},
+          styles: {fontSize: 8.5, cellPadding: 4, overflow: 'linebreak', textColor: INK}, headStyles: {fillColor: ACC, textColor: 255, fontStyle: 'bold'},
+          alternateRowStyles: {fillColor: [243, 245, 249]}, ...o});
+        y = doc.lastAutoTable.finalY + 20;
+      };
+      if (!rs.length) para(`There are no reports for ${monthLabel(month)} in these filters.`);
+      const majors = sum(a.lines.filter((d) => d.severity === 'Major'), (d) => d.pieces);
+      heading('Headline figures');
+      tbl(['Lots passed', 'Defects per 100 pcs', 'Lots at AQL limit', 'Major defects', 'Size problems', 'Clean checks'],
+        [[`${a.passed} of ${a.lots}`, fmt1(a.per100), `${a.atLimit.length + a.over.length} of ${a.sampled.length}`, `${majors} of ${a.defects}`, `${a.measReports.size} of ${a.lots}`, `${a.clean.length} of ${a.lots}`]],
+        {styles: {fontSize: 10, cellPadding: 6, halign: 'center', textColor: INK}});
+      if (prev && prev.per100 !== null && a.per100 !== null) {
+        const better = a.per100 < prev.per100;
+        para(`Compared with ${monthLabel(prevKey)}: defects per 100 pieces went from ${fmt1(prev.per100)} to ${fmt1(a.per100)} (${a.per100 === prev.per100 ? 'no change' : better ? 'better' : 'worse'}); lots passed went from ${pct(prev.passed, prev.lots)}% to ${pct(a.passed, a.lots)}%.`, {muted: true});
+        y += 6;
+      }
+      heading('What is going wrong, and what to do');
+      const fl = findings(a);
+      if (!fl.length) para('Nothing stands out this month.', {muted: true});
+      for (const x of fl) { para(`- ${x.what}`, {bold: true}); para(`What to do: ${x.todo}`, {indent: 10, muted: true}); y += 4; }
+      y += 6;
+      heading('Early warnings');
+      const wl = earlyWarnings(upTo);
+      if (!wl.length) para('No early warnings. Nothing is getting worse.', {muted: true});
+      for (const x of wl) { para(`- ${x.what}`, {bold: true}); para(`What to do: ${x.todo}`, {indent: 10, muted: true}); y += 4; }
+      y += 6;
+      const cardRows = (key) => buildCards(rs, key, upTo).map((c) => [`#${c.rank}`, placeName(key, c.key), c.grade, String(c.score), String(c.lots), `${c.passPct}%`, fmt1(c.per100), c.top || '-', c.trend.text]);
+      const gradeColor = (data) => {
+        if (data.section !== 'body' || data.column.index !== 2) return;
+        const g = String(data.cell.raw);
+        data.cell.styles.fontStyle = 'bold';
+        data.cell.styles.textColor = g === 'A' || g === 'B' ? [38, 116, 74] : g === 'C' ? ACC : g === 'D' ? [150, 87, 0] : [187, 50, 38];
+      };
+      heading('Report cards: factories');
+      tbl(['Rank', 'Factory', 'Grade', 'Score', 'Lots', 'Passed', 'Per 100', 'Biggest defect', 'Trend'], cardRows('factory'), {didParseCell: gradeColor});
+      heading('Report cards: buyers');
+      tbl(['Rank', 'Buyer', 'Grade', 'Score', 'Lots', 'Passed', 'Per 100', 'Biggest defect', 'Trend'], cardRows('buyer'), {didParseCell: gradeColor});
+      heading('Defects by type, biggest first');
+      let cum = 0;
+      tbl(['Defect', 'Pieces', 'Share', 'Running total', 'Department'], a.byType.map((t) => { cum += t.value; return [t.key, fmt(t.value), `${pct(t.value, a.defects)}%`, `${pct(cum, a.defects)}%`, DEPT_OF[t.key] || 'Not clear']; }));
+      heading('Who causes the defects');
+      tbl(['Department', 'Pieces', 'Share'], a.byDept.map((d) => [d.key, fmt(d.value), `${pct(d.value, a.defects)}%`]));
+      heading('Lots that failed or came close');
+      const close = rs.filter((r) => r.result !== 'Pass' || (isSampled(r) && roomOf(r) <= 1)).sort((x, y2) => String(x.date).localeCompare(String(y2.date)));
+      tbl(['Date', 'Factory', 'Buyer', 'Style', 'Major', 'Minor', 'Result', 'Biggest defect'],
+        close.map((r) => [day(r.date), r.factory, r.buyer, r.style, isFull(r) ? 'n/a' : ofAllowed(majorOf(r), num(r.major_allowed)), isFull(r) ? 'n/a' : ofAllowed(minorOf(r), num(r.minor_allowed)), statusOf(r)[0], topDefectOf(r) || '-']));
+      const risky = rs.filter((r) => r.analysis && (r.analysis.risk === 'High' || r.analysis.risk === 'Medium')).sort((x, y2) => (x.analysis.risk === 'High' ? 0 : 1) - (y2.analysis.risk === 'High' ? 0 : 1));
+      if (risky.length) {
+        heading("Claude's analysis of the riskiest lots");
+        for (const r of risky.slice(0, 8)) {
+          para(`${r.style} | ${r.buyer} | ${placeName('factory', r.factory)} | ${day(r.date)} | ${r.analysis.risk} risk`, {bold: true});
+          if (r.analysis.headline) para(r.analysis.headline, {indent: 10});
+          if (Array.isArray(r.analysis.actions) && r.analysis.actions.length) para(`What to do: ${r.analysis.actions.join(' ')}`, {indent: 10, muted: true});
+          y += 6;
+        }
+        y += 4;
+      }
+      heading('Measurements out of tolerance');
+      tbl(['Date', 'Style', 'Buyer', 'Measurement', 'Size', 'Found', 'Pcs'], a.measLines.map((m) => [day(m.r.date), m.r.style, m.r.buyer, m.point, m.size || '-', m.found, num(m.pieces) === null ? '-' : String(m.pieces)]));
+      heading(`Every report in ${monthLabel(month)}`);
+      tbl(['Date', 'Insp.', 'Factory', 'Buyer', 'Style', 'Checked', 'Major', 'Minor', 'Result', 'Biggest defect'],
+        [...rs].sort((x, y2) => String(x.date).localeCompare(String(y2.date))).map((r) => [day(r.date), r.inspection || 'Final', r.factory, r.buyer, r.style, fmt(num(r.checked)),
+          isFull(r) ? 'n/a' : ofAllowed(majorOf(r), num(r.major_allowed)), isFull(r) ? 'n/a' : ofAllowed(minorOf(r), num(r.minor_allowed)), r.result, topDefectOf(r) || '-']),
+        {styles: {fontSize: 7.5, cellPadding: 3, overflow: 'linebreak', textColor: INK}});
+      const pages = doc.internal.getNumberOfPages();
+      for (let i = 1; i <= pages; i += 1) {
+        doc.setPage(i);
+        doc.setFont('helvetica', 'normal'); doc.setFontSize(8); doc.setTextColor(...MUTED);
+        doc.text(pdfText(`Saivana Quality Tracker | ${monthLabel(month)} | made ${day(today())}`), M, H - 24);
+        doc.text(`Page ${i} of ${pages}`, W - M, H - 24, {align: 'right'});
+      }
+      const filename = `Saivana-Quality-Report-${month}${f.factory ? `-Factory-${String(f.factory).replace(/[^\w-]+/g, '')}` : ''}.pdf`;
+      const blob = doc.output('blob');
+      if (state.downloads) {
+        try { await state.downloads.save({filename, data: blob}); }
+        catch (e) { if (!(e && e.code === 'declined')) doc.save(filename); }
+      } else doc.save(filename);
+    } catch (e) {
+      $('f-note').textContent = e && e.code === 'pdf_lib' ? 'The PDF maker could not load. Check your internet and try again.' : 'The PDF could not be made. Try again.';
+    } finally {
+      btn.disabled = false; btn.textContent = label;
+    }
+  };
+  $('pdf-go').addEventListener('click', makePdf);
   const renderAll = () => {
     renderFilters();
     const banner = $('status-banner');
@@ -1958,18 +2627,15 @@ window.__trackerParts = (window.__trackerParts || 0) + 1;
     else if (!state.reports.length) { banner.hidden = false; banner.className = 'qt-banner'; banner.textContent = 'No reports yet.'; }
     else banner.hidden = true;
     const a = analyse(filtered());
-    renderFindings(a); renderTiles(a); renderTypes(a); renderDepts(a); renderMargin(a); renderTrend(a); renderGroups(a); renderMeasures(a); renderGaps(a);
+    renderFindings(a); renderWarnings(); renderTiles(a); renderCards(); renderTypes(a); renderDepts(a); renderMargin(a); renderTrend(a); renderGroups(a); renderMeasures(a); renderGaps(a);
     renderReports();
     renderDatalists();
+    renderAsk();
   };
-
   let resizeTimer = null;
   window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(() => renderTrend(analyse(filtered())), 150); });
-
   resetForm();
   renderAll();
-
-  
   const LOCK_PATH = 'settings/lock';
   const UNLOCK_KEY = 'qt-unlock-v1';
   const b64 = (buf) => btoa(String.fromCharCode(...new Uint8Array(buf)));
@@ -1989,7 +2655,6 @@ window.__trackerParts = (window.__trackerParts || 0) + 1;
     const d = new Date(iso);
     return Number.isNaN(d.getTime()) ? '' : new Intl.DateTimeFormat('en-IN', {day: 'numeric', month: 'short', year: 'numeric', hour: 'numeric', minute: '2-digit'}).format(d);
   };
-  
   const wrapSiteKey = async (kB64, password) => {
     const salt = crypto.getRandomValues(new Uint8Array(16));
     const iv = crypto.getRandomValues(new Uint8Array(12));
@@ -1999,15 +2664,10 @@ window.__trackerParts = (window.__trackerParts || 0) + 1;
     const ct = await crypto.subtle.encrypt({name: 'AES-GCM', iv}, wk, unb64(kB64));
     return {id: b64(crypto.getRandomValues(new Uint8Array(9))), salt: b64(salt), iterations, iv: b64(iv), ct: b64(ct)};
   };
-
-window.__trackerParts = (window.__trackerParts || 0) + 1;
-</script>
-<script>
-  
   const DRIVE = 'Google Drive';
   const DATA_TITLE = 'saivana-quality-data.json';
   const PAGE_TITLE = 'saivana-quality-website.html';
-  const SITE_PAGE_VERSION = '2026-10-31.3';
+  const SITE_PAGE_VERSION = '2026-11-03.1';
   const pub = {timer: null, busy: false, again: false, fileArgs: null};
   const b64big = (buf) => { const u = new Uint8Array(buf); let s = ''; for (let i = 0; i < u.length; i += 0x8000) s += String.fromCharCode.apply(null, u.subarray(i, i + 0x8000)); return btoa(s); };
   const stableJson = (v) => {
@@ -2143,6 +2803,7 @@ window.__trackerParts = (window.__trackerParts || 0) + 1;
     $('lock-msg').textContent = '';
     $('lock-input').value = '';
     showView();
+    renderAsk();
     if (on) { $('status-banner').hidden = true; setTimeout(() => $('lock-input').focus(), 0); } else renderAll();
   };
   $('lock-form').addEventListener('submit', async (ev) => {
@@ -2169,8 +2830,6 @@ window.__trackerParts = (window.__trackerParts || 0) + 1;
     }
   });
   $('lock-cancel').addEventListener('click', () => { setLocked(false); location.hash = 'share'; });
-
-  
   const showPwMsg = (text, cls) => { const m = $('pw-msg'); m.className = `qt-msg${cls ? ` ${cls}` : ''}`; m.textContent = text; };
   const renderShare = () => {
     const on = Boolean(state.lock);
@@ -2239,8 +2898,6 @@ window.__trackerParts = (window.__trackerParts || 0) + 1;
     }
   });
   $('web-now').addEventListener('click', () => { clearTimeout(pub.timer); publishWebsite(true); });
-
-  
   (async () => {
     const c = window.claude;
     const db = c && typeof c.use === 'function' ? await c.use('db') : null;
@@ -2254,6 +2911,8 @@ window.__trackerParts = (window.__trackerParts || 0) + 1;
     }
     state.downloads = await c.use('downloads');
     const sampleFn = await c.use('sample');
+    state.ai = sampleFn || null;
+    renderAsk();
     if (sampleFn) {
       try {
         const lim = await sampleFn.limits();
@@ -2277,8 +2936,8 @@ window.__trackerParts = (window.__trackerParts || 0) + 1;
     if (!state.isOwner && state.lock && remembered() !== state.lock.hash) { setLocked(true); return; }
     startReports();
   })();
-
-window.__trackerParts = (window.__trackerParts || 0) + 1;
+})();
+window.__trackerParts = 4;
 </script>
 </body>
 </html>
