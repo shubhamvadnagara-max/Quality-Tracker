@@ -244,6 +244,52 @@ textarea { resize: vertical; min-height: 64px; width: 100%; }
   .qt-bar-fill { transition: width .35s ease-out; }
 }
 
+/* ---------- DHU tracker ---------- */
+:root { --src-stitch: #3243A6; --src-finish: #26744A; --src-stain: #B26B00; --src-cut: #1F8A99; --src-fabric: #7B4FA6; --src-emb: #B0457A; --src-wash: #6B7280; --src-other: #A3A9BB; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --src-stitch: #97A5FF; --src-finish: #63CA8F; --src-stain: #EFB14E; --src-cut: #5CC8D6; --src-fabric: #C29BEA; --src-emb: #EE8DBA; --src-wash: #A3A9BB; --src-other: #6B7280; } }
+:root[data-theme="dark"] { --src-stitch: #97A5FF; --src-finish: #63CA8F; --src-stain: #EFB14E; --src-cut: #5CC8D6; --src-fabric: #C29BEA; --src-emb: #EE8DBA; --src-wash: #A3A9BB; --src-other: #6B7280; }
+.qt-dhu-head { display: flex; flex-wrap: wrap; gap: 10px 20px; align-items: flex-end; justify-content: space-between; background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 18px; }
+.qt-dhu-title { margin: 0; font-family: var(--font-display); font-weight: 700; font-size: 1.6rem; line-height: 1.1; }
+.qt-dhu-controls { display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: flex-end; }
+.qt-dhu-controls select { min-width: 9.5rem; }
+.qt-dhu-change { font-size: .8rem; font-weight: 700; color: var(--muted); }
+.qt-dhu-change.is-ok { color: var(--ok); }
+.qt-dhu-change.is-bad { color: var(--bad); }
+.qt-find.is-ok::before { background: var(--ok); }
+.qt-src-wrap { display: grid; gap: 6px; }
+.qt-src-bar { display: flex; height: 18px; border-radius: 6px; overflow: hidden; background: var(--soft); }
+.qt-src { display: block; height: 100%; }
+.qt-src.is-stitch, .qt-src-dot.is-stitch { background: var(--src-stitch); }
+.qt-src.is-finish, .qt-src-dot.is-finish { background: var(--src-finish); }
+.qt-src.is-stain, .qt-src-dot.is-stain { background: var(--src-stain); }
+.qt-src.is-cut, .qt-src-dot.is-cut { background: var(--src-cut); }
+.qt-src.is-fabric, .qt-src-dot.is-fabric { background: var(--src-fabric); }
+.qt-src.is-emb, .qt-src-dot.is-emb { background: var(--src-emb); }
+.qt-src.is-wash, .qt-src-dot.is-wash { background: var(--src-wash); }
+.qt-src.is-other, .qt-src-dot.is-other { background: var(--src-other); }
+.qt-src-legend { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: .82rem; color: var(--muted); }
+.qt-src-dot { display: inline-block; width: 10px; height: 10px; border-radius: 3px; vertical-align: middle; }
+.qt-src-block { display: grid; gap: 8px; padding-top: 12px; border-top: 1px solid var(--line); }
+.qt-src-block h4, .qt-sub-h { margin: 0; font-size: .95rem; }
+.qt-line { stroke-width: 2.5; }
+.qt-line.is-stitch { stroke: var(--src-stitch); } .qt-line-dot.is-stitch { fill: var(--src-stitch); }
+.qt-line.is-stain { stroke: var(--src-stain); } .qt-line-dot.is-stain { fill: var(--src-stain); }
+.qt-line.is-finish { stroke: var(--src-finish); } .qt-line-dot.is-finish { fill: var(--src-finish); }
+.qt-line.is-emb { stroke: var(--src-emb); } .qt-line-dot.is-emb { fill: var(--src-emb); }
+.qt-chain { display: grid; grid-template-columns: 6.5rem minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr); gap: 8px; align-items: stretch; padding: 10px 0; border-top: 1px solid var(--line); }
+.qt-chain-f { font-weight: 700; align-self: center; }
+.qt-chain-box { background: var(--soft); border-radius: 8px; padding: 8px 10px; display: grid; gap: 2px; align-content: start; }
+.qt-chain-num { font-family: var(--font-display); font-weight: 700; font-size: 1.7rem; line-height: 1; }
+.qt-chain-arrow { align-self: center; color: var(--muted); font-size: 1.3rem; }
+@media (max-width: 760px) { .qt-chain { grid-template-columns: 1fr; } .qt-chain-arrow { transform: rotate(90deg); justify-self: center; } }
+.qt-map { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 24rem), 1fr)); gap: 4px 18px; }
+.qt-map-row { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 8px; align-items: center; padding: 3px 6px; border-radius: 6px; font-size: .88rem; }
+.qt-map-row.is-changed { background: var(--accent-soft); }
+.qt-map-row input[type="number"] { width: 5.5rem; }
+.qt-dhu-pick { display: inline-flex; gap: 8px; align-items: center; cursor: pointer; }
+.qt-auto-item.is-off { opacity: .7; }
+#dhu-body { gap: 18px; }
+
 /* ---------- new: report cards, early warnings, Claude ---------- */
 .qt-card-head { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; justify-content: space-between; }
 .qt-seg { display: inline-flex; gap: 2px; padding: 3px; background: var(--soft); border-radius: 999px; }
@@ -310,6 +356,7 @@ textarea { resize: vertical; min-height: 64px; width: 100%; }
 <style>
 /* Website: only the read-only views exist. */
 #tab-share, #view-share, #lock-view { display: none !important; }
+#tab-dhudata, #view-dhudata { display: none !important; }
 #view-add > :not(#add-site-note) { display: none !important; }
 #add-site-note { display: grid !important; }
 #ask-section, #bulk-bar, #rename-box { display: none !important; }
@@ -349,6 +396,8 @@ textarea { resize: vertical; min-height: 64px; width: 100%; }
     <nav class="qt-tabs" id="tabs" role="tablist" aria-label="Views">
       <button class="qt-tab" role="tab" id="tab-overview" data-view="overview" aria-selected="true">Overview</button>
       <button class="qt-tab" role="tab" id="tab-reports" data-view="reports" aria-selected="false">All reports</button>
+      <button class="qt-tab" role="tab" id="tab-dhu" data-view="dhu" aria-selected="false">DHU tracker</button>
+      <button class="qt-tab" role="tab" id="tab-dhudata" data-view="dhudata" aria-selected="false">DHU data</button>
       <button class="qt-tab" role="tab" id="tab-add" data-view="add" aria-selected="false">Add a report</button>
       <button class="qt-tab" role="tab" id="tab-share" data-view="share" aria-selected="false" hidden>Share</button>
     </nav>
@@ -507,6 +556,92 @@ textarea { resize: vertical; min-height: 64px; width: 100%; }
       </details>
       <div class="qt-table-wrap" id="table-reports"></div>
       <p class="qt-msg" id="r-msg" role="status"></p>
+    </article>
+  </section>
+
+  <!-- DHU TRACKER -->
+  <section class="qt-view" id="view-dhu" aria-labelledby="tab-dhu" hidden>
+    <div class="qt-dhu-head">
+      <div>
+        <h2 class="qt-dhu-title">DHU tracker</h2>
+        <p class="qt-note">Our own 100% checks: stitching, finishing, embroidery and cutting. DHU is defects found per 100 pieces checked. Lower is better.</p>
+      </div>
+      <div class="qt-dhu-controls" id="dhu-controls" hidden>
+        <label class="qt-field"><span>Month</span><select id="dhu-month"></select></label>
+        <label class="qt-field"><span>Factory</span><select id="dhu-factory"></select></label>
+        <button class="qt-btn is-primary" type="button" id="dhu-pdf">DHU PDF</button>
+      </div>
+    </div>
+    <div class="qt-view" id="dhu-body"></div>
+  </section>
+
+  <!-- DHU DATA -->
+  <section class="qt-view" id="view-dhudata" aria-labelledby="tab-dhudata" hidden>
+    <div class="qt-banner" id="dhu-readonly" hidden>You can see the DHU data but cannot add or change it. Ask the owner to share this tracker with you as a Contributor.</div>
+    <section class="qt-auto" id="dhu-upload-card" aria-labelledby="dhu-up-title">
+      <h2 id="dhu-up-title">Upload DHU sheets</h2>
+      <ol class="qt-steps">
+        <li>Choose your DHU Excel files as they are: stitching and finishing, embroidery, and 100% cutting checking. You can choose several at once.</li>
+        <li>Check the list. Each sheet shows which check it is, its factory and dates, and anything that looks wrong.</li>
+        <li>Click <b>Save</b>. Saving replaces what the tracker has for the same check, factory and dates, so upload the same file again whenever you add days.</li>
+      </ol>
+      <div class="qt-auto-row">
+        <label class="qt-field qt-file"><span>DHU Excel files</span><input type="file" id="dhu-files" multiple accept=".xlsx,.xls,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel"></label>
+        <button class="qt-btn is-primary" type="button" id="dhu-save" hidden>Save</button>
+        <button class="qt-btn" type="button" id="dhu-cancel" hidden>Cancel</button>
+      </div>
+      <p class="qt-msg" id="dhu-up-msg" role="status"></p>
+      <ul class="qt-auto-list" id="dhu-preview"></ul>
+    </section>
+    <article class="qt-card" id="dhu-edit-card" hidden>
+      <h3 id="dhu-edit-title">Edit a row</h3>
+      <div class="qt-form-grid">
+        <label class="qt-field"><span>Date</span><input type="date" id="dhu-e-date"></label>
+        <label class="qt-field"><span>Line</span><input type="text" id="dhu-e-line"></label>
+        <label class="qt-field"><span>Style</span><input type="text" id="dhu-e-style"></label>
+        <label class="qt-field"><span>Buyer</span><input type="text" id="dhu-e-buyer"></label>
+        <label class="qt-field"><span>Colour</span><input type="text" id="dhu-e-colour"></label>
+        <label class="qt-field"><span>Checked</span><input type="number" id="dhu-e-checked" min="0" step="1" inputmode="numeric"></label>
+        <label class="qt-field"><span>Passed</span><input type="number" id="dhu-e-pass" min="0" step="1" inputmode="numeric"></label>
+      </div>
+      <h4 class="qt-sub-h">Defects</h4>
+      <div class="qt-map" id="dhu-e-defects"></div>
+      <label class="qt-field"><span>Add a defect</span><select id="dhu-e-new"></select></label>
+      <div class="qt-form-foot">
+        <button class="qt-btn is-primary" type="button" id="dhu-e-save">Save the row</button>
+        <button class="qt-btn" type="button" id="dhu-e-cancel">Cancel</button>
+        <span class="qt-msg" id="dhu-e-msg" role="status"></span>
+      </div>
+    </article>
+    <article class="qt-card" id="dhu-problems-card" hidden>
+      <h3>Rows to check</h3>
+      <p class="qt-note">These rows have a mistake, for example more pieces passed than checked. Fix them here, or in the Excel sheet and upload it again.</p>
+      <ul class="qt-auto-list" id="dhu-problems"></ul>
+    </article>
+    <article class="qt-card">
+      <h3>DHU rows</h3>
+      <div class="qt-auto-row">
+        <label class="qt-field"><span>Month</span><select id="dhu-d-month"></select></label>
+        <label class="qt-field"><span>Check</span><select id="dhu-d-stage"><option value="">All checks</option><option>Stitching</option><option>Finishing</option><option>Embroidery</option><option>Cutting</option></select></label>
+        <label class="qt-field"><span>Factory</span><select id="dhu-d-factory"></select></label>
+        <label class="qt-field"><span>Search</span><input type="search" id="dhu-d-search" placeholder="Style, buyer, line or defect"></label>
+      </div>
+      <div class="qt-lock-row">
+        <button class="qt-btn is-danger" type="button" id="dhu-d-bulk" hidden>Delete</button>
+        <button class="qt-btn" type="button" id="dhu-d-bulk-no" hidden>Keep them</button>
+      </div>
+      <p class="qt-msg" id="dhu-rows-msg" role="status"></p>
+      <div class="qt-table-wrap" id="dhu-rows"></div>
+    </article>
+    <article class="qt-card">
+      <h3>Which department each defect comes from</h3>
+      <p class="qt-note">This splits finishing defects by where they came from. Change any that are wrong for your factories; changed ones are highlighted.</p>
+      <div class="qt-map" id="dhu-map"></div>
+      <div class="qt-lock-row">
+        <button class="qt-btn is-primary" type="button" id="dhu-map-save">Save the list</button>
+        <button class="qt-btn" type="button" id="dhu-map-reset">Back to the starting list</button>
+      </div>
+      <p class="qt-msg" id="dhu-map-msg" role="status"></p>
     </article>
   </section>
 
@@ -676,15 +811,16 @@ textarea { resize: vertical; min-height: 64px; width: 100%; }
     const d = new Date(iso);
     return Number.isNaN(d.getTime()) ? '' : new Intl.DateTimeFormat('en-IN', {day: 'numeric', month: 'short', year: 'numeric', hour: 'numeric', minute: '2-digit'}).format(d);
   };
-  const state = {bundle: null, key: null, reports: [], booted: false, subs: [], fileId: null, busy: false};
+  const state = {bundle: null, key: null, reports: [], dhu: [], dhuNotes: [], dhuMap: null, booted: false, subs: [], fileId: null, busy: false};
 
   
-  const snapshot = () => ({docs: state.reports.map((r) => ({id: String(r.id), exists: true, data: () => { const c = JSON.parse(JSON.stringify(r)); delete c.id; return c; }}))});
+  const docsOf = (name) => (name === 'reports' ? state.reports : name === 'dhu' ? state.dhu : name === 'dhu-notes' ? state.dhuNotes : name === 'dhu-config' ? (state.dhuMap ? [{id: 'map', map: state.dhuMap}] : []) : []);
+  const snapshot = (name) => ({docs: docsOf(name).map((r) => ({id: String(r.id), exists: true, data: () => { const c = JSON.parse(JSON.stringify(r)); delete c.id; return c; }}))});
   const refuse = async () => { throw {code: 'invalid_argument', message: 'This website is read-only.'}; };
   const noDoc = () => ({get: async () => ({exists: false, data: () => undefined}), set: refuse, update: refuse, delete: refuse});
   const db = {
     collection: (name) => ({
-      limit: () => ({onSnapshot: (cb) => { if (name === 'reports') { state.subs.push(cb); setTimeout(() => cb(snapshot()), 0); } return () => {}; }}),
+      limit: () => ({onSnapshot: (cb) => { state.subs.push({name, cb}); setTimeout(() => cb(snapshot(name)), 0); return () => {}; }}),
       add: refuse,
       doc: noDoc
     }),
@@ -701,7 +837,7 @@ textarea { resize: vertical; min-height: 64px; width: 100%; }
     return {status: 'saved'};
   }};
   const caps = () => (hasGS() ? {db, user} : {db, user, downloads});
-  const push = () => { const s = snapshot(); for (const cb of state.subs) cb(s); };
+  const push = () => { for (const s of state.subs) s.cb(snapshot(s.name)); };
   
   let unlock = null;
   const unlocked = new Promise((resolve) => { unlock = resolve; });
@@ -718,7 +854,7 @@ textarea { resize: vertical; min-height: 64px; width: 100%; }
   };
 
   
-  const fixHash = () => { if (location.hash === '#share') history.replaceState(null, '', '#overview'); };
+  const fixHash = () => { if (location.hash === '#share' || location.hash === '#dhudata') history.replaceState(null, '', '#overview'); };
   fixHash();
   window.addEventListener('hashchange', fixHash);
 
@@ -766,9 +902,14 @@ textarea { resize: vertical; min-height: 64px; width: 100%; }
   const dataKey = (raw) => crypto.subtle.importKey('raw', raw, {name: 'AES-GCM'}, false, ['decrypt']);
   const openData = async (key, data) => {
     const pt = await crypto.subtle.decrypt({name: 'AES-GCM', iv: unb64(data.iv)}, key, unb64(data.ct));
-    const payload = JSON.parse(new TextDecoder().decode(pt));
-    return Array.isArray(payload.reports) ? payload.reports : [];
+    let bytes = new Uint8Array(pt);
+    if (data.z === 'gzip') {
+      if (typeof DecompressionStream === 'undefined') throw new Error('old browser');
+      bytes = new Uint8Array(await new Response(new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'))).arrayBuffer());
+    }
+    return JSON.parse(new TextDecoder().decode(bytes));
   };
+  const setPayload = (p) => { state.reports = Array.isArray(p && p.reports) ? p.reports : []; state.dhu = Array.isArray(p && p.dhu) ? p.dhu : []; state.dhuNotes = Array.isArray(p && p.dhuNotes) ? p.dhuNotes : []; state.dhuMap = p && p.dhuMap && typeof p.dhuMap === 'object' ? p.dhuMap : null; };
   const remembered = () => { try { return JSON.parse(localStorage.getItem(KEY_STORE) || 'null'); } catch (e) { return null; } };
   const remember = (wrapId, raw) => { try { localStorage.setItem(KEY_STORE, JSON.stringify({w: wrapId, k: b64(raw)})); } catch (e) {  } };
   const forget = () => { try { localStorage.removeItem(KEY_STORE); } catch (e) {  } };
@@ -801,7 +942,7 @@ textarea { resize: vertical; min-height: 64px; width: 100%; }
         return;
       }
       if (b.data.iv === state.bundle.data.iv) return;
-      state.reports = await openData(state.key, b.data);
+      setPayload(await openData(state.key, b.data));
       state.bundle = b;
       showApp();
     } catch (e) {
@@ -829,7 +970,7 @@ textarea { resize: vertical; min-height: 64px; width: 100%; }
       }
       if (!raw) { gateMsg('That password is not right. Try again.', 'is-bad'); $('gate-input').select(); return; }
       const key = await dataKey(raw);
-      state.reports = await openData(key, state.bundle.data);
+      setPayload(await openData(key, state.bundle.data));
       state.key = key;
       if ($('gate-remember').checked) remember(state.bundle.wrap.id, raw); else forget();
       gateMsg('');
@@ -860,7 +1001,7 @@ textarea { resize: vertical; min-height: 64px; width: 100%; }
     if (saved && saved.w === state.bundle.wrap.id) {
       try {
         const key = await dataKey(unb64(saved.k));
-        state.reports = await openData(key, state.bundle.data);
+        setPayload(await openData(key, state.bundle.data));
         state.key = key;
         showApp();
       } catch (e) { forget(); }
@@ -970,7 +1111,7 @@ textarea { resize: vertical; min-height: 64px; width: 100%; }
     isOwner: false, lock: null, locked: false, lockPreview: false, listening: false,
     website: null, site: null, mcp: null
   };
-  const VIEWS = ['overview', 'reports', 'add', 'share'];
+  const VIEWS = ['overview', 'reports', 'dhu', 'dhudata', 'add', 'share'];
   const showView = () => {
     let v = VIEWS.includes(location.hash.slice(1)) ? location.hash.slice(1) : 'overview';
     if (v === 'share' && !state.isOwner) v = 'overview';
@@ -982,7 +1123,7 @@ textarea { resize: vertical; min-height: 64px; width: 100%; }
     $('tab-share').hidden = !state.isOwner;
     $('tabs').hidden = locked;
     $('lock-view').hidden = !locked;
-    $('filters').hidden = locked || v === 'add' || v === 'share';
+    $('filters').hidden = locked || v === 'add' || v === 'share' || v === 'dhu' || v === 'dhudata';
   };
   for (const b of document.querySelectorAll('.qt-tab')) b.addEventListener('click', () => { location.hash = b.dataset.view; });
   window.addEventListener('hashchange', showView);
@@ -2423,7 +2564,7 @@ textarea { resize: vertical; min-height: 64px; width: 100%; }
     try { await state.db.doc(`reports/${id}`).update({needs_check: false, check_notes: []}); setRMsg('Marked as checked.', 'is-ok'); }
     catch (e) { setRMsg(writeError(e), 'is-bad'); }
   };
-  const ASK_EXAMPLES = ['Which factory needs the most attention, and why?', 'What should we fix first this week?', 'Compare this month with last month.', 'Which styles keep failing, and what is the common cause?'];
+  const ASK_EXAMPLES = ['Which stitching line needs the most help, and why?', 'Which factory needs the most attention, and why?', 'What should we fix first this week?', 'Compare this month with last month.', 'Which styles keep failing, and what is the common cause?'];
   let askCtl = null;
   const renderAsk = () => {
     $('ask-section').hidden = !state.ai || state.locked;
@@ -2463,6 +2604,7 @@ textarea { resize: vertical; min-height: 64px; width: 100%; }
       '',
       `QUESTION: ${q}`,
       '',
+      ...(state.dhuRows && state.dhuRows.length ? ['OUR OWN DHU CHECKS (DHU = defects per 100 pieces checked; finishing also catches faults from stitching, cutting and fabric):', dhuSummaryText(state.dhuView.month || dhuMonths()[0]), ''] : []),
       'REPORTS (newest first):',
       ...rs.map((r) => `- ${reportLine(r)}`)
     ].join('\n');
@@ -2618,6 +2760,971 @@ textarea { resize: vertical; min-height: 64px; width: 100%; }
     }
   };
   $('pdf-go').addEventListener('click', makePdf);
+  const DHU_STAGES = ['Stitching', 'Finishing', 'Embroidery', 'Cutting'];
+  const DHU_SOURCES = ['Stitching', 'Finishing (own)', 'Stains', 'Cutting', 'Fabric', 'Embroidery', 'Washing', 'Other'];
+  const SRC_CLASS = {'Stitching': 'stitch', 'Finishing (own)': 'finish', 'Stains': 'stain', 'Cutting': 'cut', 'Fabric': 'fabric', 'Embroidery': 'emb', 'Washing': 'wash', 'Other': 'other'};
+  const UPSTREAM = ['Stitching', 'Cutting', 'Fabric', 'Embroidery', 'Washing'];
+  const SRC_TODO = {
+    'Stitching': 'Line supervisors: add an end-of-line check for these faults so they are stopped on the line, not in finishing.',
+    'Cutting': 'Cutting in-charge: check shade, stripes and numbering at bundling before panels go to the lines.',
+    'Fabric': 'Fabric store: inspect rolls and mark flaws before cutting, so mending is not needed later.',
+    'Embroidery': 'Embroidery: check placement against the marking before panels leave the embroidery unit.',
+    'Washing': 'Washing: check the first pieces of every wash lot before the rest come back.'
+  };
+  state.dhuDocs = []; state.dhuRows = []; state.dhuMap = {}; state.dhuNotes = {};
+  state.dhuView = {month: '', factory: ''};
+  state.dhuData = {month: '', stage: '', factory: '', search: '', confirmBulk: false};
+  state.dhuListening = false; state.dhuLoaded = false; state.dhuEditing = null; state.dhuUpload = null; state.dhuBusy = false;
+  const defaultSourceOf = (name) => {
+    const k = String(name || '').toUpperCase().replace(/[^A-Z]/g, '');
+    if (k.includes('STICKER')) return 'Stitching';
+    if (k.includes('STAIN')) return 'Stains';
+    if (k.includes('UNCUTTHREAD') || k.includes('PRESS') || k.includes('CONTAMIN')) return 'Finishing (own)';
+    if (k.includes('SHAD') || k.includes('STRIPE') || k.includes('NUMER') || k.includes('MARKING')) return 'Cutting';
+    if (k.includes('MEND') || k.includes('FABRIC') || k.includes('PRINT')) return 'Fabric';
+    if (k.includes('WASH')) return 'Washing';
+    if (k.includes('EMB')) return 'Embroidery';
+    if (k.includes('MSTM') || k.includes('TOLL') || k.includes('SOBER')) return 'Other';
+    return 'Stitching';
+  };
+  const sourceOf = (name) => (DHU_SOURCES.includes(state.dhuMap[name]) ? state.dhuMap[name] : defaultSourceOf(name));
+  const buyerKey = (b) => String(b || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
+  const lev = (a, b) => {
+    const m = a.length; const n = b.length;
+    let prev = Array.from({length: n + 1}, (_, j) => j);
+    for (let i = 1; i <= m; i += 1) {
+      const cur = [i];
+      for (let j = 1; j <= n; j += 1) cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+      prev = cur;
+    }
+    return prev[n];
+  };
+  let buyerCache = {sig: null, map: new Map()};
+  const buyerName = (raw) => {
+    const counts = new Map();
+    for (const r of state.dhuRows) { const b = String(r.b || '').trim(); if (b) counts.set(b, (counts.get(b) || 0) + 1); }
+    const sig = `${state.dhuRows.length}|${counts.size}`;
+    if (buyerCache.sig !== sig) {
+      const names = [...counts.keys()].sort((a, b) => counts.get(b) - counts.get(a) || a.localeCompare(b));
+      const groups = [];
+      for (const n of names) {
+        const k = buyerKey(n);
+        const g = groups.find((x) => x.key === k || (k.length >= 5 && x.key.length >= 5 && lev(x.key, k) <= Math.max(1, Math.floor(Math.min(k.length, x.key.length) / 5))));
+        if (g) g.members.push(n); else groups.push({key: k, display: n.toUpperCase().replace(/\s+/g, ' '), members: [n]});
+      }
+      const map = new Map();
+      for (const g of groups) for (const m of g.members) map.set(m, g.display);
+      buyerCache = {sig, map};
+    }
+    const t = String(raw || '').trim();
+    return buyerCache.map.get(t) || (t ? t.toUpperCase() : 'Not written');
+  };
+  const XLSX_URL = 'https:' + '/' + '/cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
+  const loadXlsx = async () => {
+    if (window.XLSX && window.XLSX.read) return window.XLSX;
+    try { await loadScript(XLSX_URL); } catch (e) { throw {code: 'xlsx_lib'}; }
+    if (!(window.XLSX && window.XLSX.read)) throw {code: 'xlsx_lib'};
+    return window.XLSX;
+  };
+  const hText = (v) => String(v === null || v === undefined ? '' : v).toUpperCase().replace(/\s+/g, ' ').trim();
+  const cellText = (v) => (v === null || v === undefined ? '' : String(v).replace(/\s+/g, ' ').trim());
+  const lineOf = (v) => (v === null || v === undefined ? '' : String(typeof v === 'number' ? Math.round(v * 100) / 100 : v).toUpperCase().replace(/\s+/g, '').replace(/^LINE(NO)?\.?/, ''));
+  const pad2 = (x) => String(x).padStart(2, '0');
+  const excelDate = (v) => {
+    if (typeof v === 'number' && v > 20000 && v < 80000) return new Date(Date.UTC(1899, 11, 30) + Math.round(v) * DAY_MS).toISOString().slice(0, 10);
+    if (v instanceof Date && !Number.isNaN(v.getTime())) return `${v.getFullYear()}-${pad2(v.getMonth() + 1)}-${pad2(v.getDate())}`;
+    const s = String(v === null || v === undefined ? '' : v).trim();
+    let m = s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);
+    if (m) return `${m[1]}-${pad2(m[2])}-${pad2(m[3])}`;
+    m = s.match(/^(\d{1,2})[/.-](\d{1,2})[/.-](\d{2,4})$/);
+    if (m) return `${m[3].length === 2 ? `20${m[3]}` : m[3]}-${pad2(m[2])}-${pad2(m[1])}`;
+    return '';
+  };
+  const rid = () => Math.random().toString(36).slice(2, 10);
+  const maxDhuDate = () => { const d = new Date(Date.now() + 60 * DAY_MS); return d.toISOString().slice(0, 10); };
+  const rowWarnings = (r) => {
+    const w = [];
+    if (r.p !== null && r.p !== undefined && r.ch && r.p > r.ch) w.push(`More passed (${fmt(r.p)}) than checked (${fmt(r.ch)})`);
+    if (!r.ch && r.t) w.push('Defects written but no pieces checked');
+    if ((r.t !== null && r.t < 0) || (r.ch !== null && r.ch < 0) || (r.p !== null && r.p !== undefined && r.p < 0)) w.push('A number is below zero');
+    const s = Object.values(r.df || {}).reduce((a, x) => a + x, 0);
+    if (r.t !== null && r.t !== undefined && Object.keys(r.df || {}).length && Math.abs(s - r.t) > 0.5) w.push(`Defect columns add up to ${fmt(s)} but the total says ${fmt(r.t)}`);
+    return w;
+  };
+  const parseDhuSheet = (sheetName, grid, fileName) => {
+    const out = {sheet: sheetName, file: fileName, stage: '', factory: '', rows: [], problems: [], skipped: 0, use: true, reason: ''};
+    let h = -1;
+    for (let i = 0; i < Math.min(grid.length, 15); i += 1) {
+      const t = (grid[i] || []).map(hText);
+      if (t.includes('DATE') && (t.includes('CHECKED PCS') || t.includes('PANEL CHECKED'))) { h = i; break; }
+    }
+    if (h < 0) { out.use = false; out.reason = 'Not a DHU sheet, so it was left out.'; return out; }
+    const head = (grid[h] || []).map(hText);
+    const col = (label) => head.indexOf(label);
+    const title = [sheetName, ...grid.slice(0, h).map((r) => (r || []).filter((x) => x !== null && x !== undefined).join(' '))].join(' ').toUpperCase();
+    let stage = '';
+    if (head.includes('PANEL CHECKED')) stage = 'Cutting';
+    else if (head.includes('COMPONENT') || head.includes('BIRD NESTING') || head.includes('CUT HOLE')) stage = 'Embroidery';
+    else if (/FINISH/.test(title)) stage = 'Finishing';
+    else if (/STITCH/.test(title)) stage = 'Stitching';
+    if (!stage) { out.use = false; out.reason = 'Could not tell which check this is (stitching, finishing, embroidery or cutting).'; return out; }
+    out.stage = stage;
+    if (stage === 'Stitching' || stage === 'Finishing') {
+      const m = title.match(/PLOT\s*NO\.?\s*[-:]?\s*(\d{2,4})/) || String(sheetName).match(/(?:^|\D)(\d{2,4})(?:\D|$)/);
+      out.factory = m ? m[1] : '';
+      if (!out.factory) out.problems.push('The factory is not in the sheet name, so the rows are saved without a factory.');
+    }
+    const iDate = col('DATE'); const iStyle = col('STYLE'); const iBuyer = col('BUYER'); const iColour = col('COLOUR');
+    const iLine = col('LINE NO'); const iSize = col('SIZE');
+    let iPass; let iChecked; let iTotal; let iPcs = -1; let iUnit = -1; let dFrom; let dTo;
+    if (stage === 'Cutting') {
+      iPass = col('PASS PANEL'); iChecked = col('PANEL CHECKED'); iTotal = col('REJECTED PANEL'); iPcs = col('NO.OF PCS'); iUnit = col('UNIT');
+      dFrom = iTotal + 1; dTo = head.findIndex((x, i) => i > iTotal && (x === 'TOTAL REJECTION' || x === 'DHU'));
+    } else {
+      iPass = col('PASS PCS'); iChecked = col('CHECKED PCS'); iTotal = col('TOTAL DEFECTS');
+      dFrom = iChecked + 1; dTo = iTotal;
+    }
+    if (iDate < 0 || iChecked < 0 || iTotal < 0 || dTo < 0) { out.use = false; out.reason = 'The columns could not be found.'; return out; }
+    const defectCols = [];
+    for (let c = dFrom; c < dTo; c += 1) { const nm = cellText(grid[h][c]); if (nm) defectCols.push([c, nm]); }
+    const maxD = maxDhuDate();
+    const n = (r, k) => (k >= 0 ? num(r[k]) : null);
+    for (let i = h + 1; i < grid.length; i += 1) {
+      const r = grid[i] || [];
+      const rawDate = r[iDate];
+      const checked = n(r, iChecked); const total = n(r, iTotal);
+      if (/TOTAL/i.test(String(rawDate === null || rawDate === undefined ? '' : rawDate))) continue;
+      if ((rawDate === null || rawDate === undefined || rawDate === '') && !checked && !total) continue;
+      const d = excelDate(rawDate);
+      const where = `Row ${i + 1}`;
+      if (!d) { if (checked || total) { out.problems.push(`${where}: the date is missing or not a date, so it was not saved.`); out.skipped += 1; } continue; }
+      if (d < '2024-01-01' || d > maxD) { out.problems.push(`${where}: the date ${day(d)} looks wrong, so it was not saved.`); out.skipped += 1; continue; }
+      if (!checked && !total) continue;
+      const df = {};
+      for (const [c, nm] of defectCols) { const v = num(r[c]); if (v) df[nm] = (df[nm] || 0) + Math.round(v); }
+      const sumDf = Object.values(df).reduce((a, x) => a + x, 0);
+      const row = {id: rid(), d, st: cellText(r[iStyle]), b: cellText(r[iBuyer]), c: cellText(r[iColour]), l: lineOf(iLine >= 0 ? r[iLine] : ''), sz: cellText(r[iSize]),
+        ch: checked || 0, p: n(r, iPass), t: total === null ? sumDf : total, df};
+      if (stage === 'Cutting') { row.pc = n(r, iPcs); row.f = cellText(r[iUnit]).replace(/\.0+$/, ''); }
+      const w = rowWarnings(row);
+      if (w.length) out.problems.push(`${where} (${day(d)}, ${row.st || 'no style'}): ${w.join('; ')}.`);
+      out.rows.push(row);
+    }
+    if (!out.rows.length && out.use) { out.use = false; out.reason = out.reason || 'No rows with a date and pieces checked.'; }
+    return out;
+  };
+  const parseDhuFiles = async (files) => {
+    const X = await loadXlsx();
+    const sheets = [];
+    for (const file of files) {
+      let wb = null;
+      try { wb = X.read(await file.arrayBuffer(), {type: 'array', cellDates: false}); }
+      catch (e) { sheets.push({sheet: '', file: file.name, use: false, reason: 'This file could not be opened. Use the Excel file (.xlsx).', rows: [], problems: [], skipped: 0}); continue; }
+      for (const name of wb.SheetNames) {
+        const grid = X.utils.sheet_to_json(wb.Sheets[name], {header: 1, raw: true, defval: null, blankrows: true});
+        sheets.push(parseDhuSheet(name, grid, file.name));
+      }
+    }
+    const usable = sheets.filter((s) => s.use);
+    for (const a of usable) {
+      for (const b of usable) {
+        if (a === b || !a.use || !b.use || a.stage !== b.stage || (a.stage !== 'Cutting' && a.factory !== b.factory)) continue;
+        const small = a.rows.length < b.rows.length || (a.rows.length === b.rows.length && sheets.indexOf(a) > sheets.indexOf(b)) ? a : b;
+        const big = small === a ? b : a;
+        const bigDates = new Set(big.rows.map((r) => r.d));
+        const smallDates = [...new Set(small.rows.map((r) => r.d))];
+        if (smallDates.filter((d) => bigDates.has(d)).length < smallDates.length / 2) continue;
+        small.use = false; small.reason = `Same dates as "${big.sheet}", so it was left out to avoid counting rows twice. Tick it to save it anyway.`;
+      }
+    }
+    return sheets;
+  };
+  const docIdOf = (stage, factory, month) => `${stage.toLowerCase()}-${String(factory || 'all').replace(/[^A-Za-z0-9]/g, '_')}-${month}`;
+  const flattenDhu = () => {
+    state.dhuRows = state.dhuDocs.flatMap((doc) => (Array.isArray(doc.rows) ? doc.rows : []).map((r) => ({...r, docId: doc.id, stage: doc.stage, factory: doc.factory || '', month: doc.month || String(r.d).slice(0, 7)})));
+  };
+  const writeDhuDoc = async (id, data) => {
+    const ref = state.db.doc(`dhu/${id}`);
+    if (data && Array.isArray(data.rows) && data.rows.length) await ref.set(data); else await ref.delete();
+  };
+  const saveDhuSheets = async (sheets, onStep) => {
+    const groups = new Map();
+    for (const sh of sheets.filter((x) => x.use && x.rows.length)) {
+      for (const r of sh.rows) {
+        const factory = sh.stage === 'Cutting' ? (r.f || '') : sh.factory;
+        const month = r.d.slice(0, 7);
+        const id = docIdOf(sh.stage, factory, month);
+        const g = groups.get(id) || {stage: sh.stage, factory, month, rows: [], dates: new Set(), files: new Set()};
+        const row = {...r}; delete row.f;
+        g.rows.push(row); g.dates.add(r.d); g.files.add(sh.file);
+        groups.set(id, g);
+      }
+    }
+    let done = 0;
+    for (const [id, g] of groups) {
+      if (onStep) onStep(done, groups.size);
+      const snap = await state.db.doc(`dhu/${id}`).get();
+      const old = snap.exists && snap.data() && Array.isArray(snap.data().rows) ? snap.data().rows : [];
+      const rows = [...old.filter((r) => !g.dates.has(r.d)), ...g.rows].sort((a, b) => String(a.d).localeCompare(String(b.d)));
+      await writeDhuDoc(id, {stage: g.stage, factory: g.factory, month: g.month, rows, file: [...g.files].join(', '), updated_at: new Date().toISOString(), updated_by: state.myId || null});
+      done += 1;
+    }
+    const counts = new Map();
+    for (const g of groups.values()) counts.set(g.month, (counts.get(g.month) || 0) + g.rows.length);
+    return {docs: groups.size, months: [...counts.keys()].sort(), main: mainMonthOf(counts)};
+  };
+  const startDhu = () => {
+    if (state.dhuListening || !state.db) return;
+    state.dhuListening = true;
+    state.db.collection('dhu').limit(1000).onSnapshot((snap) => {
+      state.dhuDocs = snap.docs.filter((d) => d.exists).map((d) => ({id: d.id, ...d.data()}));
+      flattenDhu(); state.dhuLoaded = true;
+      renderDhuAll();
+      if (state.isOwner) schedulePublish();
+    }, () => { state.dhuLoaded = true; renderDhuAll(); });
+    state.db.collection('dhu-notes').limit(500).onSnapshot((snap) => {
+      state.dhuNotes = Object.fromEntries(snap.docs.filter((d) => d.exists).map((d) => [d.id, d.data()]));
+      renderDhu();
+      if (state.isOwner) schedulePublish();
+    }, () => {});
+    state.db.collection('dhu-config').limit(10).onSnapshot((snap) => {
+      const m = snap.docs.find((d) => d.exists && d.id === 'map');
+      state.dhuMap = m && m.data() && m.data().map && typeof m.data().map === 'object' ? m.data().map : {};
+      renderDhuAll();
+      if (state.isOwner) schedulePublish();
+    }, () => {});
+  };
+  const prevMonth = (k) => { const [y, m] = k.split('-').map(Number); const d = new Date(Date.UTC(y, m - 2, 1)); return d.toISOString().slice(0, 7); };
+  const dhuIn = (stage, factory, month) => state.dhuRows.filter((r) => r.stage === stage && (!month || r.month === month) && (stage === 'Embroidery' || !factory || r.factory === factory));
+  const aggOf = (rows) => {
+    const a = {n: rows.length, checked: 0, defects: 0, pieces: 0, sentBack: 0, withPass: 0, src: {}, byDefect: {}};
+    for (const r of rows) {
+      a.checked += num(r.ch) || 0; a.defects += num(r.t) || 0; a.pieces += num(r.pc) || 0;
+      if (r.p !== null && r.p !== undefined && r.ch) { a.withPass += num(r.ch) || 0; a.sentBack += (num(r.ch) || 0) - (num(r.p) || 0); }
+      for (const [k, v] of Object.entries(r.df || {})) { a.byDefect[k] = (a.byDefect[k] || 0) + v; const s = sourceOf(k); a.src[s] = (a.src[s] || 0) + v; }
+    }
+    a.dhu = a.checked ? a.defects / a.checked * 100 : null;
+    a.sentPct = a.withPass ? a.sentBack / a.withPass * 100 : null;
+    a.cutDhu = a.pieces ? a.defects / a.pieces * 100 : null;
+    a.panelPct = a.checked ? a.defects / a.checked * 100 : null;
+    a.per100 = (v) => (a.checked ? v / a.checked * 100 : null);
+    return a;
+  };
+  const topOf = (obj, n) => Object.entries(obj).sort((x, y) => y[1] - x[1]).slice(0, n);
+  const dhuFactories = (month) => [...new Set(state.dhuRows.filter((r) => r.stage !== 'Embroidery' && (!month || r.month === month)).map((r) => r.factory).filter(Boolean))]
+    .sort((a, b) => (Number(a) || 1e9) - (Number(b) || 1e9) || String(a).localeCompare(String(b)));
+  const dhuMonths = () => [...new Set(state.dhuRows.map((r) => r.month).filter(Boolean))].sort().reverse();
+  const lineStats = (factory, month) => {
+    const m = new Map();
+    const get = (l) => { const k = l || 'Not written'; if (!m.has(k)) m.set(k, {line: k, s: [], f: []}); return m.get(k); };
+    for (const r of dhuIn('Stitching', factory, month)) get(r.l).s.push(r);
+    for (const r of dhuIn('Finishing', factory, month)) get(r.l).f.push(r);
+    const prevS = new Map();
+    for (const r of dhuIn('Stitching', factory, prevMonth(month))) { const k = r.l || 'Not written'; prevS.set(k, [...(prevS.get(k) || []), r]); }
+    return [...m.values()].map((x) => {
+      const s = aggOf(x.s); const f = aggOf(x.f); const p = aggOf(prevS.get(x.line) || []);
+      const reached = f.checked ? (f.src.Stitching || 0) / f.checked * 100 : null;
+      const topS = topOf(s.byDefect, 1)[0];
+      return {line: x.line, sChecked: s.checked, sDefects: s.defects, sDhu: s.dhu, prevDhu: p.dhu, fChecked: f.checked, reached, reachedPcs: f.src.Stitching || 0, top: topS ? `${topS[0]} (${fmt(topS[1])})` : ''};
+    }).sort((a, b) => (a.sChecked >= 200 ? 0 : 1) - (b.sChecked >= 200 ? 0 : 1) || (b.sDhu ?? -1) - (a.sDhu ?? -1) || String(a.line).localeCompare(String(b.line), undefined, {numeric: true}));
+  };
+  const mainMonthOf = (counts) => {
+    const entries = [...counts.entries()].sort((a, b) => a[0].localeCompare(b[0]));
+    const max = Math.max(0, ...entries.map((e) => e[1]));
+    const ok = entries.filter((e) => e[1] >= max * 0.25);
+    return ok.length ? ok[ok.length - 1][0] : (entries.length ? entries[entries.length - 1][0] : '');
+  };
+  const defaultDhuMonth = () => {
+    const recent = new Set(dhuMonths().slice(0, 6));
+    const counts = new Map();
+    const sf = state.dhuRows.filter((r) => recent.has(r.month) && (r.stage === 'Stitching' || r.stage === 'Finishing'));
+    for (const r of (sf.length ? sf : state.dhuRows.filter((x) => recent.has(x.month)))) counts.set(r.month, (counts.get(r.month) || 0) + 1);
+    return mainMonthOf(counts);
+  };
+  const dynamicChain = (factory, month) => {
+    const rs = state.reports.filter((r) => monthKey(r.date) === month && (!factory || r.factory === factory));
+    const checked = sum(rs, (r) => r.checked);
+    const defects = sum(rs, (r) => totalOf(r));
+    const types = groupBy(rs.flatMap((r) => defectsOf(r)), (d) => d.type, (d) => d.pieces);
+    return {lots: rs.length, checked, defects, per100: checked ? defects / checked * 100 : null, top: types.slice(0, 3).map((t) => t.key)};
+  };
+  const pctTxt = (v) => (v === null || v === undefined || !Number.isFinite(v) ? '\u2013' : `${fmt1(v)}%`);
+  const changeTxt = (now, before, lowerIsBetter = true) => {
+    if (now === null || before === null || now === undefined || before === undefined) return null;
+    const diff = now - before;
+    if (Math.abs(diff) < 0.05) return {cls: 'flat', text: `same as ${monthLabel(state.dhuView.month ? prevMonth(state.dhuView.month) : '')}`};
+    const good = lowerIsBetter ? diff < 0 : diff > 0;
+    return {cls: good ? 'ok' : 'bad', text: `${diff < 0 ? '\u25bc' : '\u25b2'} ${fmt1(Math.abs(diff))} vs last month`};
+  };
+  const dhuFindings = (month, scope) => {
+    const out = [];
+    const add = (level, weight, what, todo) => out.push({level, weight, what, todo});
+    const factories = scope ? [scope] : dhuFactories(month);
+    for (const f of factories) {
+      const fin = aggOf(dhuIn('Finishing', f, month));
+      if (fin.checked >= 200 && fin.defects) {
+        const up = UPSTREAM.reduce((s, k) => s + (fin.src[k] || 0), 0);
+        const share = up / fin.defects * 100;
+        if (up) {
+          const parts = UPSTREAM.filter((k) => fin.src[k]).sort((a, b) => fin.src[b] - fin.src[a]).map((k) => `${k.toLowerCase()} ${fmt1(fin.per100(fin.src[k]))}`);
+          const topStitch = topOf(Object.fromEntries(Object.entries(fin.byDefect).filter(([k]) => sourceOf(k) === 'Stitching')), 2).map(([k, v]) => `${k.toLowerCase()} (${fmt(v)})`);
+          add(share >= 40 ? 'bad' : 'warn', 10 + share / 10, `${placeName('factory', f)}: ${Math.round(share)}% of what finishing caught came from other departments: ${fmt1(fin.per100(up))} of its ${fmt1(fin.dhu)} defects per 100 pieces (${parts.join(', ')}).`,
+            `${SRC_TODO.Stitching}${topStitch.length ? ` Start with ${topStitch.join(' and ')}.` : ''}`);
+        }
+        const own = topOf(Object.fromEntries(Object.entries(fin.byDefect).filter(([k]) => sourceOf(k) === 'Finishing (own)')), 1)[0];
+        if (own) {
+          const t = own[0].toLowerCase();
+          const act = t.includes('uncut') ? ACTIONS['Uncut thread'] : t.includes('press') ? ACTIONS['Poor pressing'] : 'Keep tables clean and check every piece before it goes to packing.';
+          add('info', 3, `${placeName('factory', f)}: finishing's own biggest defect is ${t}: ${fmt(own[1])} pieces (${fmt1(fin.per100(own[1]))} per 100).`, act);
+        }
+      }
+      const lines = lineStats(f, month).filter((x) => x.sChecked >= 300 && x.sDhu !== null);
+      if (lines.length >= 2) {
+        const worst = lines[0]; const best = lines[lines.length - 1];
+        add('warn', 6 + worst.sDhu / 10, `${placeName('factory', f)}, line ${worst.line} has the highest stitching DHU: ${fmt1(worst.sDhu)}% (${fmt(worst.sDefects)} defects in ${fmt(worst.sChecked)} pieces). Best is line ${best.line} at ${fmt1(best.sDhu)}%.`,
+          `Line ${worst.line}'s supervisor: go through the top defect${worst.top ? ` (${worst.top.toLowerCase()})` : ''} with the operators every day, and learn what line ${best.line} does differently.`);
+      }
+      const leaks = lineStats(f, month).filter((x) => x.fChecked >= 300 && x.reached !== null).sort((a, b) => b.reached - a.reached);
+      if (leaks.length >= 2 && leaks[0].reached > 0) {
+        add('warn', 5 + leaks[0].reached / 5, `${placeName('factory', f)}: line ${leaks[0].line}'s stitching faults reach finishing most often: ${fmt1(leaks[0].reached)} per 100 pieces (${fmt(leaks[0].reachedPcs)} pieces), against ${fmt1(leaks[leaks.length - 1].reached)} for line ${leaks[leaks.length - 1].line}.`,
+          `Tighten line ${leaks[0].line}'s own end-of-line check, so its faults are repaired on the line before the goods go to finishing.`);
+      }
+      const dyn = dynamicChain(f, month);
+      if (dyn.lots && dyn.per100 !== null) {
+        add(dyn.per100 >= 5 ? 'bad' : 'warn', 8 + dyn.per100 / 5, `${placeName('factory', f)}: Dynamic still found ${fmt1(dyn.per100)} defects per 100 pieces in its final checks (${plural(dyn.lots, 'lot', 'lots')}). These got past the stitching check, the finishing check and the quality team.`,
+          `Quality team: check Dynamic's top defects${dyn.top.length ? ` (${dyn.top.join(', ').toLowerCase()})` : ''} at the finishing check before a lot is offered.`);
+      }
+    }
+    for (const stage of ['Stitching', 'Finishing', 'Embroidery']) {
+      for (const f of stage === 'Embroidery' ? [''] : factories) {
+        const now = aggOf(dhuIn(stage, f, month)); const before = aggOf(dhuIn(stage, f, prevMonth(month)));
+        if (now.checked < 200 || before.checked < 200 || now.dhu === null || before.dhu === null) continue;
+        const diff = now.dhu - before.dhu;
+        if (Math.abs(diff) < 1 || Math.abs(diff) / before.dhu < 0.1) continue;
+        const who = stage === 'Embroidery' ? 'Embroidery' : `${stage} at ${placeName('factory', f).toLowerCase()}`;
+        add(diff > 0 ? 'warn' : 'ok', 2 + Math.abs(diff) / 5, `${who}: DHU ${diff > 0 ? 'rose' : 'fell'} from ${fmt1(before.dhu)}% in ${monthLabel(prevMonth(month))} to ${fmt1(now.dhu)}%.`,
+          diff > 0 ? 'Find what changed this month (new styles, new operators, machines) and fix it before it becomes normal.' : 'Keep doing what worked, and share it with the other lines and factories.');
+      }
+    }
+    const bad = state.dhuRows.filter((r) => r.month === month && (!scope || r.stage === 'Embroidery' || r.factory === scope) && rowWarnings(r).length).length;
+    if (bad) add('info', 1, `${plural(bad, 'row', 'rows')} in ${monthLabel(month)} ${bad === 1 ? 'has a mistake' : 'have mistakes'}, such as more pieces passed than checked.`, 'Open DHU data, fix them there or in the Excel sheet, so the numbers are right.');
+    const rank = {bad: 0, warn: 1, ok: 2, info: 3};
+    return out.sort((x, y) => rank[x.level] - rank[y.level] || y.weight - x.weight).slice(0, 8);
+  };
+  const dhuTile = (label, main, small, note, change) => {
+    const t = el('div', 'qt-tile');
+    t.append(el('span', 'qt-tile-label', label));
+    const n = el('span', 'qt-tile-num', main);
+    if (small) { n.append(' '); n.append(el('small', '', small)); }
+    t.append(n);
+    if (note) t.append(el('span', 'qt-tile-note', note));
+    if (change) t.append(el('span', `qt-dhu-change is-${change.cls}`, change.text));
+    return t;
+  };
+  const srcBar = (fin) => {
+    const bar = el('div', 'qt-src-bar');
+    const legend = el('div', 'qt-src-legend');
+    for (const s of DHU_SOURCES) {
+      const v = fin.src[s] || 0;
+      if (!v) continue;
+      const seg = el('span', `qt-src is-${SRC_CLASS[s]}`);
+      seg.style.width = `${v / fin.defects * 100}%`;
+      seg.title = `${s}: ${fmt(v)} pieces`;
+      bar.append(seg);
+      const lg = el('span', '');
+      lg.append(el('span', `qt-src-dot is-${SRC_CLASS[s]}`), document.createTextNode(` ${s} ${fmt1(fin.per100(v))}`));
+      legend.append(lg);
+    }
+    const wrap = el('div', 'qt-src-wrap'); wrap.append(bar, legend);
+    return wrap;
+  };
+  const chainBox = (title, value, note) => { const b = el('div', 'qt-chain-box'); b.append(el('span', 'qt-tile-label', title), el('span', 'qt-chain-num', value), el('span', 'qt-tile-note', note)); return b; };
+  const renderDhuTrend = (box, factory, month) => {
+    const months = dhuMonths().filter((m) => m <= month).slice(0, 12).reverse();
+    if (months.length < 2) { empty(box, 'The month-by-month chart shows once there are two months of DHU data.'); return; }
+    const series = [
+      {name: 'Stitching', cls: 'stitch', val: (m) => aggOf(dhuIn('Stitching', factory, m)).dhu},
+      {name: 'Finishing', cls: 'stain', val: (m) => aggOf(dhuIn('Finishing', factory, m)).dhu},
+      {name: "Finishing's own", cls: 'finish', val: (m) => { const a = aggOf(dhuIn('Finishing', factory, m)); return a.checked ? a.per100(a.src['Finishing (own)'] || 0) : null; }},
+      {name: 'Embroidery', cls: 'emb', val: (m) => aggOf(dhuIn('Embroidery', '', m)).dhu}
+    ].map((s) => ({...s, pts: months.map((m) => s.val(m))})).filter((s) => s.pts.some((v) => v !== null));
+    const width = Math.max(320, box.clientWidth || 640); const height = 230;
+    const mg = {top: 18, right: 30, bottom: 30, left: 36};
+    const maxV = Math.max(5, ...series.flatMap((s) => s.pts.filter((v) => v !== null)));
+    const x = (i) => mg.left + (width - mg.left - mg.right) * (months.length === 1 ? 0.5 : i / (months.length - 1));
+    const y = (v) => height - mg.bottom - (height - mg.top - mg.bottom) * (v / maxV);
+    const ns = 'http:' + '/' + '/www.w3.org/2000/svg';
+    const mk = (tag, attrs, text) => { const nd = document.createElementNS(ns, tag); for (const [k, v] of Object.entries(attrs)) nd.setAttribute(k, v); if (text !== undefined) nd.textContent = text; return nd; };
+    const svg = mk('svg', {viewBox: `0 0 ${width} ${height}`, class: 'qt-trend', role: 'img', 'aria-label': 'DHU month by month'});
+    for (const g of [0, 0.5, 1]) { const v = maxV * g; svg.append(mk('line', {x1: mg.left, x2: width - mg.right, y1: y(v), y2: y(v), style: 'stroke: var(--line); stroke-width: 1'})); svg.append(mk('text', {x: mg.left - 6, y: y(v) + 4, 'text-anchor': 'end'}, `${Math.round(v)}%`)); }
+    months.forEach((m, i) => svg.append(mk('text', {x: x(i), y: height - 10, 'text-anchor': 'middle'}, monthLabel(m).replace(' 20', " '"))));
+    for (const s of series) {
+      let d = ''; s.pts.forEach((v, i) => { if (v === null) return; d += `${d ? 'L' : 'M'}${x(i).toFixed(1)},${y(v).toFixed(1)}`; });
+      svg.append(mk('path', {d, class: `qt-line is-${s.cls}`, fill: 'none'}));
+      s.pts.forEach((v, i) => { if (v !== null) svg.append(mk('circle', {cx: x(i), cy: y(v), r: 3.5, class: `qt-line-dot is-${s.cls}`})); });
+    }
+    const legend = el('div', 'qt-src-legend');
+    for (const s of series) { const lg = el('span'); const last = [...s.pts].reverse().find((v) => v !== null); lg.append(el('span', `qt-src-dot is-${s.cls}`), document.createTextNode(` ${s.name}${last !== undefined ? ` ${fmt1(last)}%` : ''}`)); legend.append(lg); }
+    const wrap = el('div'); wrap.append(svg, legend);
+    box.replaceChildren(wrap);
+  };
+  const renderDhu = () => {
+    const root = $('dhu-body');
+    if (!root) return;
+    const months = dhuMonths();
+    const msel = $('dhu-month'); const fsel = $('dhu-factory');
+    if (!months.length) {
+      $('dhu-controls').hidden = true;
+      root.replaceChildren(el('p', 'qt-empty', !state.dhuLoaded ? 'Loading DHU data\u2026' : (canChangeNow() ? 'No DHU data yet. Upload your DHU Excel sheets in "DHU data".' : 'No DHU data yet.')));
+      return;
+    }
+    $('dhu-controls').hidden = false;
+    if (!state.dhuView.month || !months.includes(state.dhuView.month)) state.dhuView.month = defaultDhuMonth() || months[0];
+    const month = state.dhuView.month;
+    msel.replaceChildren(...months.map((m) => new Option(monthLabel(m), m))); msel.value = month;
+    const facs = dhuFactories(month);
+    if (state.dhuView.factory && !facs.includes(state.dhuView.factory)) state.dhuView.factory = '';
+    fsel.replaceChildren(new Option('All factories', ''), ...facs.map((f) => new Option(placeName('factory', f), f))); fsel.value = state.dhuView.factory;
+    const scope = state.dhuView.factory;
+    const scoped = scope ? [scope] : facs;
+    const prev = prevMonth(month);
+    const parts = [];
+    const fsec = el('section', 'qt-findings');
+    fsec.append(el('h2', '', `What to do: ${monthLabel(month)}`), el('p', 'qt-note', 'Worked out from your own DHU checks and Dynamic\'s reports, most important first.'));
+    const fl = el('ul', 'qt-find-list');
+    const list = dhuFindings(month, scope);
+    if (!list.length) fl.append(el('li', 'qt-empty', 'Nothing stands out this month.'));
+    for (const f of list) {
+      const li = el('li', `qt-find is-${f.level}`); const body = el('div');
+      body.append(el('p', 'qt-find-what', f.what));
+      const todo = el('p', 'qt-find-do'); todo.append(el('b', '', 'What to do: '), document.createTextNode(f.todo)); body.append(todo);
+      li.append(body); fl.append(li);
+    }
+    fsec.append(fl); parts.push(fsec);
+    const st = aggOf(dhuIn('Stitching', scope, month)); const stP = aggOf(dhuIn('Stitching', scope, prev));
+    const fi = aggOf(dhuIn('Finishing', scope, month)); const fiP = aggOf(dhuIn('Finishing', scope, prev));
+    const em = aggOf(dhuIn('Embroidery', '', month)); const emP = aggOf(dhuIn('Embroidery', '', prev));
+    const cu = aggOf(dhuIn('Cutting', scope, month)); const cuP = aggOf(dhuIn('Cutting', scope, prev));
+    const ownNow = fi.checked ? fi.per100(fi.src['Finishing (own)'] || 0) : null;
+    const ownPrev = fiP.checked ? fiP.per100(fiP.src['Finishing (own)'] || 0) : null;
+    const tiles = el('section', 'qt-tiles');
+    tiles.setAttribute('aria-label', 'DHU this month');
+    tiles.append(
+      dhuTile('Stitching DHU', pctTxt(st.dhu), '', st.checked ? `${fmt(st.defects)} defects in ${fmt(st.checked)} pieces` : 'No stitching data', changeTxt(st.dhu, stP.dhu)),
+      dhuTile('Finishing DHU', pctTxt(fi.dhu), '', fi.checked ? `${fmt(fi.defects)} defects in ${fmt(fi.checked)} pieces` : 'No finishing data', changeTxt(fi.dhu, fiP.dhu)),
+      dhuTile("Finishing's own DHU", pctTxt(ownNow), '', 'Uncut thread, pressing, contamination', changeTxt(ownNow, ownPrev)),
+      dhuTile('Sent back from finishing', pctTxt(fi.sentPct), '', fi.withPass ? `${fmt(fi.sentBack)} of ${fmt(fi.withPass)} pieces` : 'Pieces not passed', changeTxt(fi.sentPct, fiP.sentPct)),
+      dhuTile('Embroidery DHU', pctTxt(em.dhu), '', em.checked ? `${fmt(em.defects)} defects in ${fmt(em.checked)} pieces` : 'No embroidery data', changeTxt(em.dhu, emP.dhu)),
+      dhuTile('Cutting DHU', pctTxt(cu.cutDhu), '', cu.checked ? `${fmt(cu.defects)} of ${fmt(cu.checked)} panels rejected` : 'No cutting data', changeTxt(cu.cutDhu, cuP.cutDhu))
+    );
+    parts.push(tiles);
+    if (!scope && facs.length > 1) {
+      const card = el('article', 'qt-card');
+      card.append(el('h3', '', 'Factories side by side'), el('p', 'qt-note', 'Lower is better. "Reached finishing" is stitching faults the finishing check caught, per 100 pieces it checked.'));
+      const rows = facs.map((f) => { const s = aggOf(dhuIn('Stitching', f, month)); const fn = aggOf(dhuIn('Finishing', f, month)); const c = aggOf(dhuIn('Cutting', f, month));
+        return {f, s: s.dhu, fn: fn.dhu, own: fn.checked ? fn.per100(fn.src['Finishing (own)'] || 0) : null, reach: fn.checked ? fn.per100(fn.src.Stitching || 0) : null, sent: fn.sentPct, cut: c.cutDhu}; });
+      const w = el('div', 'qt-table-wrap');
+      w.append(table([
+        {label: 'Factory', get: (r) => placeName('factory', r.f)},
+        {label: 'Stitching DHU', num: true, get: (r) => pctTxt(r.s)},
+        {label: 'Finishing DHU', num: true, get: (r) => pctTxt(r.fn)},
+        {label: "Finishing's own", num: true, get: (r) => pctTxt(r.own)},
+        {label: 'Reached finishing', num: true, get: (r) => (r.reach === null ? '\u2013' : fmt1(r.reach))},
+        {label: 'Sent back', num: true, get: (r) => pctTxt(r.sent)},
+        {label: 'Cutting DHU', num: true, get: (r) => pctTxt(r.cut)}
+      ], rows, {compact: true}));
+      card.append(w); parts.push(card);
+    }
+    const srcCard = el('article', 'qt-card');
+    srcCard.append(el('h3', '', 'Where finishing defects come from'), el('p', 'qt-note', 'The finishing check also catches faults made earlier, in stitching, cutting, fabric and embroidery, that were not stopped at the source. Per 100 pieces checked in finishing. Change which defect belongs where in "DHU data".'));
+    let anyFin = false;
+    for (const f of scoped) {
+      const fn = aggOf(dhuIn('Finishing', f, month));
+      if (!fn.checked || !fn.defects) continue;
+      anyFin = true;
+      const blk = el('div', 'qt-src-block');
+      const up = UPSTREAM.reduce((s2, k) => s2 + (fn.src[k] || 0), 0);
+      blk.append(el('h4', '', `${placeName('factory', f)}: finishing DHU ${fmt1(fn.dhu)}%, of which only ${fmt1(fn.per100(fn.src['Finishing (own)'] || 0))} is finishing's own work`));
+      blk.append(srcBar(fn));
+      const rows = DHU_SOURCES.filter((s2) => fn.src[s2]).map((s2) => ({s: s2, v: fn.src[s2], top: topOf(Object.fromEntries(Object.entries(fn.byDefect).filter(([k]) => sourceOf(k) === s2)), 3).map(([k, v]) => `${k.toLowerCase()} ${fmt(v)}`).join(', ')}))
+        .sort((a, b) => b.v - a.v);
+      const w = el('div', 'qt-table-wrap');
+      w.append(table([
+        {label: 'Came from', get: (r) => r.s},
+        {label: 'Pieces', num: true, get: (r) => fmt(r.v)},
+        {label: 'Per 100 pcs', num: true, get: (r) => fmt1(fn.per100(r.v))},
+        {label: 'Share', num: true, get: (r) => `${pct(r.v, fn.defects)}%`},
+        {label: 'Biggest defects', get: (r) => r.top}
+      ], rows, {compact: true}));
+      blk.append(w);
+      if (up) blk.append(el('p', 'qt-note', `${pct(up, fn.defects)}% came from other departments (${fmt1(fn.per100(up))} per 100 pieces). Stopping these at the source lowers finishing DHU without any extra work in finishing.`));
+      srcCard.append(blk);
+    }
+    if (!anyFin) srcCard.append(el('p', 'qt-empty', 'No finishing data this month.'));
+    parts.push(srcCard);
+    const chain = el('article', 'qt-card');
+    chain.append(el('h3', '', 'The quality chain: what got past each check'), el('p', 'qt-note', 'Defects found at each step, per 100 pieces checked there. What the next step still finds was missed by the step before.'));
+    for (const f of scoped) {
+      const s2 = aggOf(dhuIn('Stitching', f, month)); const fn = aggOf(dhuIn('Finishing', f, month)); const dyn = dynamicChain(f, month);
+      if (!s2.checked && !fn.checked && !dyn.lots) continue;
+      const row = el('div', 'qt-chain');
+      row.append(el('span', 'qt-chain-f', placeName('factory', f)));
+      row.append(chainBox('Stitching check', s2.checked ? fmt1(s2.dhu) : '\u2013', s2.checked ? `found per 100 pieces (${fmt(s2.checked)} checked)` : 'no data'));
+      row.append(el('span', 'qt-chain-arrow', '\u2192'));
+      row.append(chainBox('Finishing check', fn.checked ? fmt1(fn.per100(fn.src.Stitching || 0)) : '\u2013', fn.checked ? `stitching faults per 100 that got past the stitching check (+${fmt1(fn.per100(fn.defects - (fn.src.Stitching || 0)))} other)` : 'no data'));
+      row.append(el('span', 'qt-chain-arrow', '\u2192'));
+      row.append(chainBox('Dynamic final check', dyn.lots ? fmt1(dyn.per100) : '\u2013', dyn.lots ? `per 100 pieces got past finishing and quality (${plural(dyn.lots, 'lot', 'lots')})` : 'no Dynamic reports this month'));
+      chain.append(row);
+    }
+    parts.push(chain);
+    const lc = el('article', 'qt-card');
+    lc.append(el('h3', '', 'Stitching lines'), el('p', 'qt-note', 'Each line\'s own DHU at the stitching check, and how many of its faults still reached finishing (per 100 pieces finishing checked from that line). Worst first. Lower is better for both.'));
+    let anyLine = false;
+    for (const f of scoped) {
+      const ls = lineStats(f, month);
+      if (!ls.length) continue;
+      anyLine = true;
+      if (scoped.length > 1) lc.append(el('h4', 'qt-sub-h', placeName('factory', f)));
+      const w = el('div', 'qt-table-wrap');
+      w.append(table([
+        {label: 'Line', get: (r) => r.line},
+        {label: 'Checked', num: true, get: (r) => (r.sChecked ? `${fmt(r.sChecked)}${r.sChecked < 200 ? ' (few)' : ''}` : '\u2013')},
+        {label: 'Stitching DHU', num: true, get: (r) => pctTxt(r.sDhu)},
+        {label: 'Last month', num: true, get: (r) => pctTxt(r.prevDhu)},
+        {label: 'Reached finishing', num: true, get: (r) => (r.reached === null ? '\u2013' : `${fmt1(r.reached)} (${fmt(r.reachedPcs)} pcs)`)},
+        {label: 'Top stitching defect', get: (r) => r.top}
+      ], ls, {compact: true}));
+      lc.append(w);
+    }
+    if (!anyLine) lc.append(el('p', 'qt-empty', 'No stitching or finishing data this month.'));
+    parts.push(lc);
+    const grid = el('div', 'qt-grid');
+    for (const stage of DHU_STAGES) {
+      const a = aggOf(dhuIn(stage, stage === 'Embroidery' ? '' : scope, month));
+      const card = el('article', 'qt-card');
+      card.append(el('h3', '', `${stage}: biggest defects${stage === 'Embroidery' && scope ? ' (whole unit)' : ''}`));
+      const box = el('div', 'qt-bars');
+      bars(box, topOf(a.byDefect, 8).map(([k, v]) => ({key: k, value: v, reports: new Set()})), {emptyText: `No ${stage.toLowerCase()} data this month.`, suffix: (r, t) => `\u00b7 ${pct(r.value, a.defects || t)}%`});
+      card.append(box); grid.append(card);
+    }
+    parts.push(grid);
+    const tc = el('article', 'qt-card');
+    tc.append(el('h3', '', 'Month by month'), el('p', 'qt-note', scope ? `DHU for ${placeName('factory', scope).toLowerCase()} (embroidery is for the whole unit). Lower is better.` : 'DHU for all factories together. Lower is better.'));
+    const tbox = el('div'); tc.append(tbox); parts.push(tc);
+    const bc = el('article', 'qt-card');
+    bc.append(el('h3', '', 'Buyers'), el('p', 'qt-note', 'Stitching and finishing DHU by buyer this month, worst finishing DHU first. Spellings of the same buyer are joined.'));
+    const bm = new Map();
+    for (const stage of ['Stitching', 'Finishing']) for (const r of dhuIn(stage, scope, month)) { const k = buyerName(r.b); const g = bm.get(k) || {b: k, s: [], f: []}; (stage === 'Stitching' ? g.s : g.f).push(r); bm.set(k, g); }
+    const brows = [...bm.values()].map((g) => { const s2 = aggOf(g.s); const fn = aggOf(g.f); const t = topOf(aggOf([...g.s, ...g.f]).byDefect, 1)[0];
+      return {b: g.b, sc: s2.checked, sd: s2.dhu, fc: fn.checked, fd: fn.dhu, top: t ? `${t[0]} (${fmt(t[1])})` : ''}; }).sort((a, b) => (b.fd ?? -1) - (a.fd ?? -1));
+    if (brows.length) { const w = el('div', 'qt-table-wrap'); w.append(table([
+      {label: 'Buyer', get: (r) => r.b},
+      {label: 'Stitching checked', num: true, get: (r) => (r.sc ? fmt(r.sc) : '\u2013')},
+      {label: 'Stitching DHU', num: true, get: (r) => pctTxt(r.sd)},
+      {label: 'Finishing checked', num: true, get: (r) => (r.fc ? fmt(r.fc) : '\u2013')},
+      {label: 'Finishing DHU', num: true, get: (r) => pctTxt(r.fd)},
+      {label: 'Biggest defect', get: (r) => r.top}
+    ], brows, {compact: true})); bc.append(w); } else bc.append(el('p', 'qt-empty', 'No stitching or finishing data this month.'));
+    parts.push(bc);
+    const ic = el('article', 'qt-card');
+    ic.append(el('h3', '', 'Numbers for the incentive sheet'), el('p', 'qt-note', 'The month\'s totals, no targets. Lower is better for all of them.'));
+    const irows = scoped.map((f) => { const fn = aggOf(dhuIn('Finishing', f, month)); const dyn = dynamicChain(f, month);
+      return {f, sent: fn.sentPct, own: fn.checked ? fn.per100(fn.src['Finishing (own)'] || 0) : null, reach: fn.checked ? fn.per100(fn.src.Stitching || 0) : null, dyn: dyn.per100}; });
+    const iw = el('div', 'qt-table-wrap'); iw.append(table([
+      {label: 'Factory', get: (r) => placeName('factory', r.f)},
+      {label: 'Pieces sent back from finishing (factory parameter)', num: true, get: (r) => pctTxt(r.sent)},
+      {label: "Finishing's own defects per 100 (finishing in-charge)", num: true, get: (r) => (r.own === null ? '\u2013' : fmt1(r.own))},
+      {label: 'Stitching faults that reached finishing per 100 (line supervisors)', num: true, get: (r) => (r.reach === null ? '\u2013' : fmt1(r.reach))},
+      {label: 'Defects Dynamic found per 100 (finishing and quality)', num: true, get: (r) => (r.dyn === null ? '\u2013' : fmt1(r.dyn))}
+    ], irows, {compact: true})); ic.append(iw);
+    ic.append(el('p', 'qt-note', 'For each line supervisor, use the "Reached finishing" number of their own line in Stitching lines above.'));
+    parts.push(ic);
+    const nc = el('article', 'qt-card qt-ask');
+    nc.append(el('h3', '', `Claude's view of ${monthLabel(month)}`));
+    const note = state.dhuNotes[month];
+    if (note && (note.headline || (note.points || []).length)) {
+      if (note.headline) nc.append(el('p', 'qt-ai-headline', note.headline));
+      const cols = el('div', 'qt-ai-cols');
+      const mkl = (title, items) => { if (!Array.isArray(items) || !items.length) return; const d = el('div'); d.append(el('b', '', title)); const ul = el('ul'); for (const x of items) ul.append(el('li', '', x)); d.append(ul); cols.append(d); };
+      mkl('What the numbers say', note.points); mkl('What to do', note.actions);
+      nc.append(cols);
+      if (note.at) nc.append(el('p', 'qt-note', `Reviewed ${shortDate(note.at)}`));
+    } else nc.append(el('p', 'qt-note', state.ai ? 'Not reviewed yet.' : 'Claude reviews each month when new DHU sheets are uploaded.'));
+    if (state.ai && canChangeNow()) {
+      const b = el('button', 'qt-btn', state.dhuBusy ? 'Claude is reviewing\u2026' : note ? 'Review again' : 'Ask Claude to review this month');
+      b.type = 'button'; b.disabled = state.dhuBusy;
+      b.addEventListener('click', () => dhuReview(month));
+      nc.append(b);
+    }
+    const rmsg = el('p', 'qt-msg', ''); rmsg.id = 'dhu-review-msg'; rmsg.setAttribute('role', 'status'); nc.append(rmsg);
+    parts.push(nc);
+    root.replaceChildren(...parts);
+    renderDhuTrend(tbox, scope, month);
+  };
+  $('dhu-month').addEventListener('change', () => { state.dhuView.month = $('dhu-month').value; renderDhu(); });
+  $('dhu-factory').addEventListener('change', () => { state.dhuView.factory = $('dhu-factory').value; renderDhu(); });
+  const dhuSummaryText = (month) => {
+    const lines = [`MONTH: ${monthLabel(month)} (previous month ${monthLabel(prevMonth(month))})`];
+    for (const f of dhuFactories(month)) {
+      const s2 = aggOf(dhuIn('Stitching', f, month)); const sP = aggOf(dhuIn('Stitching', f, prevMonth(month)));
+      const fn = aggOf(dhuIn('Finishing', f, month)); const fP = aggOf(dhuIn('Finishing', f, prevMonth(month)));
+      const c = aggOf(dhuIn('Cutting', f, month)); const dyn = dynamicChain(f, month);
+      lines.push(`FACTORY ${f}:`);
+      if (s2.checked) lines.push(`- Stitching 100% check: DHU ${fmt1(s2.dhu)}% (${s2.defects} defects in ${s2.checked} pcs); last month ${pctTxt(sP.dhu)}. Top defects: ${topOf(s2.byDefect, 5).map(([k, v]) => `${k} ${v}`).join(', ')}.`);
+      if (fn.checked) {
+        lines.push(`- Finishing 100% check: DHU ${fmt1(fn.dhu)}% (${fn.defects} defects in ${fn.checked} pcs); last month ${pctTxt(fP.dhu)}; pieces sent back ${pctTxt(fn.sentPct)}.`);
+        lines.push(`- Finishing defects by where they came from (per 100 pcs): ${DHU_SOURCES.filter((k) => fn.src[k]).map((k) => `${k} ${fmt1(fn.per100(fn.src[k]))}`).join(', ')}. Top: ${topOf(fn.byDefect, 5).map(([k, v]) => `${k} ${v}`).join(', ')}.`);
+      }
+      const ls = lineStats(f, month).filter((x) => x.sChecked || x.fChecked);
+      if (ls.length) lines.push(`- Stitching lines (line: stitching DHU / stitching faults reaching finishing per 100): ${ls.map((x) => `${x.line}: ${pctTxt(x.sDhu)} / ${x.reached === null ? '-' : fmt1(x.reached)}`).join('; ')}.`);
+      if (c.checked) lines.push(`- Cutting: ${c.defects} of ${c.checked} panels rejected (${pctTxt(c.cutDhu)} per 100 garments).`);
+      if (dyn.lots) lines.push(`- Dynamic final inspections: ${dyn.lots} lots, ${fmt1(dyn.per100)} defects per 100 pcs. Top: ${dyn.top.join(', ')}.`);
+    }
+    const e = aggOf(dhuIn('Embroidery', '', month)); const eP = aggOf(dhuIn('Embroidery', '', prevMonth(month)));
+    if (e.checked) lines.push(`EMBROIDERY UNIT: DHU ${fmt1(e.dhu)}% (${e.defects} in ${e.checked}); last month ${pctTxt(eP.dhu)}. Top: ${topOf(e.byDefect, 5).map(([k, v]) => `${k} ${v}`).join(', ')}.`);
+    return lines.join('\n');
+  };
+  const dhuReview = async (month) => {
+    if (!state.ai || !state.db || state.dhuBusy) return;
+    state.dhuBusy = true; renderDhu();
+    const msg = () => $('dhu-review-msg');
+    try {
+      const prompt = [
+        'You are the quality head of Saivana, a garment maker in India. Below are the month\'s own 100% quality checks (DHU = defects per 100 pieces checked) for stitching, finishing, embroidery and cutting, and Dynamic Agencies\' final inspections.',
+        'Finishing DHU is always higher than stitching DHU because the finishing check also catches stitching, cutting, fabric and embroidery faults that were not stopped at the source.',
+        'Reply with only one JSON object and no other text: {"headline":"","points":[""],"actions":[""]}.',
+        '- headline: one sentence of at most 25 words: the single most important thing about this month.',
+        '- points: 3 to 5 findings of at most 25 words each, with the numbers, naming factories, lines and defects.',
+        '- actions: 3 to 5 concrete actions of at most 22 words each, each naming who should do it (line supervisor of line X, finishing in-charge, cutting in-charge, quality team).',
+        '- Use plain, simple English for factory staff. Never invent numbers that are not below.',
+        '',
+        dhuSummaryText(month)
+      ].join('\n');
+      const ans = await state.ai.json(prompt, {modelTier: 'default'});
+      const s3 = (v) => (typeof v === 'string' ? v.trim() : '');
+      const list = (v) => (Array.isArray(v) ? v.map(s3).filter(Boolean).slice(0, 5) : []);
+      const note = {month, headline: s3(ans && ans.headline), points: list(ans && ans.points), actions: list(ans && ans.actions), at: new Date().toISOString()};
+      if (note.headline || note.points.length) await state.db.doc(`dhu-notes/${month}`).set(note);
+    } catch (e) {
+      state.dhuBusy = false; renderDhu();
+      if (msg()) { msg().className = 'qt-msg is-bad'; msg().textContent = e && e.code ? aiError(e) : 'The review could not be saved.'; }
+      return;
+    }
+    state.dhuBusy = false; renderDhu();
+  };
+  const dhuMsg = (id, text, cls) => { const m = $(id); m.className = `qt-msg${cls ? ` ${cls}` : ''}`; m.textContent = text; };
+  const renderDhuUpload = () => {
+    const box = $('dhu-preview');
+    const up = state.dhuUpload;
+    $('dhu-save').hidden = !up;
+    $('dhu-cancel').hidden = !up;
+    if (!up) { box.replaceChildren(); return; }
+    const items = up.sheets.map((sh) => {
+      const li = el('li', `qt-auto-item${sh.use ? '' : ' is-off'}`);
+      const left = el('div');
+      const lab = el('label', 'qt-dhu-pick');
+      const cb = el('input'); cb.type = 'checkbox'; cb.checked = sh.use; cb.disabled = !sh.rows.length;
+      cb.addEventListener('change', () => { sh.use = cb.checked; renderDhuUpload(); });
+      lab.append(cb, el('b', '', `${sh.file}${sh.sheet ? ` \u203a ${sh.sheet}` : ''}`));
+      left.append(lab);
+      if (sh.rows.length) {
+        const ds = sh.rows.map((r) => r.d).sort();
+        const fac = sh.stage === 'Cutting' ? [...new Set(sh.rows.map((r) => r.f).filter(Boolean))].join(', ') : sh.factory;
+        left.append(el('div', 'qt-auto-status', `${sh.stage}${fac ? ` \u00b7 ${sh.stage === 'Cutting' ? 'units' : 'factory'} ${fac}` : ''} \u00b7 ${plural(sh.rows.length, 'row', 'rows')} \u00b7 ${day(ds[0])} to ${day(ds[ds.length - 1])}`));
+      }
+      if (sh.reason) left.append(el('div', 'qt-auto-status is-warn', sh.reason));
+      if (sh.problems.length) {
+        const more = el('div', 'qt-auto-more');
+        more.append(el('div', 'is-warn', `${plural(sh.problems.length, 'thing', 'things')} to check:`));
+        for (const p of sh.problems.slice(0, 6)) more.append(el('div', '', p));
+        if (sh.problems.length > 6) more.append(el('div', '', `and ${sh.problems.length - 6} more.`));
+        left.append(more);
+      }
+      li.append(left);
+      return li;
+    });
+    box.replaceChildren(...items);
+    const n = up.sheets.filter((s) => s.use).reduce((a, s) => a + s.rows.length, 0);
+    $('dhu-save').textContent = `Save ${plural(n, 'row', 'rows')}`;
+    $('dhu-save').disabled = !n || state.dhuBusy;
+  };
+  $('dhu-files').addEventListener('change', async () => {
+    const files = [...$('dhu-files').files];
+    if (!files.length) return;
+    dhuMsg('dhu-up-msg', 'Reading the sheets\u2026');
+    try {
+      const sheets = await parseDhuFiles(files);
+      state.dhuUpload = {sheets};
+      const n = sheets.filter((s) => s.use).reduce((a, s) => a + s.rows.length, 0);
+      dhuMsg('dhu-up-msg', n ? `Read ${plural(n, 'row', 'rows')}. Check the list, then save. Saving replaces what the tracker has for the same check, factory and dates.` : 'No DHU rows were found in these files.', n ? '' : 'is-bad');
+    } catch (e) {
+      state.dhuUpload = null;
+      dhuMsg('dhu-up-msg', e && e.code === 'xlsx_lib' ? 'The Excel reader could not load. Check your internet and try again.' : 'These files could not be read. Use the Excel files (.xlsx).', 'is-bad');
+    }
+    renderDhuUpload();
+  });
+  $('dhu-cancel').addEventListener('click', () => { state.dhuUpload = null; $('dhu-files').value = ''; dhuMsg('dhu-up-msg', ''); renderDhuUpload(); });
+  $('dhu-save').addEventListener('click', async () => {
+    if (!state.dhuUpload || !state.db || state.dhuBusy) return;
+    state.dhuBusy = true; $('dhu-save').disabled = true;
+    try {
+      const res = await saveDhuSheets(state.dhuUpload.sheets, (i, nn) => dhuMsg('dhu-up-msg', `Saving ${i + 1} of ${nn}\u2026`));
+      state.dhuUpload = null; $('dhu-files').value = '';
+      const last = res.months[res.months.length - 1];
+      dhuMsg('dhu-up-msg', `Saved ${res.months.length === 1 ? monthLabel(res.months[0]) : `${monthLabel(res.months[0])} to ${monthLabel(last)}`}. The DHU tracker is updated${state.ai && res.main ? `, and Claude is reviewing ${monthLabel(res.main)}` : ''}.`, 'is-ok');
+      state.dhuBusy = false;
+      renderDhuUpload();
+      if (res.main) { state.dhuView.month = res.main; state.dhuData.month = res.main; if (state.ai) dhuReview(res.main); }
+    } catch (e) {
+      state.dhuBusy = false;
+      dhuMsg('dhu-up-msg', writeError(e), 'is-bad');
+      renderDhuUpload();
+    }
+  });
+  const renderDhuMap = () => {
+    const box = $('dhu-map');
+    const names = [...new Set(state.dhuRows.filter((r) => r.stage === 'Finishing' || r.stage === 'Stitching').flatMap((r) => Object.keys(r.df || {})))].sort();
+    if (!names.length) { empty(box, 'The list shows once stitching or finishing sheets are uploaded.'); return; }
+    const canEdit = canChangeNow();
+    const counts = aggOf(state.dhuRows.filter((r) => r.stage === 'Finishing')).byDefect;
+    box.replaceChildren(...names.map((nm) => {
+      const row = el('label', 'qt-map-row');
+      row.append(el('span', '', nm), el('span', 'qt-note', counts[nm] ? `${fmt(counts[nm])} in finishing` : ''));
+      const sel = el('select');
+      sel.replaceChildren(...DHU_SOURCES.map((s) => new Option(s, s)));
+      sel.value = sourceOf(nm); sel.disabled = !canEdit; sel.dataset.name = nm;
+      if (state.dhuMap[nm] && state.dhuMap[nm] !== defaultSourceOf(nm)) row.classList.add('is-changed');
+      row.append(sel);
+      return row;
+    }));
+  };
+  $('dhu-map-save').addEventListener('click', async () => {
+    const map = {};
+    for (const sel of $('dhu-map').querySelectorAll('select')) if (sel.value !== defaultSourceOf(sel.dataset.name)) map[sel.dataset.name] = sel.value;
+    $('dhu-map-save').disabled = true;
+    try { await state.db.doc('dhu-config/map').set({map, updated_at: new Date().toISOString()}); dhuMsg('dhu-map-msg', 'Saved. Every chart uses the new list.', 'is-ok'); }
+    catch (e) { dhuMsg('dhu-map-msg', writeError(e), 'is-bad'); }
+    $('dhu-map-save').disabled = false;
+  });
+  $('dhu-map-reset').addEventListener('click', () => {
+    for (const sel of $('dhu-map').querySelectorAll('select')) sel.value = defaultSourceOf(sel.dataset.name);
+    dhuMsg('dhu-map-msg', 'Back to the starting list. Click Save to keep it.');
+  });
+  const dhuDataRows = () => {
+    const f = state.dhuData;
+    const q = f.search.trim().toLowerCase();
+    return state.dhuRows.filter((r) => (!f.month || r.month === f.month) && (!f.stage || r.stage === f.stage) && (!f.factory || r.factory === f.factory) &&
+      (!q || [r.st, r.b, r.c, r.l, r.sz, r.d, ...Object.keys(r.df || {})].join(' ').toLowerCase().includes(q)))
+      .sort((a, b) => String(b.d).localeCompare(String(a.d)) || String(a.stage).localeCompare(String(b.stage)));
+  };
+  const renderDhuRows = () => {
+    const f = state.dhuData;
+    const months = dhuMonths();
+    if (f.month && !months.includes(f.month)) f.month = '';
+    if (!f.month && months.length) f.month = state.dhuView.month && months.includes(state.dhuView.month) ? state.dhuView.month : months[0];
+    $('dhu-d-month').replaceChildren(new Option('All months', ''), ...months.map((m) => new Option(monthLabel(m), m))); $('dhu-d-month').value = f.month;
+    $('dhu-d-stage').value = f.stage;
+    const facs = [...new Set(state.dhuRows.map((r) => r.factory).filter(Boolean))].sort();
+    $('dhu-d-factory').replaceChildren(new Option('All factories', ''), ...facs.map((x) => new Option(x, x))); $('dhu-d-factory').value = facs.includes(f.factory) ? f.factory : '';
+    const rows = dhuDataRows();
+    const box = $('dhu-rows');
+    const canEdit = canChangeNow();
+    $('dhu-d-bulk').hidden = !canEdit || !rows.length;
+    $('dhu-d-bulk').textContent = f.confirmBulk ? `Yes, delete ${plural(rows.length, 'row', 'rows')}` : `Delete the ${plural(rows.length, 'row', 'rows')} shown`;
+    $('dhu-d-bulk-no').hidden = !f.confirmBulk;
+    if (!rows.length) { empty(box, state.dhuRows.length ? 'No rows match.' : 'No DHU data yet.'); renderDhuProblems(); return; }
+    const t = el('table', 'qt-table qt-table-wide is-compact');
+    const hr = el('tr');
+    ['Date', 'Check', 'Factory', 'Line', 'Style', 'Buyer', 'Checked', 'Passed', 'Defects', 'DHU', ''].forEach((c, i) => hr.append(el('th', i >= 6 && i <= 9 ? 'num' : '', c)));
+    const thead = el('thead'); thead.append(hr);
+    const tb = el('tbody');
+    for (const r of rows.slice(0, 400)) {
+      const tr = el('tr');
+      const warn = rowWarnings(r);
+      const cells = [day(r.d), r.stage, r.factory || '\u2013', r.l || '\u2013', r.st, r.b, fmt(r.ch), r.p === null || r.p === undefined ? '\u2013' : fmt(r.p), fmt(r.t), r.ch ? `${fmt1(r.t / r.ch * 100)}%` : '\u2013'];
+      cells.forEach((v, i) => tr.append(el('td', i >= 6 && i <= 9 ? 'num nowrap' : (i === 0 ? 'nowrap' : ''), v)));
+      if (warn.length) tr.children[4].append(el('span', 'qt-pill is-warn qt-check-pill', 'Check'));
+      const td = el('td', 'nowrap');
+      if (canEdit) {
+        const e = el('button', 'qt-btn is-small', 'Edit'); e.type = 'button'; e.addEventListener('click', () => startDhuEdit(r));
+        const d = el('button', 'qt-btn is-small is-danger', 'Delete'); d.type = 'button'; d.addEventListener('click', () => deleteDhuRows([r], d));
+        td.append(e, ' ', d);
+      }
+      tr.append(td);
+      tb.append(tr);
+    }
+    t.append(thead, tb);
+    const parts = [t];
+    if (rows.length > 400) parts.push(el('p', 'qt-note', `Showing the newest 400 of ${fmt(rows.length)} rows. Pick a month or a check to see the rest.`));
+    box.replaceChildren(...parts);
+    renderDhuProblems();
+  };
+  const renderDhuProblems = () => {
+    const box = $('dhu-problems');
+    const rows = state.dhuRows.filter((r) => rowWarnings(r).length).sort((a, b) => String(b.d).localeCompare(String(a.d)));
+    $('dhu-problems-card').hidden = !rows.length;
+    if (!rows.length) return;
+    const canEdit = canChangeNow();
+    box.replaceChildren(...rows.slice(0, 30).map((r) => {
+      const li = el('li', 'qt-auto-item');
+      const left = el('div');
+      left.append(el('div', 'qt-auto-file', `${day(r.d)} \u00b7 ${r.stage}${r.factory ? ` ${r.factory}` : ''} \u00b7 ${r.st || 'no style'}${r.l ? ` \u00b7 line ${r.l}` : ''}`), el('div', 'qt-auto-status is-warn', rowWarnings(r).join('. ')));
+      const acts = el('div', 'qt-auto-acts');
+      if (canEdit) { const b = el('button', 'qt-btn', 'Fix it'); b.type = 'button'; b.addEventListener('click', () => startDhuEdit(r)); acts.append(b); }
+      li.append(left, acts);
+      return li;
+    }));
+  };
+  for (const [id, key] of [['dhu-d-month', 'month'], ['dhu-d-stage', 'stage'], ['dhu-d-factory', 'factory']]) {
+    $(id).addEventListener('change', () => { state.dhuData[key] = $(id).value; state.dhuData.confirmBulk = false; renderDhuRows(); });
+  }
+  $('dhu-d-search').addEventListener('input', () => { state.dhuData.search = $('dhu-d-search').value; state.dhuData.confirmBulk = false; renderDhuRows(); });
+  const deleteDhuRows = async (rows, btn) => {
+    if (!rows.length) return;
+    if (btn) btn.disabled = true;
+    const byDoc = new Map();
+    for (const r of rows) byDoc.set(r.docId, [...(byDoc.get(r.docId) || []), r.id]);
+    try {
+      let i = 0;
+      for (const [docId, ids] of byDoc) {
+        i += 1; dhuMsg('dhu-rows-msg', `Deleting ${i} of ${byDoc.size}\u2026`);
+        const doc = state.dhuDocs.find((d) => d.id === docId);
+        if (!doc) continue;
+        const drop = new Set(ids);
+        await writeDhuDoc(docId, {...doc, rows: doc.rows.filter((r) => !drop.has(r.id)), updated_at: new Date().toISOString(), updated_by: state.myId || null});
+      }
+      dhuMsg('dhu-rows-msg', `${plural(rows.length, 'row', 'rows')} deleted. Every chart is updated.`, 'is-ok');
+    } catch (e) { dhuMsg('dhu-rows-msg', writeError(e), 'is-bad'); if (btn) btn.disabled = false; }
+  };
+  $('dhu-d-bulk').addEventListener('click', () => {
+    if (!state.dhuData.confirmBulk) { state.dhuData.confirmBulk = true; renderDhuRows(); return; }
+    state.dhuData.confirmBulk = false;
+    deleteDhuRows(dhuDataRows(), $('dhu-d-bulk'));
+  });
+  $('dhu-d-bulk-no').addEventListener('click', () => { state.dhuData.confirmBulk = false; renderDhuRows(); });
+  const startDhuEdit = (r) => {
+    state.dhuEditing = {docId: r.docId, id: r.id, stage: r.stage, factory: r.factory};
+    $('dhu-edit-card').hidden = false;
+    $('dhu-edit-title').textContent = `Edit a ${r.stage.toLowerCase()} row${r.factory ? `, factory ${r.factory}` : ''}`;
+    $('dhu-e-date').value = r.d; $('dhu-e-line').value = r.l || ''; $('dhu-e-style').value = r.st || ''; $('dhu-e-buyer').value = r.b || '';
+    $('dhu-e-colour').value = r.c || ''; $('dhu-e-checked').value = r.ch ?? ''; $('dhu-e-pass').value = r.p ?? '';
+    const box = $('dhu-e-defects');
+    box.replaceChildren();
+    for (const [k, v] of Object.entries(r.df || {})) addDhuDefect(k, v);
+    const known = [...new Set(state.dhuRows.filter((x) => x.stage === r.stage).flatMap((x) => Object.keys(x.df || {})))].sort();
+    $('dhu-e-new').replaceChildren(new Option('Add a defect\u2026', ''), ...known.map((k) => new Option(k, k)));
+    dhuMsg('dhu-e-msg', rowWarnings(r).join('. '), rowWarnings(r).length ? 'is-bad' : '');
+    location.hash = 'dhudata';
+    setTimeout(() => $('dhu-edit-card').scrollIntoView({behavior: 'smooth', block: 'start'}), 0);
+  };
+  const addDhuDefect = (name, v) => {
+    const box = $('dhu-e-defects');
+    if ([...box.querySelectorAll('input')].some((i) => i.dataset.name === name)) return;
+    const row = el('label', 'qt-map-row');
+    row.append(el('span', '', name));
+    const inp = el('input'); inp.type = 'number'; inp.min = '0'; inp.step = '1'; inp.value = v; inp.dataset.name = name; inp.inputMode = 'numeric';
+    row.append(inp);
+    box.append(row);
+  };
+  $('dhu-e-new').addEventListener('change', () => { const v = $('dhu-e-new').value; if (v) addDhuDefect(v, 1); $('dhu-e-new').value = ''; });
+  $('dhu-e-cancel').addEventListener('click', () => { state.dhuEditing = null; $('dhu-edit-card').hidden = true; });
+  $('dhu-e-save').addEventListener('click', async () => {
+    const ed = state.dhuEditing;
+    if (!ed) return;
+    const doc = state.dhuDocs.find((d) => d.id === ed.docId);
+    const old = doc && doc.rows.find((x) => x.id === ed.id);
+    if (!doc || !old) { dhuMsg('dhu-e-msg', 'This row has changed or was deleted. Close and open it again.', 'is-bad'); return; }
+    const d = excelDate($('dhu-e-date').value);
+    const checked = num($('dhu-e-checked').value);
+    if (!d) { dhuMsg('dhu-e-msg', 'Type a date.', 'is-bad'); return; }
+    if (!(checked >= 0)) { dhuMsg('dhu-e-msg', 'Type the pieces checked.', 'is-bad'); return; }
+    const df = {};
+    for (const inp of $('dhu-e-defects').querySelectorAll('input')) { const v = Math.round(num(inp.value) || 0); if (v > 0) df[inp.dataset.name] = v; }
+    const t = Object.values(df).reduce((a, x) => a + x, 0);
+    const pass = num($('dhu-e-pass').value);
+    const row = {...old, d, l: lineOf($('dhu-e-line').value), st: cellText($('dhu-e-style').value), b: cellText($('dhu-e-buyer').value), c: cellText($('dhu-e-colour').value), ch: checked, p: pass, t: Object.keys(df).length ? t : old.t, df};
+    $('dhu-e-save').disabled = true;
+    try {
+      const newId = docIdOf(ed.stage, ed.factory, d.slice(0, 7));
+      const now = new Date().toISOString();
+      if (newId === doc.id) {
+        await writeDhuDoc(doc.id, {...doc, rows: doc.rows.map((x) => (x.id === ed.id ? row : x)), updated_at: now, updated_by: state.myId || null});
+      } else {
+        const snap = await state.db.doc(`dhu/${newId}`).get();
+        const target = snap.exists && snap.data() ? snap.data() : {stage: ed.stage, factory: ed.factory, month: d.slice(0, 7), rows: [], file: doc.file || ''};
+        await writeDhuDoc(newId, {...target, rows: [...(target.rows || []), row].sort((a, b) => String(a.d).localeCompare(String(b.d))), updated_at: now, updated_by: state.myId || null});
+        await writeDhuDoc(doc.id, {...doc, rows: doc.rows.filter((x) => x.id !== ed.id), updated_at: now, updated_by: state.myId || null});
+      }
+      state.dhuEditing = null; $('dhu-edit-card').hidden = true;
+      dhuMsg('dhu-rows-msg', 'Row saved. Every chart is updated.', 'is-ok');
+    } catch (e) { dhuMsg('dhu-e-msg', writeError(e), 'is-bad'); }
+    $('dhu-e-save').disabled = false;
+  });
+  const renderDhuData = () => {
+    const canEdit = canChangeNow();
+    $('dhu-upload-card').hidden = !canEdit;
+    $('dhu-readonly').hidden = canEdit || !state.loaded;
+    $('dhu-map-save').hidden = !canEdit; $('dhu-map-reset').hidden = !canEdit;
+    renderDhuUpload(); renderDhuRows(); renderDhuMap();
+  };
+  const renderDhuAll = () => { renderDhu(); renderDhuData(); };
+  const makeDhuPdf = async () => {
+    const btn = $('dhu-pdf');
+    const label = btn.textContent;
+    btn.disabled = true; btn.textContent = 'Making the PDF\u2026';
+    try {
+      const month = state.dhuView.month; const scope = state.dhuView.factory;
+      if (!month) return;
+      const JsPDF = await loadPdfLib();
+      const doc = new JsPDF({unit: 'pt', format: 'a4'});
+      const W = doc.internal.pageSize.getWidth(); const H = doc.internal.pageSize.getHeight(); const M = 40;
+      const ACC = [50, 67, 166]; const INK = [26, 31, 46]; const MUTED = [91, 98, 118];
+      let y = 0;
+      const room = (need) => { if (y + need > H - 50) { doc.addPage(); y = M; } };
+      doc.setFillColor(...ACC); doc.rect(0, 0, W, 78, 'F');
+      doc.setTextColor(255, 255, 255); doc.setFont('helvetica', 'bold'); doc.setFontSize(21); doc.text('Saivana DHU Report', M, 36);
+      doc.setFont('helvetica', 'normal'); doc.setFontSize(11); doc.text(pdfText(`${monthLabel(month)}  |  Our own 100% checks${scope ? `  |  Factory ${scope}` : ''}`), M, 58);
+      y = 92;
+      const heading = (t) => { room(56); y += 18; doc.setFont('helvetica', 'bold'); doc.setFontSize(13); doc.setTextColor(...ACC); doc.text(pdfText(t), M, y); y += 6; doc.setTextColor(...INK); };
+      const para = (t, o = {}) => { const size = o.size || 10; doc.setFont('helvetica', o.bold ? 'bold' : 'normal'); doc.setFontSize(size); doc.setTextColor(...(o.muted ? MUTED : INK));
+        for (const ln of doc.splitTextToSize(pdfText(t), W - 2 * M - (o.indent || 0))) { room(size * 1.4); doc.text(ln, M + (o.indent || 0), y + size); y += size * 1.38; } doc.setTextColor(...INK); };
+      const tbl = (head, body) => { if (!body.length) { para('Nothing to show.', {muted: true}); return; }
+        doc.autoTable({startY: y + 4, head: [head.map(pdfText)], body: body.map((r) => r.map(pdfText)), margin: {left: M, right: M, bottom: 50}, styles: {fontSize: 8.5, cellPadding: 4, overflow: 'linebreak', textColor: INK},
+          headStyles: {fillColor: ACC, textColor: 255, fontStyle: 'bold'}, alternateRowStyles: {fillColor: [243, 245, 249]}}); y = doc.lastAutoTable.finalY + 14; };
+      const facs = scope ? [scope] : dhuFactories(month);
+      heading('DHU this month');
+      tbl(['Factory', 'Stitching DHU', 'Finishing DHU', "Finishing's own", 'Reached finishing', 'Sent back', 'Cutting DHU'], facs.map((f) => { const s2 = aggOf(dhuIn('Stitching', f, month)); const fn = aggOf(dhuIn('Finishing', f, month)); const c = aggOf(dhuIn('Cutting', f, month));
+        return [placeName('factory', f), pctTxt(s2.dhu), pctTxt(fn.dhu), fn.checked ? fmt1(fn.per100(fn.src['Finishing (own)'] || 0)) : '-', fn.checked ? fmt1(fn.per100(fn.src.Stitching || 0)) : '-', pctTxt(fn.sentPct), pctTxt(c.cutDhu)]; }));
+      const e = aggOf(dhuIn('Embroidery', '', month));
+      if (e.checked) para(`Embroidery unit: DHU ${fmt1(e.dhu)}% (${fmt(e.defects)} defects in ${fmt(e.checked)} pieces).`, {muted: true});
+      const note = state.dhuNotes[month];
+      if (note && note.headline) { heading("Claude's view"); para(note.headline, {bold: true}); for (const p of note.points || []) para(`- ${p}`, {indent: 6}); for (const a of note.actions || []) para(`What to do: ${a}`, {indent: 6, muted: true}); }
+      heading('What to do');
+      for (const x of dhuFindings(month, scope)) { para(`- ${x.what}`, {bold: true}); para(`What to do: ${x.todo}`, {indent: 10, muted: true}); y += 3; }
+      for (const f of facs) {
+        const fn = aggOf(dhuIn('Finishing', f, month));
+        if (fn.checked) { heading(`${placeName('factory', f)}: where finishing defects come from`);
+          tbl(['Came from', 'Pieces', 'Per 100 pcs', 'Share', 'Biggest defects'], DHU_SOURCES.filter((s2) => fn.src[s2]).sort((a, b) => fn.src[b] - fn.src[a]).map((s2) => [s2, fmt(fn.src[s2]), fmt1(fn.per100(fn.src[s2])), `${pct(fn.src[s2], fn.defects)}%`,
+            topOf(Object.fromEntries(Object.entries(fn.byDefect).filter(([k]) => sourceOf(k) === s2)), 3).map(([k, v]) => `${k.toLowerCase()} ${v}`).join(', ')])); }
+        const ls = lineStats(f, month);
+        if (ls.length) { heading(`${placeName('factory', f)}: stitching lines`);
+          tbl(['Line', 'Checked', 'Stitching DHU', 'Last month', 'Reached finishing', 'Top stitching defect'], ls.map((r) => [r.line, r.sChecked ? fmt(r.sChecked) : '-', pctTxt(r.sDhu), pctTxt(r.prevDhu), r.reached === null ? '-' : `${fmt1(r.reached)} (${r.reachedPcs} pcs)`, r.top])); }
+      }
+      heading('Biggest defects');
+      for (const stage of DHU_STAGES) { const a = aggOf(dhuIn(stage, stage === 'Embroidery' ? '' : scope, month)); if (!a.defects) continue;
+        para(`${stage}: ${topOf(a.byDefect, 6).map(([k, v]) => `${k.toLowerCase()} ${v} (${pct(v, a.defects)}%)`).join(', ')}.`); }
+      const pages = doc.internal.getNumberOfPages();
+      for (let i = 1; i <= pages; i += 1) { doc.setPage(i); doc.setFont('helvetica', 'normal'); doc.setFontSize(8); doc.setTextColor(...MUTED);
+        doc.text(pdfText(`Saivana DHU Tracker | ${monthLabel(month)} | made ${day(today())}`), M, H - 24); doc.text(`Page ${i} of ${pages}`, W - M, H - 24, {align: 'right'}); }
+      const filename = `Saivana-DHU-Report-${month}${scope ? `-Factory-${String(scope).replace(/[^\w-]+/g, '')}` : ''}.pdf`;
+      const blob = doc.output('blob');
+      if (state.downloads) { try { await state.downloads.save({filename, data: blob}); } catch (er) { if (!(er && er.code === 'declined')) doc.save(filename); } }
+      else doc.save(filename);
+    } catch (e) {
+      const m = $('dhu-review-msg'); if (m) { m.className = 'qt-msg is-bad'; m.textContent = e && e.code === 'pdf_lib' ? 'The PDF maker could not load. Check your internet and try again.' : 'The PDF could not be made. Try again.'; }
+    } finally { btn.disabled = false; btn.textContent = label; }
+  };
+  $('dhu-pdf').addEventListener('click', makeDhuPdf);
   const renderAll = () => {
     renderFilters();
     const banner = $('status-banner');
@@ -2631,6 +3738,7 @@ textarea { resize: vertical; min-height: 64px; width: 100%; }
     renderReports();
     renderDatalists();
     renderAsk();
+    renderDhuAll();
   };
   let resizeTimer = null;
   window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(() => renderTrend(analyse(filtered())), 150); });
@@ -2667,7 +3775,7 @@ textarea { resize: vertical; min-height: 64px; width: 100%; }
   const DRIVE = 'Google Drive';
   const DATA_TITLE = 'saivana-quality-data.json';
   const PAGE_TITLE = 'saivana-quality-website.html';
-  const SITE_PAGE_VERSION = '2026-11-03.1';
+  const SITE_PAGE_VERSION = '2026-11-04.2';
   const pub = {timer: null, busy: false, again: false, fileArgs: null};
   const b64big = (buf) => { const u = new Uint8Array(buf); let s = ''; for (let i = 0; i < u.length; i += 0x8000) s += String.fromCharCode.apply(null, u.subarray(i, i + 0x8000)); return btoa(s); };
   const stableJson = (v) => {
@@ -2676,12 +3784,23 @@ textarea { resize: vertical; min-height: 64px; width: 100%; }
     return JSON.stringify(v === undefined ? null : v);
   };
   const sha256 = async (text) => b64(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text)));
+  const gzipText = async (text) => {
+    if (typeof CompressionStream === 'undefined') return null;
+    try { return new Uint8Array(await new Response(new Blob([text]).stream().pipeThrough(new CompressionStream('gzip'))).arrayBuffer()); } catch (e) { return null; }
+  };
   const encryptForSite = async (kB64, obj) => {
     const key = await crypto.subtle.importKey('raw', unb64(kB64), {name: 'AES-GCM'}, false, ['encrypt']);
     const iv = crypto.getRandomValues(new Uint8Array(12));
-    const ct = await crypto.subtle.encrypt({name: 'AES-GCM', iv}, key, new TextEncoder().encode(JSON.stringify(obj)));
-    return {iv: b64(iv), ct: b64big(ct)};
+    const text = JSON.stringify(obj);
+    const zipped = await gzipText(text);
+    const ct = await crypto.subtle.encrypt({name: 'AES-GCM', iv}, key, zipped || new TextEncoder().encode(text));
+    return zipped ? {iv: b64(iv), ct: b64big(ct), z: 'gzip'} : {iv: b64(iv), ct: b64big(ct)};
   };
+  const siteExtra = () => ({
+    dhu: [...state.dhuDocs].sort((a, b) => String(a.id).localeCompare(String(b.id))).map((d) => ({id: d.id, stage: d.stage, factory: d.factory || '', month: d.month, rows: d.rows || []})),
+    dhuNotes: Object.keys(state.dhuNotes).sort().map((id) => ({id, ...state.dhuNotes[id]})),
+    dhuMap: state.dhuMap || {}
+  });
   const loadSitePage = () => new Promise((resolve, reject) => {
     if (window.__SITE_PAGE__ && window.__SITE_PAGE__.html) { resolve(window.__SITE_PAGE__); return; }
     const s = document.createElement('script');
@@ -2760,10 +3879,11 @@ textarea { resize: vertical; min-height: 64px; width: 100%; }
         sent = true;
       }
       const reports = [...state.reports].sort((a, b) => String(a.id).localeCompare(String(b.id)));
-      const hash = await sha256(`${state.site.wrap.id}|${stableJson(reports)}`);
+      const extra = siteExtra();
+      const hash = await sha256(`${state.site.wrap.id}|${stableJson(reports)}|${stableJson(extra)}`);
       if (hash !== state.site.published_hash || !state.site.data_file_id) {
         const now = new Date().toISOString();
-        const bundle = {v: 1, updated_at: now, wrap: state.site.wrap, data: await encryptForSite(state.site.k, {v: 1, reports})};
+        const bundle = {v: 1, updated_at: now, wrap: state.site.wrap, data: await encryptForSite(state.site.k, {v: 2, reports, ...extra})};
         const dataId = await driveCreate(DATA_TITLE, JSON.stringify(bundle), 'application/json');
         const oldData = state.site.data_file_id;
         await updateSite({data_file_id: dataId, published_hash: hash, last_sync: now});
@@ -2783,6 +3903,7 @@ textarea { resize: vertical; min-height: 64px; width: 100%; }
   const startReports = () => {
     if (state.listening || !state.db) return;
     state.listening = true;
+    startDhu();
     state.db.collection('reports').limit(1000).onSnapshot((snap) => {
       state.reports = snap.docs.filter((d) => d.exists).map((d) => ({id: d.id, ...d.data()}));
       state.loaded = true; state.failed = false;
