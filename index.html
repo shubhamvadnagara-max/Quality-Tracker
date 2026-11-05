@@ -352,6 +352,36 @@ textarea { resize: vertical; min-height: 64px; width: 100%; }
 .qt-filters #pdf-go { margin-left: 4px; }
 #add-site-note p { margin: 0; }
 #add-site-note a.qt-btn { text-decoration: none; display: inline-block; }
+/* ---------- final: five most important things, card breakdown, theory, private ---------- */
+.qt-top5 { border-top: 4px solid var(--bad); }
+.qt-find.qt-top { grid-template-columns: 6px auto minmax(0, 1fr); }
+.qt-top-n { font-family: var(--font-display); font-weight: 700; font-size: 1.25rem; width: 2.1rem; height: 2.1rem; border-radius: 50%; display: grid; place-items: center; background: var(--panel); border: 1px solid var(--line); align-self: start; }
+.qt-top.is-bad .qt-top-n { background: var(--bad-soft); color: var(--bad); border-color: transparent; }
+.qt-top.is-warn .qt-top-n { background: var(--warn-soft); color: var(--warn); border-color: transparent; }
+.qt-top.is-ok .qt-top-n { background: var(--ok-soft); color: var(--ok); border-color: transparent; }
+.qt-proof-h { margin: 6px 0 2px; font-weight: 700; font-size: .78rem; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); }
+.qt-proof { margin: 0 0 4px; padding-left: 18px; font-size: .9rem; display: grid; gap: 1px; }
+.qt-sub-h { margin: 8px 0 2px; font-size: .95rem; }
+.qt-rc-table th { white-space: normal; min-width: 5.2rem; }
+.qt-rc-table td b { display: block; font-size: .98rem; }
+.qt-cell-fact { display: block; font-size: .75rem; line-height: 1.3; color: var(--muted); font-weight: 400; min-width: 6.5rem; max-width: 13rem; margin-left: auto; text-align: right; }
+.qt-rc-table .qt-rc-who { white-space: nowrap; }
+.qt-rc-table .qt-rc-who .qt-cell-fact { text-align: left; margin-left: 0; }
+#cards-breakdown:empty { display: none; }
+#cards-breakdown { display: grid; gap: 4px; }
+.qt-period { display: inline-block; vertical-align: middle; margin-left: 6px; padding: 1px 8px; border-radius: 999px; background: var(--soft); color: var(--muted); font-family: var(--font-body, inherit); font-size: .72rem; font-weight: 700; letter-spacing: 0; text-transform: none; }
+#dhu-body .qt-table th { white-space: normal; min-width: 4.6rem; }
+.qt-style-row small { display: block; color: var(--muted); font-weight: 400; }
+.qt-theory-card h3 { margin-bottom: 2px; }
+.qt-theory { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr)); gap: 12px 24px; margin: 0; }
+.qt-theory > div { border-left: 3px solid var(--line); padding-left: 10px; }
+.qt-theory dt { font-weight: 700; }
+.qt-theory dd { margin: 2px 0 0; color: var(--muted); font-size: .88rem; }
+.qt-theory dd b { color: var(--ink); }
+.qt-inc-card { border: 2px dashed var(--accent); }
+.qt-private #tabs, .qt-private .qt-view, .qt-private #filters, .qt-private #web-alert { display: none !important; }
+#tiles { grid-template-columns: repeat(auto-fit, minmax(min(100%, 9.3rem), 1fr)); }
+.qt-grid.qt-grid-1 { grid-template-columns: minmax(0, 1fr); }
 </style>
 <style>
 /* Website: only the read-only views exist. */
@@ -432,30 +462,6 @@ textarea { resize: vertical; min-height: 64px; width: 100%; }
 
   <!-- OVERVIEW -->
   <main class="qt-view" id="view-overview" aria-labelledby="tab-overview">
-    <section class="qt-card qt-ask" id="ask-section" aria-labelledby="ask-title" hidden>
-      <h3 id="ask-title">Ask the tracker</h3>
-      <p class="qt-note">Ask anything about the reports shown. Claude answers from your own data, and the filters above apply.</p>
-      <form class="qt-ask-row" id="ask-form" novalidate>
-        <label class="qt-sr" for="ask-input">Your question</label>
-        <input type="text" id="ask-input" placeholder="Why did factory 73 have more defects this month?" autocomplete="off">
-        <button class="qt-btn is-primary" type="submit" id="ask-go">Ask</button>
-      </form>
-      <div class="qt-ask-chips" id="ask-chips"></div>
-      <div class="qt-ask-answer" id="ask-answer" aria-live="polite" hidden></div>
-    </section>
-
-    <section class="qt-findings" aria-labelledby="find-title">
-      <h2 id="find-title">What is going wrong</h2>
-      <p class="qt-note">Worked out from the reports below, worst first. Each line says what to do about it.</p>
-      <ul class="qt-find-list" id="findings"></ul>
-    </section>
-
-    <section class="qt-findings qt-warnings" aria-labelledby="warn-title">
-      <h2 id="warn-title">Early warnings</h2>
-      <p class="qt-note">What is getting worse, found by comparing the last 4 weeks with the 4 weeks before. Act on these before lots start failing.</p>
-      <ul class="qt-find-list" id="warnings"></ul>
-    </section>
-
     <section class="qt-tiles" id="tiles" aria-label="Headline figures"></section>
 
     <section class="qt-card" aria-labelledby="cards-title">
@@ -466,8 +472,9 @@ textarea { resize: vertical; min-height: 64px; width: 100%; }
           <button type="button" data-k="buyer" aria-pressed="false">Buyers</button>
         </div>
       </div>
-      <p class="qt-note">A grade from A to F, best first. It weighs lots passed (35%), defects per 100 pieces (35%), lots kept away from the AQL limit (20%) and sizes in tolerance (10%). Click a card to see only that one.</p>
+      <p class="qt-note">A score out of 100 and a grade from A to F, best first. Lots passed 10, defects per 100 pieces 30, lots kept away from the AQL limit 20, sizes in tolerance 10, major defects 10, total defects 20. Each part gives its points in proportion, and the table below shows where every point comes from. Click a card to see only that one.</p>
       <div class="qt-rc-grid" id="cards"></div>
+      <div id="cards-breakdown"></div>
     </section>
 
     <div class="qt-grid">
@@ -496,19 +503,19 @@ textarea { resize: vertical; min-height: 64px; width: 100%; }
 
     <article class="qt-card">
       <h3>Week by week</h3>
-      <p class="qt-note">Defects per 100 pieces checked in each week, with the number of lots. Lower is better.</p>
+      <p class="qt-note">Defects per 100 pieces checked in each week, with its lots and pieces checked. Lower is better.</p>
       <div id="chart-trend"></div>
     </article>
 
-    <div class="qt-grid">
+    <div class="qt-grid qt-grid-1">
       <article class="qt-card">
         <h3>Factories</h3>
-        <p class="qt-note">Worst defect rate first.</p>
+        <p class="qt-note">Worst defect rate first. Per 100 pcs is defects &divide; pieces checked &times; 100. At limit counts lots at or over the AQL limit.</p>
         <div class="qt-table-wrap" id="table-factories"></div>
       </article>
       <article class="qt-card">
         <h3>Buyers</h3>
-        <p class="qt-note">Worst defect rate first.</p>
+        <p class="qt-note">Worst defect rate first. Per 100 pcs is defects &divide; pieces checked &times; 100. At limit counts lots at or over the AQL limit.</p>
         <div class="qt-table-wrap" id="table-buyers"></div>
       </article>
     </div>
@@ -525,6 +532,47 @@ textarea { resize: vertical; min-height: 64px; width: 100%; }
         <div class="qt-bars" id="chart-gaps"></div>
       </article>
     </div>
+
+    <section class="qt-findings qt-top5" aria-labelledby="top5-title">
+      <h2 id="top5-title">5 most important things</h2>
+      <p class="qt-note" id="top5-note"></p>
+      <ul class="qt-find-list" id="top5"></ul>
+    </section>
+
+    <article class="qt-card qt-theory-card" aria-labelledby="theory-title">
+      <h3 id="theory-title">How to read this page</h3>
+      <p class="qt-note">What every number above means and how it is worked out. All of it comes from Dynamic's inspection reports, for the filters at the top.</p>
+      <dl class="qt-theory">
+        <div><dt>Lot</dt><dd>One Dynamic inspection report: one style, buyer and offer.</dd></div>
+        <div><dt>Lots passed</dt><dd>Lots Dynamic passed, out of all lots. Failed and re-offered lots count as not passed.</dd></div>
+        <div><dt>Pieces checked</dt><dd>The pieces in Dynamic's sample (for example 80 or 125), added up over all lots.</dd></div>
+        <div><dt>Defects per 100 pieces</dt><dd>All defects found &divide; pieces checked &times; 100. Example: <b>136 defects in 1,322 pieces = 10.3 per 100</b>. Lower is better.</dd></div>
+        <div><dt>AQL limit</dt><dd>For each sample the buyer allows a number of major and a number of minor defects. One defect more than allowed fails the lot.</dd></div>
+        <div><dt>At the limit, room left</dt><dd><b>At the limit</b>: the lot used every defect allowed, so one more would have failed it. <b>Room left</b>: at least one more defect was still allowed. <b>Over</b>: more defects than allowed.</dd></div>
+        <div><dt>Major and minor</dt><dd>A major defect can make a garment unsellable or come back from the buyer; a minor one is small. Far fewer majors are allowed, so majors fail lots first.</dd></div>
+        <div><dt>Measurement problems</dt><dd>Lots where Dynamic wrote a size outside the buyer's tolerance. Lines such as "within tolerance" or "see attached sheet" are not counted.</dd></div>
+        <div><dt>Clean checks</dt><dd>Lots with no stitching or finishing defect at all.</dd></div>
+        <div><dt>Department</dt><dd>Who caused a defect, as Dynamic wrote it. When Dynamic leaves it blank it comes from the defect type, for example uncut thread is finishing. "Not clear" means it could not be told.</dd></div>
+        <div><dt>Report card score</dt><dd>Out of 100. <b>Lots passed 10</b>: share of lots passed. <b>Defects per 100 pieces 30</b>: 30 &times; (1 &minus; defects per 100 &divide; 100), so 10.3 per 100 keeps 26.9 points. <b>Kept away from the AQL limit 20</b>: share of lots with room left. <b>Sizes in tolerance 10</b>: share of lots with no measurement problem.</dd></div>
+        <div><dt>Major and total defects on the card</dt><dd><b>Major defects 10</b>: the average of three shares: majors per 100 pieces, the allowed majors used, and the defects that were major. <b>Total defects 20</b>: 20 &times; (1 &minus; all defects found &divide; all defects allowed), for lots where both limits were read.</dd></div>
+        <div><dt>Grades</dt><dd><b>A</b> 85 and up, <b>B</b> 70 to 84, <b>C</b> 55 to 69, <b>D</b> 40 to 54, <b>F</b> below 40. With fewer than 3 lots the card says "few lots yet".</dd></div>
+        <div><dt>5 most important things</dt><dd>Every risk the tracker knows is checked: failed lots, lots over or at the limit, the biggest defect, majors, the department with most defects, size problems, change from last month, buyers and reports to check. They are ranked by how close they bring lots to failing, and the top 5 are shown with their numbers.</dd></div>
+        <div><dt>Week by week</dt><dd>Weeks start on Monday. Each bar is that week's defects per 100 pieces; under it are its lots and pieces checked.</dd></div>
+        <div><dt>Check</dt><dd>A report marked Check has something to confirm, such as an AQL limit that could not be read. Its numbers count, but correct them in All reports.</dd></div>
+      </dl>
+    </article>
+    <section class="qt-card qt-ask" id="ask-section" aria-labelledby="ask-title" hidden>
+      <h3 id="ask-title">Ask the tracker</h3>
+      <p class="qt-note">Ask anything about the reports shown. Claude answers from your own data, and the filters above apply.</p>
+      <form class="qt-ask-row" id="ask-form" novalidate>
+        <label class="qt-sr" for="ask-input">Your question</label>
+        <input type="text" id="ask-input" placeholder="Why did factory 73 have more defects this month?" autocomplete="off">
+        <button class="qt-btn is-primary" type="submit" id="ask-go">Ask</button>
+      </form>
+      <div class="qt-ask-chips" id="ask-chips"></div>
+      <div class="qt-ask-answer" id="ask-answer" aria-live="polite" hidden></div>
+    </section>
+
   </main>
 
   <!-- ALL REPORTS -->
@@ -564,7 +612,7 @@ textarea { resize: vertical; min-height: 64px; width: 100%; }
     <div class="qt-dhu-head">
       <div>
         <h2 class="qt-dhu-title">DHU tracker</h2>
-        <p class="qt-note">Our own 100% checks: stitching, finishing, embroidery and cutting. DHU is defects found per 100 pieces checked. Lower is better.</p>
+        <p class="qt-note">Our own 100% checks. DHU is defects found per 100 pieces checked. Lower is better.</p>
       </div>
       <div class="qt-dhu-controls" id="dhu-controls" hidden>
         <label class="qt-field"><span>Month</span><select id="dhu-month"></select></label>
@@ -573,6 +621,24 @@ textarea { resize: vertical; min-height: 64px; width: 100%; }
       </div>
     </div>
     <div class="qt-view" id="dhu-body"></div>
+    <article class="qt-card qt-theory-card" aria-labelledby="dhu-theory-title">
+      <h3 id="dhu-theory-title">How to read the DHU numbers</h3>
+      <p class="qt-note">What every DHU number above means and how it is worked out, from your own stitching and finishing sheets.</p>
+      <dl class="qt-theory">
+        <div><dt>DHU</dt><dd>Defects per hundred units: defects found &divide; pieces checked &times; 100. <b>11.6%</b> means about 12 defects in every 100 pieces checked. One piece can have more than one defect.</dd></div>
+        <div><dt>Stitching DHU</dt><dd>From the end-of-line check on each stitching line: what the line's own checkers found.</dd></div>
+        <div><dt>Finishing DHU</dt><dd>From the 100% check in finishing. It also includes faults made earlier, in stitching, cutting or fabric, that earlier checks missed.</dd></div>
+        <div><dt>Stitching faults found in finishing</dt><dd>Stitching faults the finishing check still found, per 100 pieces it checked. Each of these got past the stitching check. Lower is better.</dd></div>
+        <div><dt>Finishing's own DHU</dt><dd>Only the defects finishing causes itself: uncut thread, pressing and contamination.</dd></div>
+        <div><dt>Sent back from finishing</dt><dd>Pieces checked minus pieces passed, as a share of pieces checked: the pieces that went back for repair.</dd></div>
+        <div><dt>Where defects come from</dt><dd>Each defect name belongs to one department, for example open seam to stitching and stains to handling. The list is in DHU data, where it can be changed.</dd></div>
+        <div><dt>Stitching lines</dt><dd>Line numbers as written in the sheets. A line with under 200 pieces checked is marked "few", because a few pieces can make its DHU look much better or worse than it is.</dd></div>
+        <div><dt>Styles letting most stitching faults through</dt><dd>Only styles with 300 pieces or more at the finishing check, so that a small run cannot top the list. Faults per 100 pieces, worst first.</dd></div>
+        <div><dt>The quality chain</dt><dd>Defects found at each check, per 100 pieces checked there: stitching, then finishing, then Dynamic. What a later check still finds was missed by the checks before it.</dd></div>
+        <div><dt>5 most important things</dt><dd>The biggest risks of the month: stitching faults reaching finishing, the worst line, the worst style, finishing's own and stain defects, pieces sent back, change from last month and mistakes in the sheets. When the same risk shows in more than one factory, the others are added under "Also".</dd></div>
+        <div><dt>Compared with last month</dt><dd>&#9650; is higher than last month and &#9660; lower. Green is better, red is worse.</dd></div>
+      </dl>
+    </article>
   </section>
 
   <!-- DHU DATA -->
@@ -649,9 +715,7 @@ textarea { resize: vertical; min-height: 64px; width: 100%; }
   <section class="qt-view" id="view-add" aria-labelledby="tab-add" hidden>
     <section class="qt-card" id="add-site-note" hidden>
       <h3>Add, edit or delete reports</h3>
-      <p>Reports are added in the Saivana Quality Tracker in Claude. Claude reads each Dynamic report, analyses it and updates every chart. This website shows the changes within about a minute, for everyone who has the link.</p>
-      <p><a class="qt-btn is-primary" href="https://claude.ai/artifact/3xW32KdHPUjHoghkfhEmDZ" target="_blank" rel="noopener noreferrer">Open the tracker in Claude</a></p>
-      <p class="qt-note">Only people the owner has shared the tracker with can open it there.</p>
+      <p>Only the owner adds and changes reports. This website shows the changes within about a minute.</p>
     </section>
     <div class="qt-banner" id="add-readonly" hidden>You can see the reports but cannot add or change them. Ask the owner to share this tracker with you as a Contributor.</div>
 
@@ -1074,6 +1138,13 @@ textarea { resize: vertical; min-height: 64px; width: 100%; }
   const majorOf = (r) => sum(defectsOf(r).filter((d) => d.severity === 'Major'), (d) => d.pieces);
   const minorOf = (r) => sum(defectsOf(r).filter((d) => d.severity === 'Minor'), (d) => d.pieces);
   const totalOf = (r) => sum(defectsOf(r), (d) => d.pieces);
+  const MEAS_OK_WORDS = /within\s*(the\s*)?tol|in\s*tolerance|as\s*per\s*spec|attached|see\s+(the\s+)?(attached\s+)?(measurement\s+)?sheet|^ok(ay)?$|^fine$/i;
+  const isMeasProblem = (m) => {
+    const f = String((m && m.found) || '').trim(); const p = String((m && m.point) || '').trim();
+    if (MEAS_OK_WORDS.test(f) || MEAS_OK_WORDS.test(p)) return false;
+    return Boolean(f || num(m && m.pieces));
+  };
+  const hasMeasProblem = (r) => Array.isArray(r.measurements) && r.measurements.some(isMeasProblem);
   const isFull = (r) => r.check_type === 'Every piece checked';
   const isSampled = (r) => !isFull(r) && (num(r.major_allowed) !== null || num(r.minor_allowed) !== null);
   const roomOf = (r) => {
@@ -1144,6 +1215,7 @@ textarea { resize: vertical; min-height: 64px; width: 100%; }
     state.filters.factory = fillSelect($('f-factory'), uniq((r) => r.factory).map((v) => [v, v]), 'All factories', state.filters.factory);
     state.filters.buyer = fillSelect($('f-buyer'), uniq((r) => r.buyer).map((v) => [v, v]), 'All buyers', state.filters.buyer);
     state.filters.type = fillSelect($('f-type'), uniq((r) => r.inspection || 'Final').map((v) => [v, v]), 'All inspections', state.filters.type);
+    if (!state.monthPicked && state.loaded && state.reports.length) { state.filters.month = defaultReportMonth(); state.monthPicked = true; }
     state.filters.month = fillSelect($('f-month'), uniq((r) => monthKey(r.date)).reverse().map((v) => [v, monthLabel(v)]), 'All months', state.filters.month);
     const n = filtered().length;
     $('f-note').textContent = state.loaded ? `Showing ${plural(n, 'report', 'reports')} of ${fmt(state.reports.length)}` : '';
@@ -1171,7 +1243,7 @@ textarea { resize: vertical; min-height: 64px; width: 100%; }
     const sampled = rs.filter(isSampled).map((r) => ({r, major: majorOf(r), minor: minorOf(r), room: roomOf(r)}));
     const byType = groupBy(lines, (d) => d.type, (d) => d.pieces);
     const byDept = groupBy(lines, (d) => d.department, (d) => d.pieces);
-    const measLines = rs.flatMap((r) => (Array.isArray(r.measurements) ? r.measurements : []).map((m) => ({...m, r})));
+    const measLines = rs.flatMap((r) => (Array.isArray(r.measurements) ? r.measurements : []).filter(isMeasProblem).map((m) => ({...m, r})));
     const measReports = new Set(measLines.map((m) => m.r.id));
     const byArea = groupBy(measLines.map((m) => ({...m, reportId: m.r.id})), (m) => measureArea(m.point), () => 1);
     const gapCounts = GAPS.map(([k, label]) => ({key: k, label, value: rs.filter((r) => Array.isArray(r.gaps) && r.gaps.includes(k)).length})).filter((g) => g.value > 0).sort((a, b) => b.value - a.value);
@@ -1192,7 +1264,7 @@ textarea { resize: vertical; min-height: 64px; width: 100%; }
           key: g.key, lots: g.rs.length, passed: g.rs.filter((r) => r.result === 'Pass').length, checked: c, defects: d,
           per100: c ? d / c * 100 : null,
           atLimit: g.rs.filter((r) => isSampled(r) && roomOf(r) <= 0).length,
-          meas: g.rs.filter((r) => Array.isArray(r.measurements) && r.measurements.length).length,
+          meas: g.rs.filter(hasMeasProblem).length,
           top: types.length ? types[0].key : '\u2013'
         };
       }).sort((a, b) => (b.per100 ?? -1) - (a.per100 ?? -1) || a.key.localeCompare(b.key));
@@ -1296,12 +1368,13 @@ textarea { resize: vertical; min-height: 64px; width: 100%; }
   };
   const renderTiles = (a) => {
     $('tiles').replaceChildren(
-      tile('Lots passed', fmt(a.passed), `of ${fmt(a.lots)}`, a.lots ? `${pct(a.passed, a.lots)}% passed` : ''),
+      tile('Lots passed', fmt(a.passed), `of ${fmt(a.lots)}`, a.lots ? `${pct(a.passed, a.lots)}% passed${a.failed + a.reoffer ? `; ${fmt(a.failed + a.reoffer)} failed or re-offered` : ''}` : ''),
+      tile('Pieces checked', fmt(a.checked), '', a.lots ? `in Dynamic's samples of ${plural(a.lots, 'lot', 'lots')}` : ''),
       tile('Defects per 100 pieces', fmt1(a.per100), '', `${fmt(a.defects)} defects in ${fmt(a.checked)} pieces checked`),
-      tile('Lots at the AQL limit', fmt(a.atLimit.length + a.over.length), `of ${fmt(a.sampled.length)}`, 'One more defect fails them', a.atLimit.length + a.over.length > 0),
-      tile('Major defects', fmt(sum(a.lines.filter((d) => d.severity === 'Major'), (d) => d.pieces)), `of ${fmt(a.defects)}`, 'Major defects fail a lot sooner'),
-      tile('Measurement problems', fmt(a.measReports.size), `of ${fmt(a.lots)}`, 'Reports with a size out of tolerance'),
-      tile('Clean checks', fmt(a.clean.length), `of ${fmt(a.lots)}`, 'No stitching or finishing defect')
+      tile('Lots at the AQL limit', fmt(a.atLimit.length + a.over.length), `of ${fmt(a.sampled.length)}`, a.over.length ? `${fmt(a.atLimit.length)} at the limit, ${fmt(a.over.length)} over it` : 'One more defect would have failed them', a.atLimit.length + a.over.length > 0),
+      tile('Major defects', fmt(sum(a.lines.filter((d) => d.severity === 'Major'), (d) => d.pieces)), `of ${fmt(a.defects)}`, a.checked ? `${fmt1(sum(a.lines.filter((d) => d.severity === 'Major'), (d) => d.pieces) / a.checked * 100)} per 100 pieces; majors fail lots first` : 'Majors fail lots first'),
+      tile('Measurement problems', fmt(a.measReports.size), `of ${fmt(a.lots)}`, "Lots with a size outside the buyer's tolerance"),
+      tile('Clean checks', fmt(a.clean.length), `of ${fmt(a.lots)}`, 'Lots with no stitching or finishing defect')
     );
   };
   const bars = (box, rows, opts) => {
@@ -1376,8 +1449,8 @@ textarea { resize: vertical; min-height: 64px; width: 100%; }
     const ws = a.weeks;
     if (!ws.length) { empty(box, 'No reports in these filters.'); return; }
     const width = Math.max(320, box.clientWidth || 640);
-    const height = 220;
-    const m = {top: 26, right: 12, bottom: 44, left: 12};
+    const height = 238;
+    const m = {top: 26, right: 12, bottom: 62, left: 12};
     const maxV = Math.max(1, ...ws.map((w) => (w.checked ? w.defects / w.checked * 100 : 0)));
     const band = (width - m.left - m.right) / ws.length;
     const barW = Math.min(48, band * 0.6);
@@ -1399,6 +1472,7 @@ textarea { resize: vertical; min-height: 64px; width: 100%; }
       const [, mo, d] = w.week.split('-');
       svg.append(mk('text', {x: cx, y: height - m.bottom + 17, 'text-anchor': 'middle'}, `${Number(d)} ${MONTHS[Number(mo) - 1]}`));
       svg.append(mk('text', {x: cx, y: height - m.bottom + 33, 'text-anchor': 'middle'}, plural(w.lots, 'lot', 'lots')));
+      svg.append(mk('text', {x: cx, y: height - m.bottom + 49, 'text-anchor': 'middle'}, `${fmt(w.checked)} pcs`));
     });
     const wrap = el('div');
     wrap.append(svg);
@@ -1430,6 +1504,8 @@ textarea { resize: vertical; min-height: 64px; width: 100%; }
     {label, get: (g) => g.key},
     {label: 'Lots', num: true, get: (g) => fmt(g.lots)},
     {label: 'Passed', num: true, get: (g) => fmt(g.passed)},
+    {label: 'Pieces checked', num: true, get: (g) => fmt(g.checked)},
+    {label: 'Defects', num: true, get: (g) => fmt(g.defects)},
     {label: 'Per 100 pcs', num: true, get: (g) => fmt1(g.per100)},
     {label: 'At limit', num: true, get: (g) => fmt(g.atLimit)},
     {label: 'Size problems', num: true, get: (g) => fmt(g.meas)},
@@ -1443,7 +1519,7 @@ textarea { resize: vertical; min-height: 64px; width: 100%; }
   };
   const renderMeasures = (a) => {
     const box = $('table-meas');
-    $('meas-note').textContent = a.lots ? `${fmt(a.measReports.size)} of ${plural(a.lots, 'report', 'reports')} had at least one measurement outside the buyer's tolerance.` : '';
+    $('meas-note').textContent = a.lots ? `${fmt(a.measReports.size)} of ${plural(a.lots, 'lot', 'lots')} had at least one measurement outside the buyer's tolerance. Lines that only say "within tolerance" or "see attached sheet" are left out.` : '';
     if (!a.measLines.length) { empty(box, 'No measurement problems in these reports.'); return; }
     const rows = [...a.measLines].sort((x, y) => String(y.r.date).localeCompare(String(x.r.date)));
     box.replaceChildren(table([
@@ -2226,17 +2302,57 @@ textarea { resize: vertical; min-height: 64px; width: 100%; }
   const topTypeOf = (rs) => { const g = groupBy(rs.flatMap((r) => defectsOf(r)), (d) => d.type, (d) => d.pieces); return g.length ? g[0].key : ''; };
   const canChangeNow = () => Boolean(!state.readOnly && state.canWrite !== false && state.db);
   const gradeOf = (s) => (s >= 85 ? 'A' : s >= 70 ? 'B' : s >= 55 ? 'C' : s >= 40 ? 'D' : 'F');
-  const scoreOf = (rs) => {
+  const CARD_PARTS = [
+    {key: 'passed', label: 'Lots passed', max: 10},
+    {key: 'per100', label: 'Defects per 100 pieces', max: 30},
+    {key: 'away', label: 'Kept away from the AQL limit', max: 20},
+    {key: 'sizes', label: 'Sizes in tolerance', max: 10},
+    {key: 'major', label: 'Major defects', max: 10},
+    {key: 'total', label: 'Total defects', max: 20}
+  ];
+  const clamp01 = (v) => Math.max(0, Math.min(1, v));
+  const scoreParts = (rs) => {
     const lots = rs.length;
-    if (!lots) return 0;
-    const passRate = rs.filter((r) => r.result === 'Pass').length / lots;
-    const p = per100Of(rs);
-    const defScore = p === null ? 0.5 : Math.max(0, 1 - p / 10);
+    const checked = sum(rs, (r) => r.checked);
+    const defects = sum(rs, (r) => totalOf(r));
+    const majors = sum(rs, (r) => majorOf(r));
+    const passed = rs.filter((r) => r.result === 'Pass').length;
+    const per100 = checked ? defects / checked * 100 : null;
+    const majPer100 = checked ? majors / checked * 100 : null;
     const sampled = rs.filter(isSampled);
-    const safe = sampled.length ? sampled.filter((r) => roomOf(r) > 0).length / sampled.length : 1;
-    const measOk = rs.filter((r) => !(Array.isArray(r.measurements) && r.measurements.length)).length / lots;
-    return Math.round(passRate * 35 + defScore * 35 + safe * 20 + measOk * 10);
+    const away = sampled.filter((r) => roomOf(r) > 0).length;
+    const sizesOk = rs.filter((r) => !hasMeasProblem(r)).length;
+    let majA = 0; let majF = 0; let allA = 0; let allF = 0;
+    for (const r of rs) {
+      if (isFull(r)) continue;
+      const ma = num(r.major_allowed); const mi = num(r.minor_allowed);
+      if (ma !== null) { majA += ma; majF += majorOf(r); }
+      if (ma !== null && mi !== null) { allA += ma + mi; allF += totalOf(r); }
+    }
+    const subs = [];
+    if (majPer100 !== null) subs.push(clamp01(1 - majPer100 / 100));
+    if (majA) subs.push(clamp01(1 - majF / majA));
+    if (defects) subs.push(clamp01(1 - majors / defects)); else if (checked) subs.push(1);
+    const share = {
+      passed: lots ? passed / lots : 0,
+      per100: per100 === null ? 0.5 : clamp01(1 - per100 / 100),
+      away: sampled.length ? away / sampled.length : 1,
+      sizes: lots ? sizesOk / lots : 0,
+      major: subs.length ? subs.reduce((t, v) => t + v, 0) / subs.length : 0.5,
+      total: allA ? clamp01(1 - allF / allA) : (per100 === null ? 0.5 : clamp01(1 - per100 / 100))
+    };
+    const fact = {
+      passed: `${fmt(passed)} of ${plural(lots, 'lot', 'lots')} passed`,
+      per100: per100 === null ? 'pieces checked not written' : `${fmt(defects)} defects in ${fmt(checked)} pieces = ${fmt1(per100)} per 100`,
+      away: sampled.length ? `${fmt(away)} of ${plural(sampled.length, 'lot', 'lots')} had room left` : 'no AQL limits read',
+      sizes: `${fmt(sizesOk)} of ${plural(lots, 'lot', 'lots')} with no size problem`,
+      major: `${fmt(majors)} majors: ${majPer100 === null ? '-' : fmt1(majPer100)} per 100 pcs${majA ? `, ${pct(majF, majA)}% of allowed majors used` : ''}${defects ? `, ${pct(majors, defects)}% of all defects` : ''}`,
+      total: allA ? `${fmt(allF)} of ${fmt(allA)} allowed defects used (${pct(allF, allA)}%)` : 'no AQL limits read, so defects per 100 is used'
+    };
+    const parts = CARD_PARTS.map((p) => ({...p, pts: p.max * share[p.key], fact: fact[p.key]}));
+    return {parts, total: parts.reduce((t, p) => t + p.pts, 0)};
   };
+  const scoreOf = (rs) => (rs.length ? Math.round(scoreParts(rs).total) : 0);
   const trendOf = (rsAll) => {
     const {recent, prior} = windows(rsAll, 28);
     const now = per100Of(recent); const before = per100Of(prior);
@@ -2249,9 +2365,10 @@ textarea { resize: vertical; min-height: 64px; width: 100%; }
     const m = new Map();
     for (const r of rs) { const k = r[key] || 'Not written'; if (!m.has(k)) m.set(k, []); m.get(k).push(r); }
     const cards = [...m.entries()].map(([k, list]) => {
-      const score = scoreOf(list);
+      const sp = scoreParts(list);
+      const score = Math.round(sp.total);
       return {
-        key: k, list, score, grade: gradeOf(score), lots: list.length,
+        key: k, list, score, parts: sp.parts, grade: gradeOf(score), lots: list.length,
         passPct: pct(list.filter((r) => r.result === 'Pass').length, list.length),
         per100: per100Of(list), top: topTypeOf(list),
         trend: trendOf(base.filter((r) => (r[key] || 'Not written') === k))
@@ -2265,7 +2382,7 @@ textarea { resize: vertical; min-height: 64px; width: 100%; }
     const box = $('cards');
     for (const b of document.querySelectorAll('#cards-seg button')) b.setAttribute('aria-pressed', String(b.dataset.k === state.cardKey));
     const cards = buildCards(filtered(), state.cardKey, trendBase());
-    if (!cards.length) { empty(box, 'No reports in these filters.'); return; }
+    if (!cards.length) { empty(box, 'No reports in these filters.'); if ($('cards-breakdown')) $('cards-breakdown').replaceChildren(); return; }
     box.replaceChildren(...cards.map((c) => {
       const card = el('button', `qt-rc is-g${c.grade}`);
       card.type = 'button';
@@ -2287,6 +2404,28 @@ textarea { resize: vertical; min-height: 64px; width: 100%; }
       });
       return card;
     }));
+    renderCardTable(cards);
+  };
+  const renderCardTable = (cards) => {
+    const bd = $('cards-breakdown');
+    if (!bd) return;
+    const t = el('table', 'qt-table is-compact qt-rc-table');
+    const thead = el('thead'); const hr = el('tr');
+    hr.append(el('th', '', state.cardKey === 'factory' ? 'Factory' : 'Buyer'));
+    for (const p of CARD_PARTS) hr.append(el('th', 'num', `${p.label} (${p.max})`));
+    hr.append(el('th', 'num', 'Score (100)'));
+    thead.append(hr);
+    const tb = el('tbody');
+    for (const c of cards) {
+      const tr = el('tr');
+      tr.append(el('td', 'qt-rc-who', placeName(state.cardKey, c.key)));
+      for (const p of c.parts) { const td = el('td', 'num'); td.append(el('b', '', fmt1(p.pts)), el('span', 'qt-cell-fact', p.fact)); tr.append(td); }
+      const ts = el('td', 'num'); ts.append(el('b', '', String(c.score)), el('span', 'qt-cell-fact', `grade ${c.grade}`)); tr.append(ts);
+      tb.append(tr);
+    }
+    t.append(thead, tb);
+    const wrap = el('div', 'qt-table-wrap'); wrap.append(t);
+    bd.replaceChildren(el('h4', 'qt-sub-h', 'Where every point comes from'), wrap);
   };
   for (const b of document.querySelectorAll('#cards-seg button')) b.addEventListener('click', () => { state.cardKey = b.dataset.k; renderCards(); });
   const earlyWarnings = (rs) => {
@@ -2684,23 +2823,18 @@ textarea { resize: vertical; min-height: 64px; width: 100%; }
       if (!rs.length) para(`There are no reports for ${monthLabel(month)} in these filters.`);
       const majors = sum(a.lines.filter((d) => d.severity === 'Major'), (d) => d.pieces);
       heading('Headline figures');
-      tbl(['Lots passed', 'Defects per 100 pcs', 'Lots at AQL limit', 'Major defects', 'Size problems', 'Clean checks'],
-        [[`${a.passed} of ${a.lots}`, fmt1(a.per100), `${a.atLimit.length + a.over.length} of ${a.sampled.length}`, `${majors} of ${a.defects}`, `${a.measReports.size} of ${a.lots}`, `${a.clean.length} of ${a.lots}`]],
+      tbl(['Lots passed', 'Pieces checked', 'Defects per 100 pcs', 'Lots at AQL limit', 'Major defects', 'Size problems', 'Clean checks'],
+        [[`${a.passed} of ${a.lots}`, fmt(a.checked), `${fmt1(a.per100)} (${fmt(a.defects)} defects)`, `${a.atLimit.length + a.over.length} of ${a.sampled.length}`, `${majors} of ${a.defects}`, `${a.measReports.size} of ${a.lots}`, `${a.clean.length} of ${a.lots}`]],
         {styles: {fontSize: 10, cellPadding: 6, halign: 'center', textColor: INK}});
       if (prev && prev.per100 !== null && a.per100 !== null) {
         const better = a.per100 < prev.per100;
         para(`Compared with ${monthLabel(prevKey)}: defects per 100 pieces went from ${fmt1(prev.per100)} to ${fmt1(a.per100)} (${a.per100 === prev.per100 ? 'no change' : better ? 'better' : 'worse'}); lots passed went from ${pct(prev.passed, prev.lots)}% to ${pct(a.passed, a.lots)}%.`, {muted: true});
         y += 6;
       }
-      heading('What is going wrong, and what to do');
-      const fl = findings(a);
+      heading(`5 most important things: ${monthLabel(month)}`);
+      const fl = topFiveDynamic(a, month);
       if (!fl.length) para('Nothing stands out this month.', {muted: true});
-      for (const x of fl) { para(`- ${x.what}`, {bold: true}); para(`What to do: ${x.todo}`, {indent: 10, muted: true}); y += 4; }
-      y += 6;
-      heading('Early warnings');
-      const wl = earlyWarnings(upTo);
-      if (!wl.length) para('No early warnings. Nothing is getting worse.', {muted: true});
-      for (const x of wl) { para(`- ${x.what}`, {bold: true}); para(`What to do: ${x.todo}`, {indent: 10, muted: true}); y += 4; }
+      fl.forEach((x, i) => { para(`${i + 1}. ${x.what}`, {bold: true}); for (const pr of x.proof) para(`- ${pr}`, {indent: 10}); para(`What to do: ${x.todo}`, {indent: 10, muted: true}); y += 4; });
       y += 6;
       const cardRows = (key) => buildCards(rs, key, upTo).map((c) => [`#${c.rank}`, placeName(key, c.key), c.grade, String(c.score), String(c.lots), `${c.passPct}%`, fmt1(c.per100), c.top || '-', c.trend.text]);
       const gradeColor = (data) => {
@@ -2713,6 +2847,9 @@ textarea { resize: vertical; min-height: 64px; width: 100%; }
       tbl(['Rank', 'Factory', 'Grade', 'Score', 'Lots', 'Passed', 'Per 100', 'Biggest defect', 'Trend'], cardRows('factory'), {didParseCell: gradeColor});
       heading('Report cards: buyers');
       tbl(['Rank', 'Buyer', 'Grade', 'Score', 'Lots', 'Passed', 'Per 100', 'Biggest defect', 'Trend'], cardRows('buyer'), {didParseCell: gradeColor});
+      heading('Report cards: where every point comes from');
+      para('Each part gives its points in proportion: 10.3 defects per 100 pieces keeps 89.7% of the 30 points, and so on. The score is the sum, rounded.', {muted: true});
+      tbl(['Factory', ...CARD_PARTS.map((pt) => `${pt.label} (${pt.max})`), 'Score'], buildCards(rs, 'factory', upTo).map((c) => [placeName('factory', c.key), ...c.parts.map((pt) => fmt1(pt.pts)), `${c.score} (${c.grade})`]));
       heading('Defects by type, biggest first');
       let cum = 0;
       tbl(['Defect', 'Pieces', 'Share', 'Running total', 'Department'], a.byType.map((t) => { cum += t.value; return [t.key, fmt(t.value), `${pct(t.value, a.defects)}%`, `${pct(cum, a.defects)}%`, DEPT_OF[t.key] || 'Not clear']; }));
@@ -2773,7 +2910,7 @@ textarea { resize: vertical; min-height: 64px; width: 100%; }
   };
   state.dhuDocs = []; state.dhuRows = []; state.dhuMap = {}; state.dhuNotes = {};
   state.dhuView = {month: '', factory: ''};
-  state.dhuData = {month: '', stage: '', factory: '', search: '', confirmBulk: false};
+  state.dhuData = {month: null, stage: '', factory: '', search: '', confirmBulk: false};
   state.dhuListening = false; state.dhuLoaded = false; state.dhuEditing = null; state.dhuUpload = null; state.dhuBusy = false;
   const defaultSourceOf = (name) => {
     const k = String(name || '').toUpperCase().replace(/[^A-Z]/g, '');
@@ -2973,6 +3110,25 @@ textarea { resize: vertical; min-height: 64px; width: 100%; }
     for (const g of groups.values()) counts.set(g.month, (counts.get(g.month) || 0) + g.rows.length);
     return {docs: groups.size, months: [...counts.keys()].sort(), main: mainMonthOf(counts)};
   };
+  const EMB_CUT_FLAG = 'dhu-config/removed-embroidery-cutting';
+  const removeEmbCutOnce = async () => {
+    if (state.embCutBusy || state.embCutDone || !canChangeNow() || !state.dhuDocs.length) return;
+    const docs = state.dhuDocs.filter((d) => d.stage === 'Embroidery' || d.stage === 'Cutting');
+    state.embCutBusy = true;
+    try {
+      const flag = await state.db.doc(EMB_CUT_FLAG).get();
+      if (flag.exists) { state.embCutDone = true; return; }
+      let rows = 0;
+      for (const d of docs) { await state.db.doc(`dhu/${d.id}`).delete(); rows += Array.isArray(d.rows) ? d.rows.length : 0; }
+      await state.db.doc(EMB_CUT_FLAG).set({done_at: new Date().toISOString(), by: state.myId || null, sheets: docs.length, rows});
+      state.embCutDone = true;
+      if (docs.length) {
+        dhuMsg('dhu-rows-msg', `Embroidery and cutting data removed: ${plural(rows, 'row', 'rows')}.`, 'is-ok');
+        setTimeout(() => { const m = defaultDhuMonth(); if (state.ai && m && state.dhuNotes[m]) dhuReview(m); }, 3000);
+      }
+    } catch (e) {  }
+    finally { state.embCutBusy = false; }
+  };
   const startDhu = () => {
     if (state.dhuListening || !state.db) return;
     state.dhuListening = true;
@@ -2980,7 +3136,7 @@ textarea { resize: vertical; min-height: 64px; width: 100%; }
       state.dhuDocs = snap.docs.filter((d) => d.exists).map((d) => ({id: d.id, ...d.data()}));
       flattenDhu(); state.dhuLoaded = true;
       renderDhuAll();
-      if (state.isOwner) schedulePublish();
+      if (state.isOwner) { schedulePublish(); removeEmbCutOnce(); }
     }, () => { state.dhuLoaded = true; renderDhuAll(); });
     state.db.collection('dhu-notes').limit(500).onSnapshot((snap) => {
       state.dhuNotes = Object.fromEntries(snap.docs.filter((d) => d.exists).map((d) => [d.id, d.data()]));
@@ -3111,6 +3267,105 @@ textarea { resize: vertical; min-height: 64px; width: 100%; }
     const rank = {bad: 0, warn: 1, ok: 2, info: 3};
     return out.sort((x, y) => rank[x.level] - rank[y.level] || y.weight - x.weight).slice(0, 8);
   };
+  const STYLE_MIN = 300;
+  const r1 = (v) => Math.round(v * 10) / 10;
+  const styleLeaks = (scope, month) => {
+    const m = new Map();
+    for (const r of dhuIn('Finishing', scope, month)) {
+      const name = String(r.st || '').trim();
+      const k = `${r.factory}|${name.toUpperCase()}`;
+      const g = m.get(k) || {f: r.factory, st: name || 'Style not written', rows: []};
+      g.rows.push(r); m.set(k, g);
+    }
+    return [...m.values()].map((g) => {
+      const a = aggOf(g.rows);
+      const top = topOf(Object.fromEntries(Object.entries(a.byDefect).filter(([k]) => sourceOf(k) === 'Stitching')), 1)[0];
+      return {f: g.f, st: g.st, checked: a.checked, faults: a.src.Stitching || 0, per100: a.checked ? (a.src.Stitching || 0) / a.checked * 100 : null, top};
+    }).filter((x) => x.checked >= STYLE_MIN && x.per100 !== null).sort((a, b) => b.per100 - a.per100 || b.checked - a.checked);
+  };
+  const dhuTopFive = (month, scope) => {
+    const out = [];
+    const add = (type, level, weight, what, proof, todo, also) => out.push({type, level, weight, what, proof: proof.filter(Boolean), todo, also});
+    const factories = scope ? [scope] : dhuFactories(month);
+    const pm = prevMonth(month);
+    for (const f of factories) {
+      const F = placeName('factory', f);
+      const st = aggOf(dhuIn('Stitching', f, month)); const stP = aggOf(dhuIn('Stitching', f, pm));
+      const fn = aggOf(dhuIn('Finishing', f, month)); const fnP = aggOf(dhuIn('Finishing', f, pm));
+      if (fn.checked >= 200 && fn.src.Stitching) {
+        const v = fn.per100(fn.src.Stitching);
+        const tops = topOf(Object.fromEntries(Object.entries(fn.byDefect).filter(([k]) => sourceOf(k) === 'Stitching')), 3);
+        add('reach', v >= 5 ? 'bad' : 'warn', 70 + v, `${F}: ${fmt(fn.src.Stitching)} stitching faults got past the stitching check and were found in finishing (${fmt1(v)} per 100 pieces)`,
+          [`Finishing checked ${fmt(fn.checked)} pieces and found ${fmt(fn.defects)} defects; ${pct(fn.src.Stitching, fn.defects)}% of them were stitching faults`, tops.length ? `Biggest: ${tops.map(([k, n]) => `${k.toLowerCase()} ${fmt(n)}`).join(', ')}` : ''],
+          'Line supervisors and end-of-line checkers: stop these on the line, starting with the biggest one.',
+          `${F}: ${fmt1(v)} per 100 (${fmt(fn.src.Stitching)} faults)`);
+      }
+      const ls = lineStats(f, month);
+      const big = ls.filter((x) => x.sChecked >= 300 && x.sDhu !== null);
+      if (big.length) {
+        const w = big[0]; const best = big[big.length - 1];
+        add('line', w.sDhu >= 25 ? 'bad' : 'warn', 60 + w.sDhu / 2, `${F}, line ${w.line} has the highest stitching DHU: ${fmt1(w.sDhu)}%`,
+          [`${fmt(w.sDefects)} defects in ${fmt(w.sChecked)} pieces checked`, w.top ? `Top defect: ${w.top.toLowerCase()}` : '', big.length > 1 ? `Best line: ${best.line} at ${fmt1(best.sDhu)}% (${fmt(best.sChecked)} pieces)` : '', w.prevDhu !== null ? `Last month: ${fmt1(w.prevDhu)}%` : ''],
+          `Line ${w.line}'s supervisor: go through the top defect with the operators every day${big.length > 1 ? `, and learn what line ${best.line} does differently` : ''}.`,
+          `${F}: line ${w.line} at ${fmt1(w.sDhu)}%`);
+      }
+      const sl = styleLeaks(f, month)[0];
+      if (sl && sl.per100 >= 5) {
+        add('style', 'warn', 55 + sl.per100, `${F}, style ${sl.st} let the most stitching faults through: ${fmt1(sl.per100)} per 100 pieces`,
+          [`${fmt(sl.faults)} stitching faults in ${fmt(sl.checked)} pieces at the finishing check`, sl.top ? `Mostly ${sl.top[0].toLowerCase()} (${fmt(sl.top[1])})` : ''],
+          `Check style ${sl.st} at the end of the line, operation by operation, before it goes to finishing.`,
+          `${F}: ${sl.st} at ${fmt1(sl.per100)} per 100`);
+      }
+      if (fn.checked >= 200) {
+        const own = topOf(Object.fromEntries(Object.entries(fn.byDefect).filter(([k]) => sourceOf(k) === 'Finishing (own)')), 1)[0];
+        if (own) {
+          const v = fn.per100(own[1]); const t = own[0].toLowerCase();
+          add('own', v >= 3 ? 'warn' : 'info', 45 + v * 3, `${F}: finishing's own biggest defect is ${t}: ${fmt(own[1])} pieces (${fmt1(v)} per 100)`,
+            [`Finishing's own DHU: ${fmt1(fn.per100(fn.src['Finishing (own)'] || 0))}% (${fmt(fn.src['Finishing (own)'] || 0)} defects in ${fmt(fn.checked)} pieces)`],
+            t.includes('uncut') ? ACTIONS['Uncut thread'] : t.includes('press') ? ACTIONS['Poor pressing'] : 'Keep tables clean and check every piece before packing.',
+            `${F}: ${t} ${fmt(own[1])}`);
+        }
+        if (fn.src.Stains) {
+          const v = fn.per100(fn.src.Stains);
+          if (v >= 1.5) {
+            add('stain', 'warn', 42 + v * 2, `${F}: ${fmt(fn.src.Stains)} stained pieces were found in finishing (${fmt1(v)} per 100)`,
+              [`${pct(fn.src.Stains, fn.defects)}% of all finishing defects`], ACTIONS['Soils/stains'], `${F}: ${fmt(fn.src.Stains)} (${fmt1(v)} per 100)`);
+          }
+        }
+      }
+      if (fn.withPass >= 200 && fn.sentPct !== null) {
+        add('sent', fn.sentPct >= 15 ? 'warn' : 'info', 40 + fn.sentPct / 2, `${F}: ${fmt1(fn.sentPct)}% of pieces were sent back from finishing for repair`,
+          [`${fmt(fn.sentBack)} of ${fmt(fn.withPass)} pieces`, fnP.sentPct !== null ? `Last month: ${fmt1(fnP.sentPct)}%` : ''],
+          'Every piece sent back is repair work and lost time. Stopping faults at the source brings this down.', `${F}: ${fmt1(fn.sentPct)}%`);
+      }
+      if (st.checked >= 200 && stP.checked >= 200 && st.dhu !== null && stP.dhu !== null) {
+        const d = st.dhu - stP.dhu;
+        if (Math.abs(d) >= 1) {
+          add(`trend-${d > 0 ? 'up' : 'down'}`, d > 0 ? 'warn' : 'ok', 38 + Math.abs(d), `${F}: stitching DHU ${d > 0 ? 'rose' : 'fell'} from ${fmt1(stP.dhu)}% to ${fmt1(st.dhu)}%`,
+            [`${monthLabel(month)}: ${fmt(st.defects)} defects in ${fmt(st.checked)} pieces`, `${monthLabel(pm)}: ${fmt(stP.defects)} defects in ${fmt(stP.checked)} pieces`],
+            d > 0 ? 'Find what changed (new styles, operators, machines) and fix it.' : 'Keep doing what worked and share it with the other lines.', `${F}: ${fmt1(stP.dhu)}% to ${fmt1(st.dhu)}%`);
+        }
+      }
+      const onlyFin = ls.filter((x) => !x.sChecked && x.fChecked).map((x) => x.line);
+      if (onlyFin.length) {
+        add('lines', 'info', 32, `${F}: finishing wrote line ${onlyFin.join(', ')}, but the stitching sheet has no data for ${onlyFin.length === 1 ? 'it' : 'them'} this month`,
+          ['So their stitching DHU cannot be shown, or used for their line supervisors'], 'Ask the checkers to write the same line numbers in the stitching and finishing sheets.', `${F}: line ${onlyFin.join(', ')}`);
+      }
+    }
+    const bad = state.dhuRows.filter((r) => r.month === month && (!scope || r.factory === scope) && rowWarnings(r).length);
+    if (bad.length) {
+      add('rows', 'info', 30 + bad.length / 5, `${plural(bad.length, 'row', 'rows')} in ${monthLabel(month)} ${bad.length === 1 ? 'has a mistake' : 'have mistakes'}`,
+        bad.slice(0, 3).map((r) => `${day(r.d)}, ${String(r.stage).toLowerCase()}, style ${r.st || '-'}: ${rowWarnings(r)[0]}`),
+        'Open DHU data and fix them there or in the Excel sheet, so every number is right.', '');
+    }
+    const best = new Map();
+    for (const it of [...out].sort((x, y) => y.weight - x.weight)) {
+      const g = best.get(it.type);
+      if (!g) best.set(it.type, {...it, others: []}); else if (it.also) g.others.push(it.also);
+    }
+    return [...best.values()].map((it) => (it.others.length ? {...it, proof: [...it.proof, `Also: ${it.others.join('; ')}`]} : it))
+      .sort((x, y) => y.weight - x.weight).slice(0, 5);
+  };
   const dhuTile = (label, main, small, note, change) => {
     const t = el('div', 'qt-tile');
     t.append(el('span', 'qt-tile-label', label));
@@ -3189,50 +3444,43 @@ textarea { resize: vertical; min-height: 64px; width: 100%; }
     const scoped = scope ? [scope] : facs;
     const prev = prevMonth(month);
     const parts = [];
-    const fsec = el('section', 'qt-findings');
-    fsec.append(el('h2', '', `What to do: ${monthLabel(month)}`), el('p', 'qt-note', 'Worked out from your own DHU checks and Dynamic\'s reports, most important first.'));
-    const fl = el('ul', 'qt-find-list');
-    const list = dhuFindings(month, scope);
-    if (!list.length) fl.append(el('li', 'qt-empty', 'Nothing stands out this month.'));
-    for (const f of list) {
-      const li = el('li', `qt-find is-${f.level}`); const body = el('div');
-      body.append(el('p', 'qt-find-what', f.what));
-      const todo = el('p', 'qt-find-do'); todo.append(el('b', '', 'What to do: '), document.createTextNode(f.todo)); body.append(todo);
-      li.append(body); fl.append(li);
-    }
-    fsec.append(fl); parts.push(fsec);
     const st = aggOf(dhuIn('Stitching', scope, month)); const stP = aggOf(dhuIn('Stitching', scope, prev));
     const fi = aggOf(dhuIn('Finishing', scope, month)); const fiP = aggOf(dhuIn('Finishing', scope, prev));
     const em = aggOf(dhuIn('Embroidery', '', month)); const emP = aggOf(dhuIn('Embroidery', '', prev));
     const cu = aggOf(dhuIn('Cutting', scope, month)); const cuP = aggOf(dhuIn('Cutting', scope, prev));
     const ownNow = fi.checked ? fi.per100(fi.src['Finishing (own)'] || 0) : null;
     const ownPrev = fiP.checked ? fiP.per100(fiP.src['Finishing (own)'] || 0) : null;
+    const reachNow = fi.checked ? fi.per100(fi.src.Stitching || 0) : null;
+    const reachPrev = fiP.checked ? fiP.per100(fiP.src.Stitching || 0) : null;
     const tiles = el('section', 'qt-tiles');
     tiles.setAttribute('aria-label', 'DHU this month');
     tiles.append(
-      dhuTile('Stitching DHU', pctTxt(st.dhu), '', st.checked ? `${fmt(st.defects)} defects in ${fmt(st.checked)} pieces` : 'No stitching data', changeTxt(st.dhu, stP.dhu)),
-      dhuTile('Finishing DHU', pctTxt(fi.dhu), '', fi.checked ? `${fmt(fi.defects)} defects in ${fmt(fi.checked)} pieces` : 'No finishing data', changeTxt(fi.dhu, fiP.dhu)),
-      dhuTile("Finishing's own DHU", pctTxt(ownNow), '', 'Uncut thread, pressing, contamination', changeTxt(ownNow, ownPrev)),
-      dhuTile('Sent back from finishing', pctTxt(fi.sentPct), '', fi.withPass ? `${fmt(fi.sentBack)} of ${fmt(fi.withPass)} pieces` : 'Pieces not passed', changeTxt(fi.sentPct, fiP.sentPct)),
-      dhuTile('Embroidery DHU', pctTxt(em.dhu), '', em.checked ? `${fmt(em.defects)} defects in ${fmt(em.checked)} pieces` : 'No embroidery data', changeTxt(em.dhu, emP.dhu)),
-      dhuTile('Cutting DHU', pctTxt(cu.cutDhu), '', cu.checked ? `${fmt(cu.defects)} of ${fmt(cu.checked)} panels rejected` : 'No cutting data', changeTxt(cu.cutDhu, cuP.cutDhu))
+      dhuTile('Stitching DHU', pctTxt(st.dhu), '', st.checked ? `${fmt(st.defects)} defects in ${fmt(st.checked)} pieces checked at the end of the lines` : 'No stitching data', changeTxt(st.dhu, stP.dhu)),
+      dhuTile('Finishing DHU', pctTxt(fi.dhu), '', fi.checked ? `${fmt(fi.defects)} defects in ${fmt(fi.checked)} pieces checked in finishing` : 'No finishing data', changeTxt(fi.dhu, fiP.dhu)),
+      dhuTile('Stitching faults found in finishing', reachNow === null ? '\u2013' : fmt1(reachNow), 'per 100 pcs', fi.checked ? `${fmt(fi.src.Stitching || 0)} faults got past the stitching check` : 'No finishing data', changeTxt(reachNow, reachPrev)),
+      dhuTile("Finishing's own DHU", pctTxt(ownNow), '', fi.checked ? `${fmt(fi.src['Finishing (own)'] || 0)} pieces: uncut thread, pressing, contamination` : 'No finishing data', changeTxt(ownNow, ownPrev)),
+      dhuTile('Sent back from finishing', pctTxt(fi.sentPct), '', fi.withPass ? `${fmt(fi.sentBack)} of ${fmt(fi.withPass)} pieces sent back for repair` : 'Pieces not passed', changeTxt(fi.sentPct, fiP.sentPct))
     );
+    if (em.checked) tiles.append(dhuTile('Embroidery DHU', pctTxt(em.dhu), '', `${fmt(em.defects)} defects in ${fmt(em.checked)} pieces`, changeTxt(em.dhu, emP.dhu)));
+    if (cu.checked) tiles.append(dhuTile('Cutting DHU', pctTxt(cu.cutDhu), '', `${fmt(cu.defects)} of ${fmt(cu.checked)} panels rejected`, changeTxt(cu.cutDhu, cuP.cutDhu)));
     parts.push(tiles);
     if (!scope && facs.length > 1) {
       const card = el('article', 'qt-card');
-      card.append(el('h3', '', 'Factories side by side'), el('p', 'qt-note', 'Lower is better. "Reached finishing" is stitching faults the finishing check caught, per 100 pieces it checked.'));
+      card.append(el('h3', '', 'Factories side by side'), el('p', 'qt-note', 'Lower is better. "Stitching faults in finishing" is the stitching faults the finishing check still found, per 100 pieces it checked: faults that got past the stitching check.'));
       const rows = facs.map((f) => { const s = aggOf(dhuIn('Stitching', f, month)); const fn = aggOf(dhuIn('Finishing', f, month)); const c = aggOf(dhuIn('Cutting', f, month));
-        return {f, s: s.dhu, fn: fn.dhu, own: fn.checked ? fn.per100(fn.src['Finishing (own)'] || 0) : null, reach: fn.checked ? fn.per100(fn.src.Stitching || 0) : null, sent: fn.sentPct, cut: c.cutDhu}; });
+        return {f, sc: s.checked, s: s.dhu, fc: fn.checked, fn: fn.dhu, own: fn.checked ? fn.per100(fn.src['Finishing (own)'] || 0) : null, reach: fn.checked ? fn.per100(fn.src.Stitching || 0) : null, sent: fn.sentPct, cut: c.cutDhu, cc: c.checked}; });
+      const anyCut = rows.some((r) => r.cc);
       const w = el('div', 'qt-table-wrap');
       w.append(table([
         {label: 'Factory', get: (r) => placeName('factory', r.f)},
+        {label: 'Stitching checked', num: true, get: (r) => (r.sc ? fmt(r.sc) : '\u2013')},
         {label: 'Stitching DHU', num: true, get: (r) => pctTxt(r.s)},
+        {label: 'Finishing checked', num: true, get: (r) => (r.fc ? fmt(r.fc) : '\u2013')},
         {label: 'Finishing DHU', num: true, get: (r) => pctTxt(r.fn)},
+        {label: 'Stitching faults in finishing (per 100)', num: true, get: (r) => (r.reach === null ? '\u2013' : fmt1(r.reach))},
         {label: "Finishing's own", num: true, get: (r) => pctTxt(r.own)},
-        {label: 'Reached finishing', num: true, get: (r) => (r.reach === null ? '\u2013' : fmt1(r.reach))},
-        {label: 'Sent back', num: true, get: (r) => pctTxt(r.sent)},
-        {label: 'Cutting DHU', num: true, get: (r) => pctTxt(r.cut)}
-      ], rows, {compact: true}));
+        {label: 'Sent back', num: true, get: (r) => pctTxt(r.sent)}
+      ].concat(anyCut ? [{label: 'Cutting DHU', num: true, get: (r) => pctTxt(r.cut)}] : []), rows, {compact: true}));
       card.append(w); parts.push(card);
     }
     const srcCard = el('article', 'qt-card');
@@ -3289,26 +3537,47 @@ textarea { resize: vertical; min-height: 64px; width: 100%; }
       w.append(table([
         {label: 'Line', get: (r) => r.line},
         {label: 'Checked', num: true, get: (r) => (r.sChecked ? `${fmt(r.sChecked)}${r.sChecked < 200 ? ' (few)' : ''}` : '\u2013')},
+        {label: 'Defects', num: true, get: (r) => (r.sChecked ? fmt(r.sDefects) : '\u2013')},
         {label: 'Stitching DHU', num: true, get: (r) => pctTxt(r.sDhu)},
         {label: 'Last month', num: true, get: (r) => pctTxt(r.prevDhu)},
-        {label: 'Reached finishing', num: true, get: (r) => (r.reached === null ? '\u2013' : `${fmt1(r.reached)} (${fmt(r.reachedPcs)} pcs)`)},
+        {label: 'Its faults found in finishing (per 100)', num: true, get: (r) => (r.reached === null ? '\u2013' : `${fmt1(r.reached)} (${fmt(r.reachedPcs)} pcs)`)},
         {label: 'Top stitching defect', get: (r) => r.top}
       ], ls, {compact: true}));
       lc.append(w);
     }
     if (!anyLine) lc.append(el('p', 'qt-empty', 'No stitching or finishing data this month.'));
     parts.push(lc);
+    const sc = el('article', 'qt-card');
+    sc.append(el('h3', '', 'Styles letting most stitching faults through'),
+      el('p', 'qt-note', `Styles with ${fmt(STYLE_MIN)} pieces or more at the finishing check: stitching faults found per 100 pieces, worst first. Style names are shown as written in the sheet.`));
+    const srows = styleLeaks(scope, month).slice(0, 10);
+    if (srows.length) {
+      const smax = Math.max(...srows.map((x) => x.per100));
+      const list = el('div', 'qt-bars');
+      for (const x of srows) {
+        const row = el('div', 'qt-bar-row qt-style-row');
+        const name = el('span', 'qt-bar-name');
+        name.append(el('b', '', `${x.f} \u00b7 ${x.st}`), el('small', '', ` ${fmt(x.checked)} pcs \u00b7 ${fmt(x.faults)} faults${x.top ? ` \u00b7 mostly ${x.top[0].toLowerCase()}` : ''}`));
+        const track = el('span', 'qt-bar-track'); const fill = el('span', `qt-bar-fill${x === srows[0] ? ' is-key' : ''}`); fill.style.width = `${x.per100 / smax * 100}%`; track.append(fill);
+        const val = el('span', 'qt-bar-val'); val.append(el('b', '', fmt1(x.per100)));
+        row.append(name, track, val);
+        list.append(row);
+      }
+      sc.append(list);
+    } else sc.append(el('p', 'qt-empty', `No style had ${fmt(STYLE_MIN)} pieces or more at the finishing check this month.`));
+    parts.push(sc);
     const grid = el('div', 'qt-grid');
     for (const stage of DHU_STAGES) {
       const a = aggOf(dhuIn(stage, stage === 'Embroidery' ? '' : scope, month));
+      if (!a.checked) continue;
       const card = el('article', 'qt-card');
-      card.append(el('h3', '', `${stage}: biggest defects${stage === 'Embroidery' && scope ? ' (whole unit)' : ''}`));
+      card.append(el('h3', '', `${stage}: biggest defects${stage === 'Embroidery' && scope ? ' (whole unit)' : ''}`), el('p', 'qt-note', `${fmt(a.defects)} defects in ${fmt(a.checked)} ${stage === 'Cutting' ? 'panels' : 'pieces'} checked. Pieces, then share of all defects.`));
       const box = el('div', 'qt-bars');
       bars(box, topOf(a.byDefect, 8).map(([k, v]) => ({key: k, value: v, reports: new Set()})), {emptyText: `No ${stage.toLowerCase()} data this month.`, suffix: (r, t) => `\u00b7 ${pct(r.value, a.defects || t)}%`});
       card.append(box); grid.append(card);
     }
     parts.push(grid);
-    const tc = el('article', 'qt-card');
+    const tc = el('article', 'qt-card qt-no-period');
     tc.append(el('h3', '', 'Month by month'), el('p', 'qt-note', scope ? `DHU for ${placeName('factory', scope).toLowerCase()} (embroidery is for the whole unit). Lower is better.` : 'DHU for all factories together. Lower is better.'));
     const tbox = el('div'); tc.append(tbox); parts.push(tc);
     const bc = el('article', 'qt-card');
@@ -3326,19 +3595,12 @@ textarea { resize: vertical; min-height: 64px; width: 100%; }
       {label: 'Biggest defect', get: (r) => r.top}
     ], brows, {compact: true})); bc.append(w); } else bc.append(el('p', 'qt-empty', 'No stitching or finishing data this month.'));
     parts.push(bc);
-    const ic = el('article', 'qt-card');
-    ic.append(el('h3', '', 'Numbers for the incentive sheet'), el('p', 'qt-note', 'The month\'s totals, no targets. Lower is better for all of them.'));
-    const irows = scoped.map((f) => { const fn = aggOf(dhuIn('Finishing', f, month)); const dyn = dynamicChain(f, month);
-      return {f, sent: fn.sentPct, own: fn.checked ? fn.per100(fn.src['Finishing (own)'] || 0) : null, reach: fn.checked ? fn.per100(fn.src.Stitching || 0) : null, dyn: dyn.per100}; });
-    const iw = el('div', 'qt-table-wrap'); iw.append(table([
-      {label: 'Factory', get: (r) => placeName('factory', r.f)},
-      {label: 'Pieces sent back from finishing (factory parameter)', num: true, get: (r) => pctTxt(r.sent)},
-      {label: "Finishing's own defects per 100 (finishing in-charge)", num: true, get: (r) => (r.own === null ? '\u2013' : fmt1(r.own))},
-      {label: 'Stitching faults that reached finishing per 100 (line supervisors)', num: true, get: (r) => (r.reach === null ? '\u2013' : fmt1(r.reach))},
-      {label: 'Defects Dynamic found per 100 (finishing and quality)', num: true, get: (r) => (r.dyn === null ? '\u2013' : fmt1(r.dyn))}
-    ], irows, {compact: true})); ic.append(iw);
-    ic.append(el('p', 'qt-note', 'For each line supervisor, use the "Reached finishing" number of their own line in Stitching lines above.'));
-    parts.push(ic);
+    const tsec = el('section', 'qt-findings qt-top5');
+    tsec.append(el('h2', '', `5 most important things: ${monthLabel(month)}${scope ? `, ${placeName('factory', scope).toLowerCase()}` : ''}`),
+      el('p', 'qt-note', 'The biggest risks in your own DHU checks this month, most dangerous first, each with the numbers from the sheets as proof.'));
+    const tl = el('ul', 'qt-find-list');
+    topList(tl, dhuTopFive(month, scope), 'Nothing stands out this month.', 'Proof from the DHU sheets:');
+    tsec.append(tl); parts.push(tsec);
     const nc = el('article', 'qt-card qt-ask');
     nc.append(el('h3', '', `Claude's view of ${monthLabel(month)}`));
     const note = state.dhuNotes[month];
@@ -3360,6 +3622,7 @@ textarea { resize: vertical; min-height: 64px; width: 100%; }
     parts.push(nc);
     root.replaceChildren(...parts);
     renderDhuTrend(tbox, scope, month);
+    markPeriods(root, [monthLabel(month), scope ? placeName('factory', scope) : 'all factories'].join(' \u00b7 '));
   };
   $('dhu-month').addEventListener('change', () => { state.dhuView.month = $('dhu-month').value; renderDhu(); });
   $('dhu-factory').addEventListener('change', () => { state.dhuView.factory = $('dhu-factory').value; renderDhu(); });
@@ -3520,9 +3783,9 @@ textarea { resize: vertical; min-height: 64px; width: 100%; }
   const renderDhuRows = () => {
     const f = state.dhuData;
     const months = dhuMonths();
-    if (f.month && !months.includes(f.month)) f.month = '';
-    if (!f.month && months.length) f.month = state.dhuView.month && months.includes(state.dhuView.month) ? state.dhuView.month : months[0];
-    $('dhu-d-month').replaceChildren(new Option('All months', ''), ...months.map((m) => new Option(monthLabel(m), m))); $('dhu-d-month').value = f.month;
+    if (f.month && !months.includes(f.month)) f.month = null;
+    if (f.month === null && months.length) f.month = state.dhuView.month && months.includes(state.dhuView.month) ? state.dhuView.month : months[0];
+    $('dhu-d-month').replaceChildren(new Option('All months', ''), ...months.map((m) => new Option(monthLabel(m), m))); $('dhu-d-month').value = f.month || '';
     $('dhu-d-stage').value = f.stage;
     const facs = [...new Set(state.dhuRows.map((r) => r.factory).filter(Boolean))].sort();
     $('dhu-d-factory').replaceChildren(new Option('All factories', ''), ...facs.map((x) => new Option(x, x))); $('dhu-d-factory').value = facs.includes(f.factory) ? f.factory : '';
@@ -3693,14 +3956,17 @@ textarea { resize: vertical; min-height: 64px; width: 100%; }
           headStyles: {fillColor: ACC, textColor: 255, fontStyle: 'bold'}, alternateRowStyles: {fillColor: [243, 245, 249]}}); y = doc.lastAutoTable.finalY + 14; };
       const facs = scope ? [scope] : dhuFactories(month);
       heading('DHU this month');
-      tbl(['Factory', 'Stitching DHU', 'Finishing DHU', "Finishing's own", 'Reached finishing', 'Sent back', 'Cutting DHU'], facs.map((f) => { const s2 = aggOf(dhuIn('Stitching', f, month)); const fn = aggOf(dhuIn('Finishing', f, month)); const c = aggOf(dhuIn('Cutting', f, month));
-        return [placeName('factory', f), pctTxt(s2.dhu), pctTxt(fn.dhu), fn.checked ? fmt1(fn.per100(fn.src['Finishing (own)'] || 0)) : '-', fn.checked ? fmt1(fn.per100(fn.src.Stitching || 0)) : '-', pctTxt(fn.sentPct), pctTxt(c.cutDhu)]; }));
+      const anyCutPdf = facs.some((f) => aggOf(dhuIn('Cutting', f, month)).checked);
+      tbl(['Factory', 'Stitching checked', 'Stitching DHU', 'Finishing checked', 'Finishing DHU', 'Stitching faults in finishing (per 100)', "Finishing's own", 'Sent back'].concat(anyCutPdf ? ['Cutting DHU'] : []), facs.map((f) => { const s2 = aggOf(dhuIn('Stitching', f, month)); const fn = aggOf(dhuIn('Finishing', f, month)); const c = aggOf(dhuIn('Cutting', f, month));
+        return [placeName('factory', f), s2.checked ? fmt(s2.checked) : '-', pctTxt(s2.dhu), fn.checked ? fmt(fn.checked) : '-', pctTxt(fn.dhu), fn.checked ? `${fmt1(fn.per100(fn.src.Stitching || 0))} (${fmt(fn.src.Stitching || 0)} pcs)` : '-', fn.checked ? `${fmt1(fn.per100(fn.src['Finishing (own)'] || 0))}%` : '-', pctTxt(fn.sentPct)].concat(anyCutPdf ? [pctTxt(c.cutDhu)] : []); }));
       const e = aggOf(dhuIn('Embroidery', '', month));
       if (e.checked) para(`Embroidery unit: DHU ${fmt1(e.dhu)}% (${fmt(e.defects)} defects in ${fmt(e.checked)} pieces).`, {muted: true});
       const note = state.dhuNotes[month];
       if (note && note.headline) { heading("Claude's view"); para(note.headline, {bold: true}); for (const p of note.points || []) para(`- ${p}`, {indent: 6}); for (const a of note.actions || []) para(`What to do: ${a}`, {indent: 6, muted: true}); }
-      heading('What to do');
-      for (const x of dhuFindings(month, scope)) { para(`- ${x.what}`, {bold: true}); para(`What to do: ${x.todo}`, {indent: 10, muted: true}); y += 3; }
+      heading(`5 most important things: ${monthLabel(month)}`);
+      const top5 = dhuTopFive(month, scope);
+      if (!top5.length) para('Nothing stands out this month.', {muted: true});
+      top5.forEach((x, i) => { para(`${i + 1}. ${x.what}`, {bold: true}); for (const pr of x.proof) para(`- ${pr}`, {indent: 10}); para(`What to do: ${x.todo}`, {indent: 10, muted: true}); y += 4; });
       for (const f of facs) {
         const fn = aggOf(dhuIn('Finishing', f, month));
         if (fn.checked) { heading(`${placeName('factory', f)}: where finishing defects come from`);
@@ -3708,11 +3974,13 @@ textarea { resize: vertical; min-height: 64px; width: 100%; }
             topOf(Object.fromEntries(Object.entries(fn.byDefect).filter(([k]) => sourceOf(k) === s2)), 3).map(([k, v]) => `${k.toLowerCase()} ${v}`).join(', ')])); }
         const ls = lineStats(f, month);
         if (ls.length) { heading(`${placeName('factory', f)}: stitching lines`);
-          tbl(['Line', 'Checked', 'Stitching DHU', 'Last month', 'Reached finishing', 'Top stitching defect'], ls.map((r) => [r.line, r.sChecked ? fmt(r.sChecked) : '-', pctTxt(r.sDhu), pctTxt(r.prevDhu), r.reached === null ? '-' : `${fmt1(r.reached)} (${r.reachedPcs} pcs)`, r.top])); }
+          tbl(['Line', 'Checked', 'Defects', 'Stitching DHU', 'Last month', 'Its faults found in finishing (per 100)', 'Top stitching defect'], ls.map((r) => [r.line, r.sChecked ? fmt(r.sChecked) : '-', r.sChecked ? fmt(r.sDefects) : '-', pctTxt(r.sDhu), pctTxt(r.prevDhu), r.reached === null ? '-' : `${fmt1(r.reached)} (${r.reachedPcs} pcs)`, r.top])); }
       }
+      heading(`Styles letting most stitching faults through (${fmt(STYLE_MIN)}+ pieces at finishing)`);
+      tbl(['Factory', 'Style', 'Pieces checked in finishing', 'Stitching faults', 'Per 100 pcs', 'Biggest fault'], styleLeaks(scope, month).slice(0, 12).map((x) => [x.f, x.st, fmt(x.checked), fmt(x.faults), fmt1(x.per100), x.top ? `${x.top[0]} (${fmt(x.top[1])})` : '-']));
       heading('Biggest defects');
       for (const stage of DHU_STAGES) { const a = aggOf(dhuIn(stage, stage === 'Embroidery' ? '' : scope, month)); if (!a.defects) continue;
-        para(`${stage}: ${topOf(a.byDefect, 6).map(([k, v]) => `${k.toLowerCase()} ${v} (${pct(v, a.defects)}%)`).join(', ')}.`); }
+        para(`${stage} (${fmt(a.defects)} defects in ${fmt(a.checked)} ${stage === 'Cutting' ? 'panels' : 'pieces'}): ${topOf(a.byDefect, 6).map(([k, v]) => `${k.toLowerCase()} ${v} (${pct(v, a.defects)}%)`).join(', ')}.`); }
       const pages = doc.internal.getNumberOfPages();
       for (let i = 1; i <= pages; i += 1) { doc.setPage(i); doc.setFont('helvetica', 'normal'); doc.setFontSize(8); doc.setTextColor(...MUTED);
         doc.text(pdfText(`Saivana DHU Tracker | ${monthLabel(month)} | made ${day(today())}`), M, H - 24); doc.text(`Page ${i} of ${pages}`, W - M, H - 24, {align: 'right'}); }
@@ -3725,20 +3993,172 @@ textarea { resize: vertical; min-height: 64px; width: 100%; }
     } finally { btn.disabled = false; btn.textContent = label; }
   };
   $('dhu-pdf').addEventListener('click', makeDhuPdf);
+  const IS_SITE = true;
+  const defaultReportMonth = () => {
+    const counts = new Map();
+    for (const r of state.reports) { const m = monthKey(r.date); if (m) counts.set(m, (counts.get(m) || 0) + 1); }
+    const entries = [...counts.entries()].sort((a, b) => a[0].localeCompare(b[0]));
+    if (!entries.length) return '';
+    const max = Math.max(...entries.map((e) => e[1]));
+    const ok = entries.filter((e) => e[1] >= max * 0.25);
+    return (ok.length ? ok[ok.length - 1] : entries[entries.length - 1])[0];
+  };
+  const prevMonthKey = (k) => { const [y, m] = String(k).split('-').map(Number); const d = new Date(Date.UTC(y, m - 2, 1)); return d.toISOString().slice(0, 7); };
+  const lotLine = (r) => `${r.style || 'Style not written'} (${r.buyer || 'buyer not written'}, ${day(r.date)})`;
+  const limitsTxt = (r) => (isFull(r) ? 'every piece checked' : `majors ${ofAllowed(majorOf(r), num(r.major_allowed))}, minors ${ofAllowed(minorOf(r), num(r.minor_allowed))}`);
+  const listTxt = (rows) => rows.map((x) => `${x.key.toLowerCase()} ${fmt(x.value)}`).join(', ');
+  const topFiveDynamic = (a, monthArg) => {
+    const out = [];
+    const add = (level, weight, what, proof, todo) => out.push({level, weight, what, proof: proof.filter(Boolean), todo});
+    if (!a.lots) return out;
+    const failed = a.rs.filter((r) => r.result === 'Fail' || r.result === 'Re-offer');
+    if (failed.length) {
+      add('bad', 100 + failed.length, `${plural(failed.length, 'lot', 'lots')} of ${fmt(a.lots)} failed or had to be offered again`,
+        failed.slice(0, 5).map((r) => `${lotLine(r)}: ${limitsTxt(r)}, biggest defect ${(topDefectOf(r) || 'not written').toLowerCase()}`),
+        'Fix the main defect of these lots before the next offer, and check every piece in finishing until a lot passes with room to spare.');
+    }
+    const over = a.sampled.filter((x) => x.room < 0 && x.r.result === 'Pass');
+    if (over.length) {
+      add('bad', 95 + over.length, `${plural(over.length, 'lot was', 'lots were')} passed although Dynamic found more defects than allowed`,
+        over.slice(0, 5).map((x) => `${lotLine(x.r)}: ${limitsTxt(x.r)}`),
+        'Ask Dynamic why these lots passed, and count them as failed in your own records.');
+    }
+    if (a.atLimit.length) {
+      const rows = [...a.atLimit].sort((x, y) => String(y.r.date).localeCompare(String(x.r.date)));
+      add('bad', 80 + a.atLimit.length, `${fmt(a.atLimit.length)} of ${plural(a.sampled.length, 'lot', 'lots')} passed exactly at the AQL limit: one more defect and ${a.atLimit.length === 1 ? 'it' : 'they'} would have failed`,
+        rows.slice(0, 5).map((x) => `${lotLine(x.r)}: ${limitsTxt(x.r)}`).concat(rows.length > 5 ? [`and ${plural(rows.length - 5, 'more lot', 'more lots')}`] : []),
+        'Before the next offer of these styles, check them piece by piece in finishing and take out every defective piece.');
+    }
+    if (a.byType.length && a.defects) {
+      const t = a.byType[0];
+      const lines = a.lines.filter((d) => d.type === t.key);
+      const maj = sum(lines.filter((d) => d.severity === 'Major'), (d) => d.pieces);
+      add('warn', 60 + pct(t.value, a.defects) / 2, `${t.key} is the biggest defect: ${plural(t.value, 'piece', 'pieces')}, ${pct(t.value, a.defects)}% of all ${fmt(a.defects)} defects`,
+        [`Found in ${fmt(t.reports.size)} of ${plural(a.lots, 'lot', 'lots')}`, `${fmt(maj)} major and ${fmt(t.value - maj)} minor`, `Department: ${DEPT_OF[t.key] || 'Not clear'}`],
+        ACTIONS[t.key] || 'Find where it starts with the department and add a check before Dynamic comes.');
+    }
+    const majLines = a.lines.filter((d) => d.severity === 'Major');
+    const majors = sum(majLines, (d) => d.pieces);
+    if (a.defects && majors / a.defects >= 0.3) {
+      let usedF = 0; let usedA = 0;
+      for (const r of a.rs) { const ma = num(r.major_allowed); if (ma === null || isFull(r)) continue; usedA += ma; usedF += majorOf(r); }
+      const mt = groupBy(majLines, (d) => d.type, (d) => d.pieces).slice(0, 3);
+      add('warn', 55 + majors / a.defects * 20, `${fmt(majors)} of ${fmt(a.defects)} defects (${pct(majors, a.defects)}%) were major`,
+        [a.checked ? `${fmt1(majors / a.checked * 100)} major defects per 100 pieces checked` : '', usedA ? `Majors used ${fmt(usedF)} of the ${fmt(usedA)} the buyers allow (${pct(usedF, usedA)}%)` : '', mt.length ? `Biggest majors: ${listTxt(mt)}` : ''],
+        'A lot fails on majors first. Put the biggest major defects on the end-of-line check of every line.');
+    }
+    if (a.byDept.length && a.defects) {
+      const d = a.byDept[0];
+      const types = groupBy(a.lines.filter((x) => x.department === d.key), (x) => x.type, (x) => x.pieces).slice(0, 3);
+      add('warn', 50 + pct(d.value, a.defects) / 3, `${d.key} caused the most defects: ${fmt(d.value)} of ${fmt(a.defects)} pieces (${pct(d.value, a.defects)}%)`,
+        [types.length ? `Biggest: ${listTxt(types)}` : '', a.byDept[1] ? `Next: ${a.byDept[1].key.toLowerCase()} ${fmt(a.byDept[1].value)} (${pct(a.byDept[1].value, a.defects)}%)` : ''],
+        d.key === 'Not clear' ? 'Ask Dynamic to write the responsible department for every defect.' : `The ${d.key.replace(' (stains)', '').toLowerCase()} in-charge should go through these defects with the team this week.`);
+    }
+    if (a.measReports.size && a.measReports.size * 4 >= a.lots) {
+      const areas = a.byArea.slice(0, 3);
+      add(a.measReports.size * 2 >= a.lots ? 'warn' : 'info', 45 + a.measReports.size / a.lots * 20, `${fmt(a.measReports.size)} of ${plural(a.lots, 'lot', 'lots')} had a size outside the buyer's tolerance`,
+        [areas.length ? `Most often: ${areas.map((x) => `${x.key.toLowerCase()} (${plural(x.reports.size, 'lot', 'lots')})`).join(', ')}` : ''],
+        'Measure a size set from every line before final inspection, and check the pattern when the same point keeps failing.');
+    }
+    const month = monthArg === undefined ? state.filters.month : monthArg;
+    if (month) {
+      const prev = prevMonthKey(month);
+      const prs = state.reports.filter((r) => monthKey(r.date) === prev && (!state.filters.factory || r.factory === state.filters.factory) &&
+        (!state.filters.buyer || r.buyer === state.filters.buyer) && (!state.filters.type || (r.inspection || 'Final') === state.filters.type));
+      const b = prs.length ? analyse(prs) : null;
+      if (b && b.per100 !== null && a.per100 !== null) {
+        const diff = a.per100 - b.per100;
+        if (Math.abs(diff) >= 0.5) {
+          add(diff > 0 ? 'warn' : 'ok', 40 + Math.abs(diff) * 2, `Defects per 100 pieces ${diff > 0 ? 'rose' : 'fell'} from ${fmt1(b.per100)} in ${monthLabel(prev)} to ${fmt1(a.per100)}`,
+            [`${monthLabel(month)}: ${fmt(a.defects)} defects in ${fmt(a.checked)} pieces (${plural(a.lots, 'lot', 'lots')})`, `${monthLabel(prev)}: ${fmt(b.defects)} defects in ${fmt(b.checked)} pieces (${plural(b.lots, 'lot', 'lots')})`],
+            diff > 0 ? 'Find what changed this month (new styles, new operators, machines) and fix it.' : 'Keep doing what worked and share it with every line.');
+        }
+        const rise = a.byType.map((t) => { const bt = b.byType.find((x) => x.key === t.key); const now = t.value / a.checked * 100; const before = bt && b.checked ? bt.value / b.checked * 100 : 0; return {key: t.key, now, before, pcs: t.value}; })
+          .filter((x) => x.pcs >= 3 && x.now - x.before >= 1).sort((x, y) => (y.now - y.before) - (x.now - x.before))[0];
+        if (rise) {
+          add('warn', 42 + (rise.now - rise.before) * 3, `${rise.key} is rising: ${fmt1(rise.now)} per 100 pieces, up from ${fmt1(rise.before)} in ${monthLabel(prev)}`,
+            [`${plural(rise.pcs, 'piece', 'pieces')} this month`], ACTIONS[rise.key] || 'Find where it starts on the line and add a check before the next inspection.');
+        }
+      }
+    }
+    if (a.byBuyer.length > 1 && a.per100 !== null) {
+      const bb = a.byBuyer.filter((g) => g.checked >= 100 && g.per100 !== null)[0];
+      if (bb && bb.per100 >= a.per100 * 1.15) {
+        add('info', 35 + (bb.per100 - a.per100), `${bb.key} has the highest defect rate: ${fmt1(bb.per100)} per 100 pieces, against ${fmt1(a.per100)} overall`,
+          [`${plural(bb.lots, 'lot', 'lots')}: ${fmt(bb.defects)} defects in ${fmt(bb.checked)} pieces`, bb.top && bb.top !== '\u2013' ? `Biggest defect: ${bb.top.toLowerCase()}` : ''],
+          `Review the running ${bb.key} styles with the line supervisors.`);
+      }
+    }
+    const toCheck = a.rs.filter((r) => r.needs_check);
+    if (toCheck.length) {
+      add('info', 30 + toCheck.length, `${plural(toCheck.length, 'report needs', 'reports need')} a check before you trust every number`,
+        toCheck.slice(0, 4).map((r) => `${lotLine(r)}${Array.isArray(r.check_notes) && r.check_notes.length ? `: ${r.check_notes[0]}` : ''}`),
+        'Open All reports, click the lines marked Check and correct anything that was read wrong.');
+    }
+    return out.sort((x, y) => y.weight - x.weight).slice(0, 5);
+  };
+  const topList = (box, list, emptyText, proofLabel) => {
+    if (!list.length) { box.replaceChildren(el('li', 'qt-empty', emptyText)); return; }
+    box.replaceChildren(...list.map((f, i) => {
+      const li = el('li', `qt-find qt-top is-${f.level}`);
+      li.append(el('span', 'qt-top-n', String(i + 1)));
+      const body = el('div');
+      body.append(el('p', 'qt-find-what', f.what));
+      if (f.proof.length) {
+        body.append(el('p', 'qt-proof-h', proofLabel));
+        const ul = el('ul', 'qt-proof');
+        for (const x of f.proof) ul.append(el('li', '', x));
+        body.append(ul);
+      }
+      const todo = el('p', 'qt-find-do');
+      todo.append(el('b', '', 'What to do: '), document.createTextNode(f.todo));
+      body.append(todo);
+      li.append(body);
+      return li;
+    }));
+  };
+  const renderTop5 = (a) => {
+    const box = $('top5');
+    if (!box) return;
+    const month = state.filters.month;
+    $('top5-title').textContent = `5 most important things: ${month ? monthLabel(month) : 'all months'}`;
+    $('top5-note').textContent = month
+      ? `The biggest risks in ${monthLabel(month)}, most dangerous first, each with the numbers from the reports as proof. Pick another month in the filters at the top.`
+      : 'The biggest risks across all months, most dangerous first. Pick a month in the filters at the top to see that month only.';
+    topList(box, topFiveDynamic(a), a.lots ? 'Nothing stands out in these reports.' : 'No reports match these filters.', 'Proof from the reports:');
+  };
+  const markPeriods = (root, text) => {
+    const first = text.split(' \u00b7 ')[0];
+    for (const h of root.querySelectorAll('.qt-card:not(.qt-no-period):not(.qt-theory-card) > h3, .qt-card-head > h3')) {
+      let chip = h.querySelector('.qt-period');
+      const own = chip ? h.textContent.replace(chip.textContent, '') : h.textContent;
+      if (!chip && own.includes(first)) continue;
+      if (!chip) { chip = el('span', 'qt-period'); h.append(' ', chip); }
+      chip.textContent = text;
+    }
+  };
+  const renderPeriods = () => {
+    const f = state.filters;
+    const v = $('view-overview');
+    if (!v || !v.querySelectorAll) return;
+    markPeriods(v, [f.month ? monthLabel(f.month) : 'All months', f.factory ? placeName('factory', f.factory) : '', f.buyer || '', f.type ? `${f.type} inspections` : ''].filter(Boolean).join(' \u00b7 '));
+  };
   const renderAll = () => {
     renderFilters();
     const banner = $('status-banner');
-    if (state.locked) banner.hidden = true;
+    if (state.privateView) { banner.hidden = false; banner.className = 'qt-banner'; banner.textContent = 'This tracker is private. Only its owner can open it.'; }
+    else if (state.locked) banner.hidden = true;
     else if (state.failed) { banner.hidden = false; banner.className = 'qt-banner is-bad'; banner.textContent = 'The reports could not be loaded here. Open this tracker in Claude to see and add reports.'; }
     else if (!state.loaded) { banner.hidden = false; banner.className = 'qt-banner'; banner.textContent = 'Loading reports\u2026'; }
     else if (!state.reports.length) { banner.hidden = false; banner.className = 'qt-banner'; banner.textContent = 'No reports yet.'; }
     else banner.hidden = true;
     const a = analyse(filtered());
-    renderFindings(a); renderWarnings(); renderTiles(a); renderCards(); renderTypes(a); renderDepts(a); renderMargin(a); renderTrend(a); renderGroups(a); renderMeasures(a); renderGaps(a);
+    renderTiles(a); renderCards(); renderTop5(a); renderTypes(a); renderDepts(a); renderMargin(a); renderTrend(a); renderGroups(a); renderMeasures(a); renderGaps(a);
     renderReports();
     renderDatalists();
     renderAsk();
     renderDhuAll();
+    renderPeriods();
   };
   let resizeTimer = null;
   window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(() => renderTrend(analyse(filtered())), 150); });
@@ -3775,7 +4195,7 @@ textarea { resize: vertical; min-height: 64px; width: 100%; }
   const DRIVE = 'Google Drive';
   const DATA_TITLE = 'saivana-quality-data.json';
   const PAGE_TITLE = 'saivana-quality-website.html';
-  const SITE_PAGE_VERSION = '2026-11-04.2';
+  const SITE_PAGE_VERSION = '2026-11-05.1';
   const pub = {timer: null, busy: false, again: false, fileArgs: null};
   const b64big = (buf) => { const u = new Uint8Array(buf); let s = ''; for (let i = 0; i < u.length; i += 0x8000) s += String.fromCharCode.apply(null, u.subarray(i, i + 0x8000)); return btoa(s); };
   const stableJson = (v) => {
@@ -4030,6 +4450,7 @@ textarea { resize: vertical; min-height: 64px; width: 100%; }
       try { state.canWrite = await user.can('data.write'); } catch (e) { state.canWrite = null; }
       try { state.isOwner = Boolean(await user.isOwner()); } catch (e) { state.isOwner = false; }
     }
+    if (!state.isOwner && !IS_SITE) { state.privateView = true; state.failed = true; state.loaded = true; document.documentElement.classList.add('qt-private'); renderAll(); return; }
     state.downloads = await c.use('downloads');
     const sampleFn = await c.use('sample');
     state.ai = sampleFn || null;
