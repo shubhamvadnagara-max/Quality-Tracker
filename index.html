@@ -431,6 +431,7 @@ textarea { resize: vertical; min-height: 64px; width: 100%; }
       <button class="qt-tab" role="tab" id="tab-dhu" data-view="dhu" aria-selected="false">DHU tracker</button>
       <button class="qt-tab" role="tab" id="tab-dhudata" data-view="dhudata" aria-selected="false">DHU data</button>
       <button class="qt-tab" role="tab" id="tab-add" data-view="add" aria-selected="false">Add a report</button>
+      <span id="tab-owner" hidden></span>
       <button class="qt-tab" role="tab" id="tab-share" data-view="share" aria-selected="false" hidden>Share</button>
     </nav>
   </header>
@@ -713,6 +714,7 @@ textarea { resize: vertical; min-height: 64px; width: 100%; }
     </article>
   </section>
 
+  <div id="view-owner" hidden></div>
   <!-- ADD A REPORT -->
   <section class="qt-view" id="view-add" aria-labelledby="tab-add" hidden>
     <section class="qt-card" id="add-site-note" hidden>
@@ -910,8 +912,8 @@ textarea { resize: vertical; min-height: 64px; width: 100%; }
   window.claude = {use: (name) => unlocked.then(() => caps()[name] || null)};
   const checkStarted = () => {
     const banner = $('status-banner');
-    const findings = $('findings');
-    const stuck = !banner || !findings || (!banner.hidden && /Loading/.test(banner.textContent)) || !findings.children.length;
+    const tiles = $('tiles');
+    const stuck = !banner || !tiles || (!banner.hidden && /Loading/.test(banner.textContent)) || !tiles.children.length;
     if (!stuck) return;
     const errs = (window.__siteErrors || []).slice(0, 6);
     $('site-diag').hidden = false;
